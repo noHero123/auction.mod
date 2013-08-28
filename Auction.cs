@@ -1188,8 +1188,9 @@ namespace UserMenuInChat.mod
             addcardstolist();
         }
 
-        private void getaucitemsformmsg(string msg, string from, string room)
+        private void getaucitemsformmsg(string msgg, string from, string room)
         {
+            string msg = Regex.Replace(msgg, @"(<color=#[A-Za-z0-9]{0,6}>)|(</color>)", String.Empty);
             this.addingwtbcards.Clear();
             this.addingwtscards.Clear();
             // todo: delete old msgs from author
