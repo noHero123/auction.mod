@@ -43,7 +43,7 @@ namespace UserMenuInChat.mod
                System.IO.Stream stream = myWebResponse.GetResponseStream();
                 System.IO.StreamReader reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
                 string ressi = reader.ReadToEnd();
-               Console.WriteLine(ressi);
+               //Console.WriteLine(ressi);
                 string price="0";
                 string sugprice = "0";
                 if (ressi.Contains("\"suggested\":"))
@@ -346,7 +346,7 @@ namespace UserMenuInChat.mod
                 {
                     string name = "";
                     name = (fm.info).Split('\'')[1];
-                    Console.WriteLine("could not find: " + name);
+                    //Console.WriteLine("could not find: " + name);
                     if (this.aucusers.ContainsKey(name)) { this.aucusers.Remove(name); }
                 }
             }
@@ -531,7 +531,7 @@ namespace UserMenuInChat.mod
                 {
                     if (wtspricelist1[card.card.getName().ToLower()] != "")
                     {
-                        Console.WriteLine(card.card.getName() + " " + wtspricelist1[card.card.getName().ToLower()]);
+                        //Console.WriteLine(card.card.getName() + " " + wtspricelist1[card.card.getName().ToLower()]);
                         if (card.priceinint >= Convert.ToInt32(wtspricelist1[card.card.getName().ToLower()])) { list.Add(card); };
                     }
                     else
@@ -877,7 +877,7 @@ namespace UserMenuInChat.mod
                 gettextures(cardView);
                 this.mytext = true;
                 Camera.main.transform.localPosition = vccopy;
-                Console.WriteLine("CARD: " + clink);
+                //Console.WriteLine("CARD: " + clink);
 
             }
         
@@ -950,7 +950,7 @@ namespace UserMenuInChat.mod
 
         private void addcardstolist()
         {
-            Console.WriteLine("##addcars");
+            //Console.WriteLine("##addcars");
 
             if (addingwtscards.Count() > 0)
             {
@@ -1106,7 +1106,7 @@ namespace UserMenuInChat.mod
                 }
 
             }
-            Console.WriteLine(msg + "##" + secmsg);
+            //Console.WriteLine(msg + "##" + secmsg);
 
             string[] words = msg.Split(';');
             for (int i = 0; i < words.Length; i++)
@@ -1211,7 +1211,7 @@ namespace UserMenuInChat.mod
                 int iadder = 0;
                 if (arrindex >= 0) // wort in cardlist enthalten
                 {
-                    Console.WriteLine(word + " " + arrindex);
+                    //Console.WriteLine(word + " " + arrindex);
                     string[] possiblecards = Array.FindAll(this.cardnames, element => word.Contains(element.Split(' ')[0]));
                     bool findcard = false;
                     string foundedcard = "";
@@ -1234,11 +1234,11 @@ namespace UserMenuInChat.mod
                     {
                         CardType type = CardTypeManager.getInstance().get(cardnametoid(foundedcard.ToLower()));
                         c = new Card(cardids[arrindex], type, true);
-                        Console.WriteLine("found " + foundedcard + " in " + textplace);
+                        //Console.WriteLine("found " + foundedcard + " in " + textplace);
                         string tmpgold = pricetestfirst((textplace.Split(' '))[(textplace.Split(' ')).Length - 1]);
                         if (!(tmpgold == "") ) // && iadder >1
                         {   // case: cardnamegold
-                            Console.WriteLine("found " + this.numberregx.Match(tmpgold).Value);
+                            //Console.WriteLine("found " + this.numberregx.Match(tmpgold).Value);
                             price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                         }
                         else if (i< words.Length)
@@ -1257,7 +1257,7 @@ namespace UserMenuInChat.mod
 
                             if (!(tmpgold == "fail"))
                             { // cardname gold
-                                Console.WriteLine("found gold " + this.numberregx.Match(tmpgold).Value);
+                                //Console.WriteLine("found gold " + this.numberregx.Match(tmpgold).Value);
                                 price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                             }
                         }
@@ -1348,8 +1348,8 @@ namespace UserMenuInChat.mod
             msg = msg.Remove(msg.Length - 1);
             shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             if (this.wtsmenue) { this.generatedwtsmessage = msg; this.shortgeneratedwtsmessage = shortmsg; } else { this.generatedwtbmessage = msg; this.shortgeneratedwtbmessage = shortmsg; }
-            Console.WriteLine(msg);
-            Console.WriteLine(shortmsg);
+            //Console.WriteLine(msg);
+            //Console.WriteLine(shortmsg);
             this.sellersearchstring = msg;
             this.pricesearchstring = shortmsg;
         
@@ -2503,7 +2503,6 @@ namespace UserMenuInChat.mod
 
             if (info.target is Store && info.targetMethod.Equals("Start"))
             {
-                Console.WriteLine("init");
                 this.lobbySkin = (GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target);
                 this.storeinfo=(Store)info.target;
                 //this.AHFrame = new GameObject("Card List / AH List").AddComponent<CardListPopup>();
@@ -2609,7 +2608,6 @@ namespace UserMenuInChat.mod
                     {
                         this.inauchouse = true;
                         //this.hideInformation();
-                        Console.WriteLine("KLICK_AH");
                         hideInformationinfo.Invoke(storeinfo, null);
 
                         showBuyinfo.SetValue(storeinfo, false);
@@ -2637,7 +2635,6 @@ namespace UserMenuInChat.mod
                     if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(3f), "Gen", this.lobbySkin))
                     {
                         //this.hideInformation();
-                        Console.WriteLine("KLICK_generator");
                         hideInformationinfo.Invoke(storeinfo, null);
                         showBuyinfo.SetValue(storeinfo, false);
                         iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
