@@ -3002,7 +3002,7 @@ namespace UserMenuInChat.mod
             this.sbpricerect = new Rect(sbsellerrect.x, sbpricelabelrect.y, sbsellerrect.width, texthight);
             
             this.sbtpfgen = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, texthight, texthight);
-            this.sbtpfgenlabel = new Rect(sbonlywithpricebox.xMax + 4, sbpricelabelrect.yMax + 4, filtermenurect.width - sbonlywithpricebox.width - num2, texthight);
+            this.sbtpfgenlabel = new Rect(sbtpfgen.xMax + 4, sbpricelabelrect.yMax + 4, filtermenurect.width - sbtpfgen.width - num2, texthight);
 
             this.sbonlywithpricebox = new Rect(sbarlabelrect.x, sbtpfgen.yMax + 4, texthight, texthight);
             this.sbonlywithpricelabelbox = new Rect(sbonlywithpricebox.xMax + 4, sbtpfgen.yMax + 4, filtermenurect.width - sbonlywithpricebox.width - num2, texthight);
