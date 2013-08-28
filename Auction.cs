@@ -177,8 +177,8 @@ namespace UserMenuInChat.mod
         //private List<Card> genlist=new List<Card>();
         //private List<Card> genlistfull = new List<Card>();
         private List<aucitem> wtsPlayer = new List<aucitem>();
-        private List<aucitem> orgicardsPlayerwountrade = new List<aucitem>();
-        private List<Card> orgicardsPlayer = new List<Card>();
+        private List<aucitem> orgicardsPlayerwountrade = new List<aucitem>(); // cards player owns minus the untradable cards
+        private List<Card> orgicardsPlayer = new List<Card>(); // all cards the player owns
         private List<aucitem> wtbPlayer = new List<aucitem>();
         private List<aucitem> allcardsavailable = new List<aucitem>();
         private List<aucitem> addingwtscards = new List<aucitem>();
@@ -462,10 +462,14 @@ namespace UserMenuInChat.mod
             // add the t1 cards first ( the t3 cards at least)
             foreach (aucitem card in temp)
             {
-                if (available[card.card.getName()] < 3)
+                if (available.ContainsKey(card.card.getName()))
                 {
-                    list.Add(card);
-                };
+                    if (available[card.card.getName()] < 3)
+                    {
+                        list.Add(card);
+                    };
+                }
+                else { list.Add(card); } // if you dont have the card, you have less than 3 :D
 
             }
 
@@ -2510,7 +2514,7 @@ namespace UserMenuInChat.mod
                 //this.AHFrame.Init(new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.height * 0.8f, (float)Screen.height * 0.7f), false, true, this.ahlist, this, null, new GUIContent("BLUBB"), false, true, false, false, null, false);
                 //this.AHFrame.SetOpacity(1f);
                 
-                setupPositions();
+                
 
                 
             }
@@ -2540,6 +2544,14 @@ namespace UserMenuInChat.mod
                         this.orgicardsPlayer.AddRange(((LibraryViewMessage)msg).cards);
                         List<string> checklist = new List<string>();
                         this.available.Clear();
+                        foreach (aucitem ai in allcardsavailable)
+                        {
+                            if (!available.ContainsKey(ai.card.getName()))
+                            {
+                                available.Add(ai.card.getName(), 0);
+                            }
+                        }
+
                         foreach (Card c in orgicardsPlayer)
                         {
                             if (c.tradable&& !(checklist.Contains(c.getName())))
@@ -2553,10 +2565,7 @@ namespace UserMenuInChat.mod
                                 checklist.Add(c.getName());
                             }
 
-                                if (!available.ContainsKey(c.getName()))
-                                {
-                                    available.Add(c.getName(), 0);
-                                }
+                                
                                 available[c.getName()] = available[c.getName()] + 1;
                         }
 
