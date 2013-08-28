@@ -1059,7 +1059,7 @@ namespace UserMenuInChat.mod
             if (from == this.ownname) return;
 
             string commando = msg.Split(' ')[1];
-            if (commando != "")
+            if (commando != "" && this.contonetwork)
             {
                 if (commando == "sendwts" && this.genwtssettings.strings2 != "") { dowhisper(this.genwtssettings.strings2, from); }
                 if (commando == "sendwtb" && this.genwtbsettings.strings2 != "") { dowhisper(this.genwtbsettings.strings2, from); }
