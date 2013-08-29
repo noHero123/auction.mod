@@ -97,6 +97,7 @@ namespace UserMenuInChat.mod
             public string price;
             public int priceinint;
             public string time;
+            public DateTime dtime;
         }
 
         class settingcopy
@@ -115,6 +116,7 @@ namespace UserMenuInChat.mod
             public string strings0 ;
             public string strings1;
             public string strings2;
+            public string strings3;
         
         }
 
@@ -197,15 +199,18 @@ namespace UserMenuInChat.mod
         private bool onebool;
         private bool ignore0;
         private bool takepriceformgenarator;
+        private string timesearchstring = "";
+        private string wtssearchstring = "";
+        private string sellersearchstring = "";
+        private string pricesearchstring = "";
 
         private settingcopy ahwtssettings = new settingcopy();
         private settingcopy ahwtbsettings = new settingcopy();
         private settingcopy genwtssettings = new settingcopy();
         private settingcopy genwtbsettings = new settingcopy();
 
-        private string wtssearchstring="";
-        private string sellersearchstring = "";
-        private string pricesearchstring = "";
+
+        
         private Rect filtermenurect;
         private Rect sbarlabelrect;
         private Rect sbrect;
@@ -217,6 +222,8 @@ namespace UserMenuInChat.mod
         private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbmessage;
         private Rect sbtpfgen; private Rect sbtpfgenlabel;
         private Rect sbclrearpricesbutton; Rect sbnetworklabel;
+        private Rect sbtimelabel; Rect sbtimerect;
+
         private bool showtradedialog = false; private aucitem tradeitem;
 
         //cardlistpopup#######################
@@ -407,6 +414,9 @@ namespace UserMenuInChat.mod
                     allcardsavailable.Add(ai);
                 };
                 this.allcardsavailable.Sort(delegate(aucitem p1, aucitem p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
+                //test
+                //foreach (aucitem ai in allcardsavailable)
+                //{ Console.WriteLine(ai.card.getName()); }
                 //App.Communicator.removeListener(this);//dont need the listener anymore
             }
 
@@ -433,6 +443,7 @@ namespace UserMenuInChat.mod
             copy.strings0 = wtssearchstring;
             copy.strings1 = sellersearchstring;
             copy.strings2 = pricesearchstring;
+            copy.strings3 = timesearchstring;
         }
 
         private void setsettings(settingcopy copy)
@@ -451,6 +462,7 @@ namespace UserMenuInChat.mod
              wtssearchstring= copy.strings0;
              sellersearchstring= copy.strings1;
              pricesearchstring = copy.strings2;
+             timesearchstring=copy.strings3 ;
 
         }
 
@@ -704,6 +716,7 @@ namespace UserMenuInChat.mod
             this.wtssearchstring = "";
             this.sellersearchstring = "";
             this.pricesearchstring = "";
+            this.timesearchstring = "";
             savesettings(this.ahwtssettings);
             savesettings(this.ahwtbsettings);
             savesettings(this.genwtssettings);
@@ -963,6 +976,7 @@ namespace UserMenuInChat.mod
                 this.wtslistfulltimed.RemoveAll(element => element.seller == seller);
                 this.wtslistfull.RemoveAll(element => element.seller == seller);
                 this.wtslist.RemoveAll(element => element.seller == seller);
+
             }
 
             if (addingwtbcards.Count() > 0)
@@ -1036,6 +1050,7 @@ namespace UserMenuInChat.mod
             ai.priceinint = gold;
             ai.price = gold.ToString();
             ai.time = DateTime.Now.ToString("hh:mm:ss tt");//DateTime.Now.ToShortTimeString();
+            ai.dtime = DateTime.Now;
             if (gold == 0) ai.price = "?";
             if (wts) 
             {
@@ -1458,8 +1473,6 @@ namespace UserMenuInChat.mod
             if (this.inauchouse)
             {
 
-
-               
                 GUI.color = Color.white;
 
                 // draw filter menue
@@ -1546,6 +1559,18 @@ namespace UserMenuInChat.mod
                 this.pricesearchstring =Regex.Replace( GUI.TextField(this.sbpricerect, this.pricesearchstring, chatLogStyle),@"[^0-9]","");
                 GUI.color = Color.white;
 
+                // draw time filter
+
+                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.Label(sbtimelabel, "not older than");
+                GUI.skin = this.cardListPopupSkin;
+                GUI.Box(this.sbtimerect, string.Empty);
+                string timecopy = timesearchstring;
+                this.timesearchstring = Regex.Replace(GUI.TextField(this.sbtimerect, this.timesearchstring,2, chatLogStyle), @"[^0-9]", "");
+                if (timesearchstring!=""&&Convert.ToInt32(timesearchstring) > 30) { timesearchstring = "30"; }
+                GUI.color = Color.white;
+
+
                 bool tpfgen = GUI.Button(sbtpfgen, "");
                 if (this.takepriceformgenarator)
                 {
@@ -1603,6 +1628,7 @@ namespace UserMenuInChat.mod
                     this.wtssearchstring = "";
                     this.pricesearchstring = "";
                     this.sellersearchstring = "";
+                    this.timesearchstring = "";
                     growthbool = true;
                     orderbool = true;
                     energybool = true;
@@ -1783,16 +1809,41 @@ namespace UserMenuInChat.mod
                 }
 
 
-                this.scrollPos = GUI.BeginScrollView(position3, this.scrollPos, new Rect(0f, 0f, this.innerRect.width - 20f, this.fieldHeight * (float)this.ahlist.Count));
+                
                 int num = 0;
                 Card card = null;
-                GUI.skin = this.cardListPopupBigLabelSkin;
-
-
+                
+                // delete old cards:
+                DateTime currenttime = DateTime.Now.AddMinutes(-30);
+                if (wtslistfulltimed.Count >0&& wtslistfulltimed[wtslistfulltimed.Count - 1].dtime.CompareTo(currenttime) < 0)
+                {
+                    this.wtslistfulltimed.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                    this.wtslistfull.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                    this.wtslist.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                }
+                if (wtblistfulltimed.Count > 0 && wtblistfulltimed[wtblistfulltimed.Count - 1].dtime.CompareTo(currenttime) < 0)
+                {
+                    this.wtblistfulltimed.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                    this.wtblistfull.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                    this.wtblist.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
+                }
                 // draw auctimes################################################
+                //timefilter: 
+                int time = 0;
+                bool usetimefilter = false;
+                float anzcards = anzcards = (float)this.ahlist.Count();
+                if (this.timesearchstring != "") {
+                    time = Convert.ToInt32(timesearchstring); 
+                    currenttime = DateTime.Now.AddMinutes(-1 * time); usetimefilter = true;
+                    anzcards = (float)this.ahlist.Count(delegate(aucitem p1) { return (p1.dtime).CompareTo(currenttime) >= 0; });
+                }
+               
+                this.scrollPos = GUI.BeginScrollView(position3, this.scrollPos, new Rect(0f, 0f, this.innerRect.width - 20f, this.fieldHeight * anzcards));
                 if (this.reverse) { this.ahlist.Reverse(); }
+                GUI.skin = this.cardListPopupBigLabelSkin;
                 foreach (aucitem current in this.ahlist)
                 {
+                    if (usetimefilter && (current.dtime).CompareTo(currenttime) < 0) { continue; }
                     if (!current.card.tradable)
                     {
                         GUI.color = new Color(1f, 1f, 1f, 0.5f);
@@ -1800,7 +1851,7 @@ namespace UserMenuInChat.mod
                     GUI.skin = this.cardListPopupGradientSkin;
                     //draw boxes
                     Rect position7 = new Rect(this.cardWidth + 10f, (float)num * this.fieldHeight, this.innerRect.width - this.scrollBarSize - this.cardWidth - this.costIconWidth - 12f, this.fieldHeight);
-                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + position3.height)
+                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + position3.height )
                     {
                         num++;
                         GUI.color = Color.white;
@@ -3000,9 +3051,12 @@ namespace UserMenuInChat.mod
 
             this.sbpricelabelrect = new Rect(sbarlabelrect.x, sbsellerlabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
             this.sbpricerect = new Rect(sbsellerrect.x, sbpricelabelrect.y, sbsellerrect.width, texthight);
-            
-            this.sbtpfgen = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, texthight, texthight);
-            this.sbtpfgenlabel = new Rect(sbtpfgen.xMax + 4, sbpricelabelrect.yMax + 4, filtermenurect.width - sbtpfgen.width - num2, texthight);
+
+            this.sbtimelabel = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
+            this.sbtimerect = new Rect(sbsellerrect.x, sbtimelabel.y, sbsellerrect.width, texthight);
+
+            this.sbtpfgen = new Rect(sbarlabelrect.x, sbtimelabel.yMax + 4, texthight, texthight);
+            this.sbtpfgenlabel = new Rect(sbtpfgen.xMax + 4, sbtimelabel.yMax + 4, filtermenurect.width - sbtpfgen.width - num2, texthight);
 
             this.sbonlywithpricebox = new Rect(sbarlabelrect.x, sbtpfgen.yMax + 4, texthight, texthight);
             this.sbonlywithpricelabelbox = new Rect(sbonlywithpricebox.xMax + 4, sbtpfgen.yMax + 4, filtermenurect.width - sbonlywithpricebox.width - num2, texthight);
