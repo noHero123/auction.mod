@@ -13,7 +13,7 @@ using Irrelevant.Assets;
 using ScrollsModLoader;
 using System.Net;
 
-namespace UserMenuInChat.mod
+namespace Auction.mod
 {
 
 
@@ -89,7 +89,6 @@ namespace UserMenuInChat.mod
             public Color color;
         }
 
-
         struct aucitem
         {
             public Card card;
@@ -98,6 +97,7 @@ namespace UserMenuInChat.mod
             public int priceinint;
             public string time;
             public DateTime dtime;
+            public string whole;
         }
 
         class settingcopy
@@ -117,6 +117,8 @@ namespace UserMenuInChat.mod
             public string strings1;
             public string strings2;
             public string strings3;
+            public string strings4;
+
         
         }
 
@@ -147,7 +149,15 @@ namespace UserMenuInChat.mod
         int idtesting = 0;
 
         bool contonetwork = false;
+        List<string> roooms= new List<string>();
+        DateTime joindate = DateTime.Now;
+        Dictionary<string, string> usertoaucroom=new Dictionary<string,string>();
+        int ownroomnumber = 0;
+        bool rooomsearched = false;
 
+        private bool inbattle = false;
+        private bool newwtsmsgs = false;
+        private bool newwtbmsgs = false;
         private string shortgeneratedwtsmessage = "";
         private string shortgeneratedwtbmessage = "";
         private string generatedwtsmessage = "";
@@ -163,6 +173,8 @@ namespace UserMenuInChat.mod
         private bool inauchouse;
         private string ownname;
         private string ownid;
+
+        Vector2 scrolll = new Vector2(0, 0);
 
         private int longestcardname;
         private GUISkin lobbySkin;
@@ -203,6 +215,7 @@ namespace UserMenuInChat.mod
         private string wtssearchstring = "";
         private string sellersearchstring = "";
         private string pricesearchstring = "";
+        private string pricesearchstring2 = "";
 
         private settingcopy ahwtssettings = new settingcopy();
         private settingcopy ahwtbsettings = new settingcopy();
@@ -218,6 +231,7 @@ namespace UserMenuInChat.mod
         private Rect sbcommonrect; private Rect sbuncommonrect; private Rect sbrarerect; private Rect sbthreerect; private Rect sbonerect;
         private Rect sbsellerlabelrect;private Rect sbsellerrect;
         private Rect sbpricelabelrect; private Rect sbpricerect; private Rect sbclearrect; private Rect sbgeneratebutton;
+        private Rect sbpricerect2;
         private Rect sbonlywithpricebox; private Rect sbonlywithpricelabelbox;
         private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbmessage;
         private Rect sbtpfgen; private Rect sbtpfgenlabel;
@@ -340,9 +354,99 @@ namespace UserMenuInChat.mod
         string[] auccontroler = new string[] { };
 
         public void handleMessage(Message msg)
-        { 
+        {
+
+            if (msg is GameInfoMessage && this.contonetwork)
+            {
+                GameInfoMessage gim =(GameInfoMessage) msg;
+                if (this.inbattle == false) { this.inbattle = true; this.disconfromaucnet(); Console.WriteLine("discon"); }
+            }
+
+            if (msg is RoomInfoMessage && this.contonetwork)
+            {
+                RoomInfoMessage roominfo = (RoomInfoMessage)msg;
+                if (roominfo.roomName.StartsWith("auc-"))
+                {
+                    // if the update list contains more than 1 user, then ,
+                    RoomInfoProfile[] rip =roominfo.updated;
+                    if (rip.Length >= 1) // he joins the room, add him
+                    {
+                        
+                        foreach (RoomInfoProfile roinpro in rip) // add the new user to the aucusers and globalusers
+                        {
+                            if (!this.globalusers.ContainsKey(roinpro.name))
+                            {
+                                ChatUser newuser = new ChatUser();
+                                newuser.acceptChallenges = false;
+                                newuser.acceptTrades = true;
+                                newuser.adminRole = AdminRole.None;
+                                newuser.name = roinpro.name;
+                                newuser.id = roinpro.id;
+                                this.globalusers.Add(roinpro.name, newuser);
+                            }
+                            if (!this.aucusers.ContainsKey(roinpro.name) && roinpro.name != this.ownname) {  this.aucusers.Add(roinpro.name, roinpro.id); }
+                            if (!this.usertoaucroom.ContainsKey(roinpro.name)) this.usertoaucroom.Add(roinpro.name, roominfo.roomName.Split('-')[1]);
+                        }
+
+                        if (rip.Length > 50 && ownroomnumber == 0) //goto next room
+                        {
+                            int roomnumber = Convert.ToInt32(roominfo.roomName.Split('-')[1]) + 1;
+                            App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
+                            App.Communicator.sendRequest(new RoomEnterMessage("auc-" + roomnumber));
+                        }
+                        else
+                        {
+                            if (ownroomnumber == 0)
+                            {
+                                // stay here, write others, that you stay here.
+                                ownroomnumber = Convert.ToInt32(roominfo.roomName.Remove(0, 4));
+                                int sendasks=0;
+                                foreach (KeyValuePair<string, string> pair in this.aucusers)
+                                {
+                                    if (sendasks < 5) // only send the room-asking message to the first 10 users (it would be to spammy)
+                                    {
+                                        dowhisper("aucstay? " + ownroomnumber, pair.Key);
+                                        sendasks++;
+                                    }
+                                    else { dowhisper("aucstay! " + ownroomnumber, pair.Key); }
+
+                                }
+
+                            }
+                            else 
+                            { // stayed in ownroom, but have to visit others :D
+                                // so just leave this room (and join the next if multijoin doesnt work)
+
+                                foreach (RoomInfoProfile roinpro in rip)//whisper to the users in this channel, what your channel is
+                                {
+                                    if (this.ownname == roinpro.name) continue;
+                                    dowhisper("aucstay! " + ownroomnumber, roinpro.name);
+                                }
+                                if (ownroomnumber != Convert.ToInt32( roominfo.roomName.Split('-')[1])) // leave room, only when its not the own room
+                                {
+                                    App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
+                                }
+                                if (this.roooms.Count >= 1) { App.Communicator.sendRequest(new RoomEnterMessage(this.roooms[0])); this.roooms.RemoveAt(0); }
+
+                            }
+
+
+
+                        }
+
+
+                    }
+
+                   
+
+
+
+                }
+            
+            }
+
             if ( msg is FailMessage)
-            {   
+            {   // delete user if he cant be whispered ( so he doesnt check out... blame on him!)
                 FailMessage fm = (FailMessage)msg;
                 if (this.idtesting > 0)
                 {
@@ -354,11 +458,12 @@ namespace UserMenuInChat.mod
                     string name = "";
                     name = (fm.info).Split('\'')[1];
                     //Console.WriteLine("could not find: " + name);
-                    if (this.aucusers.ContainsKey(name)) { this.aucusers.Remove(name); }
+                    if (this.usertoaucroom.ContainsKey(name)) { this.usertoaucroom.Remove(name); }
+                    if (this.aucusers.ContainsKey(name)) { this.aucusers.Remove(name);  this.deleteuserfromnet(); }
                 }
             }
 
-            if (this.idtesting>0 && msg is ProfilePageInfoMessage)
+            if (this.idtesting>0 && msg is ProfilePageInfoMessage)//doesnt needed anymore
             {
                 ProfilePageInfoMessage ppim = (ProfilePageInfoMessage)msg;
                 ChatUser newuser = new ChatUser();
@@ -372,8 +477,9 @@ namespace UserMenuInChat.mod
                 this.idtesting--;
             }
 
-            if (msg is ProfileInfoMessage) 
+            if (msg is ProfileInfoMessage) // this could be done simplier, with app.myprofile...
             {
+
                 ProfileInfoMessage pmsg = (ProfileInfoMessage)msg;
                 this.ownname = pmsg.profile.name;
                 this.ownid = pmsg.profile.id;
@@ -444,6 +550,7 @@ namespace UserMenuInChat.mod
             copy.strings1 = sellersearchstring;
             copy.strings2 = pricesearchstring;
             copy.strings3 = timesearchstring;
+            copy.strings4 = pricesearchstring2;
         }
 
         private void setsettings(settingcopy copy)
@@ -463,6 +570,7 @@ namespace UserMenuInChat.mod
              sellersearchstring= copy.strings1;
              pricesearchstring = copy.strings2;
              timesearchstring=copy.strings3 ;
+             pricesearchstring2 = copy.strings4;
 
         }
 
@@ -597,12 +705,15 @@ namespace UserMenuInChat.mod
 
         private void containsseller(string name, List<aucitem> list)
         {
+            // "contains seller not" should its name be :D
+            string[] sellers = new string[]{name};
+            if (name.Contains(" ")) sellers = name.ToLower().Split(' ');
             List<aucitem> temp = new List<aucitem>(list);
             list.Clear();
             foreach (aucitem card in temp)//this.orgicardsPlayer1)
             {
-                if (card.seller.ToLower().Contains(name.ToLower())) { list.Add(card); };
-
+                //if (card.seller.ToLower().Contains(name.ToLower())) { list.Add(card); };
+                if (!sellers.Any(card.seller.ToLower().Equals)) { list.Add(card); };
             }
 
         }
@@ -717,6 +828,7 @@ namespace UserMenuInChat.mod
             this.sellersearchstring = "";
             this.pricesearchstring = "";
             this.timesearchstring = "";
+            this.pricesearchstring2 = "";
             savesettings(this.ahwtssettings);
             savesettings(this.ahwtbsettings);
             savesettings(this.genwtssettings);
@@ -750,7 +862,8 @@ namespace UserMenuInChat.mod
                     scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
                     scrollsTypes["ChatRooms"].Methods.GetMethod("ChatMessage", new Type[]{typeof(RoomChatMessageMessage)}),
                    scrollsTypes["ArenaChat"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
-                   
+                   //scrollsTypes["Lobby"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
+                   scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
                    scrollsTypes["Store"].Methods.GetMethod("Start")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
@@ -773,6 +886,25 @@ namespace UserMenuInChat.mod
             {
                 if (this.inauchouse || this.generator) return true;
             }
+            
+            if (info.target is BattleMode && info.targetMethod.Equals("_handleMessage"))
+            {
+                Message msg = (Message)info.arguments[0];
+                if (msg is WhisperMessage)
+                {
+                    WhisperMessage wmsg = (WhisperMessage)msg;
+                    if (this.contonetwork)
+                    {
+
+                        if ((wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                    }
+                    else
+                    {
+                        if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
+                    }
+                }
+            }
+            
             if (info.target is ArenaChat && info.targetMethod.Equals("handleMessage"))
             {
                 Message msg = (Message)info.arguments[0];
@@ -782,16 +914,55 @@ namespace UserMenuInChat.mod
                     if (this.contonetwork)
                     {
 
-                        if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                        if ((wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
                     }
                     else
                     {
-                        if ((wmsg.text).StartsWith("aucstop") ) return true;
+                        if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
                     }
                 }
+                if (msg is RoomChatMessageMessage)
+                {
+                    RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
+                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                }
+
+                if (msg is RoomEnterMessage)
+                {   
+                    RoomEnterMessage rem = (RoomEnterMessage) msg;
+                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                }
+
+                if (msg is RoomInfoMessage)
+                {
+                    RoomInfoMessage rem = (RoomInfoMessage)msg;
+                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                }
+
+
             }
+            /*if (info.target is Lobby && info.targetMethod.Equals("handleMessage"))
+            {
+                Message msg = (Message)info.arguments[0];
+
+                if (msg is RoomEnterMessage)
+                {
+                    RoomEnterMessage rem = (RoomEnterMessage)msg;
+                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                }
+
+                if (msg is RoomInfoMessage)
+                {
+                    RoomInfoMessage rem = (RoomInfoMessage)msg;
+                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                }
+
+
+            }*/
             return false;
         }
+
+
         public override void ReplaceMethod(InvocationInfo info, out object returnValue)
         {
 
@@ -803,9 +974,71 @@ namespace UserMenuInChat.mod
                     WhisperMessage wmsg = (WhisperMessage)msg;
                     string text = wmsg.text;
 
+                    if (text.StartsWith("aucto1please")&& this.contonetwork)
+                    {
+                        App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
+                        this.ownroomnumber = 0;
+                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+                    
+                    }
+
+                    if (text.StartsWith("aucstay? ") && this.contonetwork)
+                    {   // user founded a room, but dont know if this is all
+                        string stayroom=text.Split(' ')[1];
+                        if(!this.usertoaucroom.ContainsKey(wmsg.from)) this.usertoaucroom.Add(wmsg.from, stayroom);//save his aucroom
+
+                        string respondstring = "";
+                        // whispering user already visited all room till his room
+                        List<string> allreadyadded = new List<string>();
+                        for (int i = 0; i < Convert.ToInt32(stayroom); i++)
+                        {
+                            allreadyadded.Add(i.ToString());
+                        }
+
+                        foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
+                        {
+                            if (!allreadyadded.Contains(pair.Value))
+                            {
+                                respondstring = respondstring + " " + pair.Value;
+                                allreadyadded.Add(pair.Value);
+                            }
+                        
+                        
+                        }
+
+                        if (respondstring != "") 
+                        { 
+                            respondstring = "aucrooms" + respondstring; 
+                            WhisperMessage sendrooms = new WhisperMessage(wmsg.from, respondstring); 
+                            App.Communicator.sendRequest(sendrooms); 
+                        }
+
+                    
+                    }
+
+                    if (text.StartsWith("aucstay! "))
+                    {   // user founded a room, and he dont want to get the room-list
+                        if (!this.usertoaucroom.ContainsKey(wmsg.from)) { this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }//save his aucroom
+                        else { this.usertoaucroom.Remove(wmsg.from); this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }
+                    }
+
+                    if (text.StartsWith("aucrooms ") && !rooomsearched && this.contonetwork)
+                    {
+                         string[] rms = (text.Remove(0, 9)).Split(' ');
+                         
+                         this.roooms.Clear();
+                         foreach (string str in rms)
+                         { roooms.Add("auc-" + str); Console.WriteLine("auc-" + str); }
+                         //App.Communicator.sendRequest(new RoomEnterMultiMessage(roooms));//doesnt seems to work prooperly, scrolls (not me) is producing an error when i receive an chatmassage form this rooms
+                         App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
+                         roooms.RemoveAt(0);
+                         this.rooomsearched = true;
+                    }
+
                     if (text.StartsWith("aucstop"))
                     {
-                        if (this.aucusers.ContainsKey(wmsg.from)) { this.aucusers.Remove(wmsg.from); }
+                        if (this.usertoaucroom.ContainsKey(wmsg.from)) { this.usertoaucroom.Remove(wmsg.from); }
+                        if (this.aucusers.ContainsKey(wmsg.from)) { this.aucusers.Remove(wmsg.from);  this.deleteuserfromnet(); }
                     }
 
                     if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
@@ -815,11 +1048,12 @@ namespace UserMenuInChat.mod
                         if (!this.globalusers.ContainsKey(wmsg.from)) { WhisperMessage needid = new WhisperMessage(wmsg.from, "needaucid"); App.Communicator.sendRequest(needid); }
                     }
                     
+                    //dont needed anymore left in only to be shure :D
                     if (text.StartsWith("needaucid"))
                     {
                         WhisperMessage sendid = new WhisperMessage(wmsg.from, "aucid " +this.ownid); App.Communicator.sendRequest(sendid); 
                     }
-                    
+                     //dont needed anymore
                     if (text.StartsWith("aucid "))
                     {
                         if (!this.globalusers.ContainsKey(wmsg.from))
@@ -841,6 +1075,8 @@ namespace UserMenuInChat.mod
                         }
                         
                     }
+
+
                 }
             }
 
@@ -968,7 +1204,8 @@ namespace UserMenuInChat.mod
         private void addcardstolist()
         {
             //Console.WriteLine("##addcars");
-
+            if (this.generator||!this.inauchouse) { this.newwtsmsgs = true; this.newwtbmsgs = true; }
+            else { if (this.wtsmenue) { this.newwtbmsgs = true; } else { this.newwtsmsgs = true; } }
             if (addingwtscards.Count() > 0)
             {
                 addingwtscards.Reverse();
@@ -1042,7 +1279,7 @@ namespace UserMenuInChat.mod
             }
         }
 
-        private void additemtolist(Card c, string from, int gold, bool wts)
+        private void additemtolist(Card c, string from, int gold, bool wts,string wholemsg)
         {
             aucitem ai = new aucitem();
             ai.card = c;
@@ -1051,6 +1288,7 @@ namespace UserMenuInChat.mod
             ai.price = gold.ToString();
             ai.time = DateTime.Now.ToString("hh:mm:ss tt");//DateTime.Now.ToShortTimeString();
             ai.dtime = DateTime.Now;
+            ai.whole = wholemsg;
             if (gold == 0) ai.price = "?";
             if (wts) 
             {
@@ -1070,7 +1308,9 @@ namespace UserMenuInChat.mod
         private void dowhisper(string msg, string to)
         {
             WhisperMessage wmsg=new WhisperMessage(to, msg);
-            App.Communicator.sendRequest(wmsg);
+            if (this.inbattle) App.Communicator.sendBattleRequest(wmsg);
+            else
+                App.Communicator.sendRequest(wmsg);
         }
 
         private void respondtocommand(string msg, string from)
@@ -1153,7 +1393,7 @@ namespace UserMenuInChat.mod
                         int id = Convert.ToInt32(idd);
                         CardType type = CardTypeManager.getInstance().get(id);
                         Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts);
+                        additemtolist(card, from, Convert.ToInt32(price), wts,"");
                         }
                     
                     }
@@ -1162,7 +1402,7 @@ namespace UserMenuInChat.mod
                         int id = Convert.ToInt32(ids);
                         CardType type = CardTypeManager.getInstance().get(id);
                         Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts);
+                        additemtolist(card, from, Convert.ToInt32(price), wts,"");
                     
                     }
 
@@ -1187,7 +1427,7 @@ namespace UserMenuInChat.mod
                             int id = Convert.ToInt32(idd);
                             CardType type = CardTypeManager.getInstance().get(id);
                             Card card = new Card(id, type, true);
-                            additemtolist(card, from, Convert.ToInt32(price), wts);
+                            additemtolist(card, from, Convert.ToInt32(price), wts,"");
                         }
 
                     }
@@ -1196,7 +1436,7 @@ namespace UserMenuInChat.mod
                         int id = Convert.ToInt32(ids);
                         CardType type = CardTypeManager.getInstance().get(id);
                         Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts);
+                        additemtolist(card, from, Convert.ToInt32(price), wts,"");
 
                     }
 
@@ -1281,7 +1521,7 @@ namespace UserMenuInChat.mod
                                 price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                             }
                         }
-                        additemtolist(c, from, price, wts);
+                        additemtolist(c, from, price, wts,msgg);
                         i--;
 
 
@@ -1354,7 +1594,7 @@ namespace UserMenuInChat.mod
                         else
                         {
 
-                            msg = msg + ai.card.getName() + " " + ai.price + ";";
+                            msg = msg + ai.card.getName() + " " + ai.price + "g, ";
                             shortmsg = shortmsg + ai.card.getType() + " " + ai.price + ";";
                         }
                         
@@ -1365,7 +1605,7 @@ namespace UserMenuInChat.mod
             {
                 if (this.wtsmenue) { msg = "wts " + msg; shortmsg = "aucs " + shortmsg; } else { msg = "wtb " + msg; shortmsg = "aucb " + shortmsg; }
             }
-            msg = msg.Remove(msg.Length - 1);
+            msg = msg.Remove(msg.Length - 2);
             shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             if (this.wtsmenue) { this.generatedwtsmessage = msg; this.shortgeneratedwtsmessage = shortmsg; } else { this.generatedwtbmessage = msg; this.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
@@ -1439,20 +1679,16 @@ namespace UserMenuInChat.mod
 
             if (this.inauchouse)
             {
-                if (this.wtsmenue)
+                if (this.pricesearchstring != "" || this.takepriceformgenarator)
                 {
-                    if (this.pricesearchstring != "" || this.takepriceformgenarator)
-                    {
-                        this.priceislower(this.pricesearchstring, list);
-                    }
+                    this.priceishigher(this.pricesearchstring, list);
                 }
-                else
+                if (this.pricesearchstring2 != "" || this.takepriceformgenarator)
                 {
-                    if (this.pricesearchstring != "" || this.takepriceformgenarator)
-                    {
-                        this.priceishigher(this.pricesearchstring, list);
-                    }
+                    this.priceislower(this.pricesearchstring2, list);
+                    
                 }
+
             }
                 
             
@@ -1464,7 +1700,61 @@ namespace UserMenuInChat.mod
         
         }
 
+        private void deleteuserfromnet()
+        {
+            // user is deleted, check if there are too few in room 1.
+            if (ownroomnumber == 1) return;
 
+            int usersin1 = 0;
+            foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
+            {
+                if (pair.Value == "1") usersin1++;
+            }
+            if (usersin1 < 10) 
+            {
+                App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
+                this.ownroomnumber = 0;
+                App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+            }
+
+        
+        }
+
+        private void disconfromaucnet()
+        {
+            this.rooomsearched = false;
+            this.contonetwork = false;
+
+            foreach (KeyValuePair<string, string> pair in this.aucusers)
+            {
+
+                dowhisper("aucstop", pair.Key);
+
+            }
+            if (this.ownroomnumber == 1)
+            {// say user with biggest roomnumber he should come to 1.
+                int biggestroomnumber = 0;
+                string name = "";
+                foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
+                {
+                    if (biggestroomnumber < Convert.ToInt32(pair.Value))
+                    {
+                        biggestroomnumber = Convert.ToInt32(pair.Value);
+                        name = pair.Key;
+                    }
+
+                }
+
+                if (biggestroomnumber > 1) { dowhisper("aucto1please",name);};
+
+            };
+            this.aucusers.Clear();
+            this.usertoaucroom.Clear();
+            this.ownroomnumber = 0;
+            this.rooomsearched = false;
+            this.contonetwork = false;
+
+        }
 
         private void drawAH()
         {
@@ -1534,9 +1824,9 @@ namespace UserMenuInChat.mod
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 if (this.wtsmenue)
                 {
-                    GUI.Label(sbsellerlabelrect, "Seller:");
+                    GUI.Label(sbsellerlabelrect, "ignore Seller:");
                 }
-                else { GUI.Label(sbsellerlabelrect, "Buyer:"); }
+                else { GUI.Label(sbsellerlabelrect, "ignore Buyer:"); }
 
                 GUI.skin = this.cardListPopupSkin;
                 GUI.Box(this.sbsellerrect, string.Empty);
@@ -1545,18 +1835,21 @@ namespace UserMenuInChat.mod
                 this.sellersearchstring = GUI.TextField(this.sbsellerrect, this.sellersearchstring, chatLogStyle);
 
                 // draw price filter
+
+
                 GUI.skin = this.cardListPopupBigLabelSkin;
-                if (this.wtsmenue)
-                {
-                    GUI.Label(sbpricelabelrect, "Price <=");
-                }
-                else { GUI.Label(sbpricelabelrect, "Price >="); }
+                GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                GUI.Label(sbpricelabelrect, "<= Price <=");
+                GUI.skin.label.alignment = TextAnchor.UpperLeft;
+                
 
                 GUI.skin = this.cardListPopupSkin;
                 GUI.Box(this.sbpricerect, string.Empty);
+                GUI.Box(this.sbpricerect2, string.Empty);
                 string pricecopy = pricesearchstring;
-                GUI.SetNextControlName("priceframe");
+                string pricecopy2 = pricesearchstring2;
                 this.pricesearchstring =Regex.Replace( GUI.TextField(this.sbpricerect, this.pricesearchstring, chatLogStyle),@"[^0-9]","");
+                this.pricesearchstring2 = Regex.Replace(GUI.TextField(this.sbpricerect2, this.pricesearchstring2, chatLogStyle), @"[^0-9]", "");
                 GUI.color = Color.white;
 
                 // draw time filter
@@ -1588,7 +1881,7 @@ namespace UserMenuInChat.mod
                 else { GUI.Label(sbtpfgenlabel, "Price >= wts-generator"); }
                 
 
-
+                /*
                 bool owp= GUI.Button(sbonlywithpricebox, "");
                 if (this.ignore0)
                 {
@@ -1600,6 +1893,7 @@ namespace UserMenuInChat.mod
                 }
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 GUI.Label(sbonlywithpricelabelbox, "only Scrolls with Price");
+                 */
 
                 GUI.skin = this.cardListPopupSkin;
 
@@ -1621,12 +1915,13 @@ namespace UserMenuInChat.mod
                 if (rareclick) { rarebool = !rarebool; };
                 if (mt3click) { threebool = !threebool; }
                 if (mt0click) { onebool = !onebool; }
-                if (owp) { ignore0 = !ignore0; }
+                //if (owp) { ignore0 = !ignore0; }
                 if (tpfgen) { takepriceformgenarator = !takepriceformgenarator; }
                 if (closeclick)
                 {
                     this.wtssearchstring = "";
                     this.pricesearchstring = "";
+                    this.pricesearchstring2 = "";
                     this.sellersearchstring = "";
                     this.timesearchstring = "";
                     growthbool = true;
@@ -1645,9 +1940,13 @@ namespace UserMenuInChat.mod
                 if (this.wtsmenue) { savesettings(this.ahwtssettings); } else { savesettings(this.ahwtbsettings); }
 
                 bool pricecheck = false;
-                if (wtsmenue) { pricecheck = (pricecopy.Length < this.pricesearchstring.Length) || (pricecopy.Length != this.pricesearchstring.Length && pricesearchstring == "") || (tpfgen); } else { pricecheck = pricecopy.Length > this.pricesearchstring.Length || (tpfgen); }
+                //if (wtsmenue) { pricecheck = (pricecopy2.Length < this.pricesearchstring2.Length) || (pricecopy2.Length != this.pricesearchstring2.Length && pricesearchstring2 == "") || (tpfgen); } else { pricecheck = pricecopy.Length > this.pricesearchstring.Length || (tpfgen); }
+
+                pricecheck = (pricecopy2.Length < this.pricesearchstring2.Length) || (pricecopy2.Length != this.pricesearchstring2.Length && pricesearchstring2 == "") || (tpfgen) || pricecopy.Length > this.pricesearchstring.Length || (tpfgen); 
+                
                 //clear p1moddedlist only if necessary
-                if (selfcopy.Length > this.wtssearchstring.Length || (owp&&!ignore0)|| sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
+                //if (selfcopy.Length > this.wtssearchstring.Length || (owp&&!ignore0)|| sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
+                if (selfcopy.Length > this.wtssearchstring.Length || sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
                 {
                     //Console.WriteLine("delete dings####");
                     this.fullupdatelist(ahlist, ahlistfull);
@@ -1686,15 +1985,25 @@ namespace UserMenuInChat.mod
 
                         if (this.pricesearchstring != "" )
                         {
-                            if (wtsmenue)
-                            {
-                                this.priceislower(this.pricesearchstring, ahlist);
-                            }
-                            else { this.priceishigher(this.pricesearchstring, ahlist); }
+                            this.priceishigher(this.pricesearchstring, ahlist);
+
                         }
 
 
                     }
+                    if (pricecopy2 != this.pricesearchstring2)
+                    {
+
+                        if (this.pricesearchstring2 != "")
+                        {
+                            this.priceislower(this.pricesearchstring2, ahlist);
+                            
+
+                        }
+
+
+                    }
+                    
                     if (growthclick || orderclick || energyclick || decayclick)
                     {
                         string[] res = { "", "", "", "" };
@@ -1912,7 +2221,14 @@ namespace UserMenuInChat.mod
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         //draw timestamp
                         GUI.skin = this.cardListPopupSkin;
-                        sellername = current.time;
+                        DateTime temptime = DateTime.Now;
+                        TimeSpan ts=temptime.Subtract(current.dtime);
+
+                        if (ts.Minutes >= 1) { sellername = "" + ts.Minutes + " minutes ago"; }
+                        else { 
+                            //sellername = "" + ts.Seconds + " seconds ago"; // to mutch changing numbers XD
+                            sellername = "seconds ago";
+                        }
                        
                         Rect position13 = new Rect(restyperect.xMax + 2f, position9.y, this.labelsWidth, this.fieldHeight);
                         GUI.skin.label.alignment = TextAnchor.UpperCenter;
@@ -2027,6 +2343,12 @@ namespace UserMenuInChat.mod
                 { 
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f); 
                 }
+                if (this.newwtsmsgs) 
+                { 
+                    GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
+                    GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
+                }
+
                 
                 if (GUI.Button(wtsbuttonrect, "WTS"))
                 {
@@ -2037,7 +2359,14 @@ namespace UserMenuInChat.mod
                     this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true;
                     setsettings(this.ahwtssettings);
                     fullupdatelist(ahlist, ahlistfull);
+                    this.newwtsmsgs = false;
                 }
+                GUI.skin.button.normal.textColor = Color.white;
+                GUI.skin.button.hover.textColor = Color.white;
+
+                
+
+
                 if (!this.wtsmenue)
                 {
                     GUI.color = Color.white;
@@ -2045,6 +2374,11 @@ namespace UserMenuInChat.mod
                 else
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                }
+                if (this.newwtbmsgs)
+                {
+                    GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
+                    GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
                 if (GUI.Button(wtbbuttonrect, "WTB"))
                 {
@@ -2054,7 +2388,11 @@ namespace UserMenuInChat.mod
                     this.ahlist = this.wtblist; this.ahlistfull = this.wtblistfull; this.wtsmenue = false;
                     setsettings(this.ahwtbsettings);
                     fullupdatelist(ahlist, ahlistfull);
+                    this.newwtbmsgs = false;
                 }
+                GUI.skin.button.normal.textColor = Color.white;
+                GUI.skin.button.hover.textColor = Color.white;
+
                 
                 GUI.color = Color.white;
 
@@ -2062,14 +2400,7 @@ namespace UserMenuInChat.mod
                 {
                     if (GUI.Button(this.updatebuttonrect, "discon"))
                     {
-                        this.contonetwork = false;
-                        foreach (KeyValuePair<string, string> pair in this.aucusers)
-                        {
-
-                                dowhisper("aucstop", pair.Key);
-
-                        }
-                        this.aucusers.Clear();
+                        disconfromaucnet();
                     }
                 }
                 else
@@ -2077,12 +2408,37 @@ namespace UserMenuInChat.mod
                     if (GUI.Button(this.updatebuttonrect, "connect"))
                     {
                         this.contonetwork = true;
-                        App.Communicator.sendRequest(new RoomChatMessageMessage(chatRooms.GetCurrentRoomName(), "aucc aucstart"));
+                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+                        this.joindate = DateTime.Now;
+                        //App.Communicator.sendRequest(new RoomChatMessageMessage(chatRooms.GetCurrentRoomName(), "aucc aucstart"));
+                        // short explanation of my network:
+
+                        // joining in network:
+                        // goto auc-1
+                        // you are in auc-i -> save users from roominfo message -> the first infomessage one will be the biggest, if the biggest is longer than 50 people goto next room (auc-i+1), repeat
+                         // now your are in room auc-j with #users <=50 -> send added users aucstay! + your roomnumber. (to the first 5 users send aucstay? + roomnumber)
+                        // form the users u send aucstay? you got an number with room, you have to visit also ( rooms with numbers bigger than your "stay-room")
+                        // visit them , add the users and send them aucstay!
+
+                        // be-ing in network:
+                        // if a user joins your channel -> add him to the network list
+                        // if you got a message with aucstay! save the user-room
+                        // if you got a message with aucstay? save the user-room and send the writer a list with roomnumbers, that are bigger then the writers stay-room and where 
+                        //+ people stay too.
+
+                        // if you are not in room 1, and there are too few people in 1 (cause they leave) disconnect and rejoin
+                        //(because this algo needs people in auc-1, to communicate the other rooms where people "live" :D
+
+                        // communication in network if not joining:
+                        // whisper to all users of the network (in this.aucusers) your wts and wtb message if you click "post"
+
+                        // leaving the network:
+                        // whisper to all users that you leave, and if you are in room 1, tell a user not in 1, to join 1.
                     }
                 
                 }
 
-                if (this.showtradedialog) { this.starttrading(tradeitem.seller,tradeitem.card.getName(),tradeitem.priceinint, this.wtsmenue); }
+                if (this.showtradedialog) { this.starttrading(tradeitem.seller,tradeitem.card.getName(),tradeitem.priceinint, this.wtsmenue,tradeitem.whole); }
 
 
 
@@ -2976,7 +3332,7 @@ namespace UserMenuInChat.mod
         {
         }
 
-        private void starttrading(string name, string cname, int price, bool wts)
+        private void starttrading(string name, string cname, int price, bool wts, string orgmsg)
         {
             // asks the user if he wants to trade
             GUI.skin = this.cardListPopupSkin;
@@ -2986,10 +3342,20 @@ namespace UserMenuInChat.mod
 
             string text = "sell";
             if (wts) text = "buy";
-            GUI.Label(tbmessage, "You want to "+text+"\r\n"+cname+" for " +price+" Gold");
+            string message = "You want to " + text + "\r\n" + cname + " for " + price + " Gold";// +"\r\n Original Message: \r\n" + orgmsg;
+            float msghigh = GUI.skin.label.CalcHeight(new GUIContent(message), tbmessage.width - 20f);
+            GUI.skin = this.cardListPopupSkin;
+            //scrolll = GUI.BeginScrollView(tbmessage, scrolll, new Rect(0f, 0f, this.tbmessage.width - 20f, msghigh));
+            GUI.skin = this.cardListPopupBigLabelSkin;
+            //GUI.skin.label.wordWrap = true;
+            //GUI.Label(new Rect(5f,5f,tbmessage.width-30,tbmessage.height), message);
+            GUI.Label(tbmessage, message);
+            Console.WriteLine(message);
+            //GUI.skin.label.wordWrap = false;
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-            
+            //GUI.EndScrollView();
             GUI.skin = this.cardListPopupLeftButtonSkin;
+
             if (GUI.Button(tbok, "OK")) { this.showtradedialog = false; App.GameActionManager.TradeUser(this.globalusers[name]); };
             if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false;};
         }
@@ -3049,8 +3415,9 @@ namespace UserMenuInChat.mod
             this.sbsellerlabelrect = new Rect(sbarlabelrect.x, sbcommonrect.yMax + 4, sbrarerect.xMax-sbarlabelrect.x, texthight);
             this.sbsellerrect = new Rect(sbdrect.x, sbsellerlabelrect.y, filtermenurect.xMax - sbdrect.x - num2, texthight);
 
-            this.sbpricelabelrect = new Rect(sbarlabelrect.x, sbsellerlabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
-            this.sbpricerect = new Rect(sbsellerrect.x, sbpricelabelrect.y, sbsellerrect.width, texthight);
+            this.sbpricerect = new Rect(sbgrect.x, sbsellerlabelrect.yMax + 4, sborect.xMax - sbgrect.x, texthight);
+            this.sbpricelabelrect = new Rect(sberect.x, sbpricerect.y, sbdrect.xMax - sberect.x, texthight);
+            this.sbpricerect2 = new Rect(sbthreerect.x, sbpricerect.y, sbrect.xMax - sbthreerect.x, texthight);
 
             this.sbtimelabel = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
             this.sbtimerect = new Rect(sbsellerrect.x, sbtimelabel.y, sbsellerrect.width, texthight);
