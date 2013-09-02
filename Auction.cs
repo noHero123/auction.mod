@@ -224,6 +224,9 @@ namespace Auction.mod
         int ownroomnumber = 0;
         bool rooomsearched = false;
 
+        private bool wtsinah = true;
+        private bool wtsingen = true;
+
         private bool inbattle = false;
         private bool newwtsmsgs = false;
         private bool newwtbmsgs = false;
@@ -302,7 +305,7 @@ namespace Auction.mod
         private Rect sbpricelabelrect; private Rect sbpricerect; private Rect sbclearrect; private Rect sbgeneratebutton;
         private Rect sbpricerect2;
         private Rect sbonlywithpricebox; private Rect sbonlywithpricelabelbox;
-        private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbmessage; private Rect tbmessagescroll;
+        private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbwhisper; private Rect tbmessage; private Rect tbmessagescroll;
         private Rect sbtpfgen; private Rect sbtpfgenlabel;
         private Rect sbclrearpricesbutton; Rect sbnetworklabel;
         private Rect sbtimelabel; Rect sbtimerect;
@@ -457,6 +460,10 @@ namespace Auction.mod
                             }
                             if (!this.aucusers.ContainsKey(roinpro.name) && roinpro.name != this.ownname) {  this.aucusers.Add(roinpro.name, roinpro.id); }
                             if (!this.usertoaucroom.ContainsKey(roinpro.name)) this.usertoaucroom.Add(roinpro.name, roominfo.roomName.Split('-')[1]);
+                        }
+                        if (roominfo.roomName == "auc-1" && rip.Length == 1)
+                        {//noone is there... you are connected! 
+                            this.realycontonetwork = true;
                         }
 
                         if (rip.Length > 50 && ownroomnumber == 0) //goto next room
@@ -624,7 +631,7 @@ namespace Auction.mod
             copy.boolean10 = takepriceformgenarator;
             copy.strings0 = wtssearchstring;
             copy.strings1 = sellersearchstring;
-            copy.strings2 = pricesearchstring;
+            copy.strings2 = pricesearchstring;//shortwts/wtbstring
             copy.strings3 = timesearchstring;
             copy.strings4 = pricesearchstring2;
         }
@@ -970,15 +977,17 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
+                    if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                   /*
                     if (this.contonetwork)
                     {
 
-                        if ((wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                        if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
                     }
                     else
                     {
                         if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
-                    }
+                    }*/
                 }
             }
             
@@ -988,15 +997,17 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    if (this.contonetwork)
+                    if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                   
+                    /*if (this.contonetwork)
                     {
 
-                        if ((wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                        if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
                     }
                     else
                     {
                         if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
-                    }
+                    }*/
                 }
                 if (msg is RoomChatMessageMessage)
                 {
@@ -1051,6 +1062,27 @@ namespace Auction.mod
                     WhisperMessage wmsg = (WhisperMessage)msg;
                     string text = wmsg.text;
 
+                    if (text.StartsWith("aucdeletes"))
+                    {
+
+                            this.wtslistfulltimed.RemoveAll(element => element.seller == wmsg.from);
+                            this.wtslistfull.RemoveAll(element => element.seller == wmsg.from);
+                            this.wtslist.RemoveAll(element => element.seller == wmsg.from);
+
+
+                        
+
+                    }
+                    if (text.StartsWith("aucdeleteb"))
+                    {
+
+                        this.wtblistfulltimed.RemoveAll(element => element.seller == wmsg.from);
+                        this.wtblistfull.RemoveAll(element => element.seller == wmsg.from);
+                        this.wtblist.RemoveAll(element => element.seller == wmsg.from);
+                    
+
+                    }
+
                     if (text.StartsWith("aucto1please")&& this.contonetwork)
                     {
                         App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
@@ -1088,14 +1120,14 @@ namespace Auction.mod
                         WhisperMessage sendrooms = new WhisperMessage(wmsg.from, respondstring); 
                         App.Communicator.sendRequest(sendrooms); 
                         //send your offers
-                        if (this.genwtssettings.strings2 != "")
+                        if (shortgeneratedwtsmessage != "")
                         {
-                            dowhisper(this.genwtssettings.strings2, wmsg.from);
+                            dowhisper(shortgeneratedwtsmessage, wmsg.from);
                         }
 
-                        if (this.genwtbsettings.strings2 != "")
+                        if (shortgeneratedwtbmessage != "")
                         {
-                            dowhisper(this.genwtbsettings.strings2, wmsg.from);
+                            dowhisper(shortgeneratedwtbmessage, wmsg.from);
                         }
 
                     
@@ -1106,14 +1138,14 @@ namespace Auction.mod
                         if (!this.usertoaucroom.ContainsKey(wmsg.from)) { this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }//save his aucroom
                         else { this.usertoaucroom.Remove(wmsg.from); this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }
                         //send your offers
-                        if (this.genwtssettings.strings2 != "")
+                        if (this.shortgeneratedwtsmessage != "")
                         {
-                            dowhisper(this.genwtssettings.strings2, wmsg.from);
+                            dowhisper(this.shortgeneratedwtsmessage, wmsg.from);
                         }
 
-                        if (this.genwtbsettings.strings2 != "")
+                        if (this.shortgeneratedwtbmessage != "")
                         {
-                            dowhisper(this.genwtbsettings.strings2, wmsg.from);
+                            dowhisper(this.shortgeneratedwtbmessage, wmsg.from);
                         }
                     }
 
@@ -1152,14 +1184,14 @@ namespace Auction.mod
                         foreach(KeyValuePair<string,string> pair in this.aucusers)
                         {
                             string from=pair.Key;
-                            if(this.genwtssettings.strings2 != "")
+                            if (this.shortgeneratedwtsmessage != "")
                             {
-                                dowhisper(this.genwtssettings.strings2, from); 
+                                dowhisper(this.shortgeneratedwtsmessage, from); 
                             }
 
-                            if ( this.genwtbsettings.strings2 != "")
-                            { 
-                                dowhisper(this.genwtbsettings.strings2, from); 
+                            if (this.shortgeneratedwtbmessage != "")
+                            {
+                                dowhisper(this.shortgeneratedwtbmessage, from); 
                             }
                         }
                     }
@@ -1726,9 +1758,10 @@ namespace Auction.mod
             if (msg!="")
             {
                 if (this.wtsmenue) { msg = "wts " + msg; shortmsg = "aucs " + shortmsg; } else { msg = "wtb " + msg; shortmsg = "aucb " + shortmsg; }
+                msg = msg.Remove(msg.Length - 2);
+                shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
-            msg = msg.Remove(msg.Length - 2);
-            shortmsg = shortmsg.Remove(shortmsg.Length - 1);
+            
             if (this.wtsmenue) { this.generatedwtsmessage = msg; this.shortgeneratedwtsmessage = shortmsg; } else { this.generatedwtbmessage = msg; this.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
             //Console.WriteLine(shortmsg);
@@ -1821,6 +1854,7 @@ namespace Auction.mod
             this.searchforownrarity(rare, list);
         
         }
+
 
         private void deleteuserfromnet()
         {
@@ -2479,7 +2513,7 @@ namespace Auction.mod
                     wtslistfull.Clear(); wtslistfull.AddRange(this.wtslistfulltimed);
                     sortlist(wtslistfull);
 
-                    this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true;
+                    this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true; this.wtsinah = true;
                     setsettings(this.ahwtssettings);
                     fullupdatelist(ahlist, ahlistfull);
                     this.newwtsmsgs = false;
@@ -2508,7 +2542,7 @@ namespace Auction.mod
                     wtblistfull.Clear(); wtblistfull.AddRange(this.wtblistfulltimed);
                     //sortmode==0 = sort by date so dont sort wtsfulltimed
                     sortlist(wtblistfull);
-                    this.ahlist = this.wtblist; this.ahlistfull = this.wtblistfull; this.wtsmenue = false;
+                    this.ahlist = this.wtblist; this.ahlistfull = this.wtblistfull; this.wtsmenue = false; this.wtsinah = false;
                     setsettings(this.ahwtbsettings);
                     fullupdatelist(ahlist, ahlistfull);
                     this.newwtbmsgs = false;
@@ -2689,6 +2723,34 @@ namespace Auction.mod
                     rarebool = true;
                     threebool = false;
                     onebool = false;
+                    if (this.wtsmenue)
+                    {
+                        this.generatedwtsmessage = "";
+                        this.shortgeneratedwtsmessage = "";
+                    }
+                    else
+                    {
+                        this.generatedwtbmessage = "";
+                        this.shortgeneratedwtbmessage = "";
+                    }
+                    if (this.realycontonetwork)
+                    {
+                        if (this.wtsmenue)
+                        {
+
+                            foreach(KeyValuePair<string,string> pair in this.aucusers)
+                            {
+                                App.Communicator.sendRequest(new WhisperMessage(pair.Key, "aucdeletes"));
+                            }
+                        }
+                        else
+                        {
+                            foreach (KeyValuePair<string, string> pair in this.aucusers)
+                            {
+                                App.Communicator.sendRequest(new WhisperMessage(pair.Key, "aucdeleteb"));
+                            }
+                        }
+                    }
                 }
                 if (this.wtsmenue) { savesettings(this.genwtssettings); } else { savesettings(this.genwtbsettings); }
                 //if (wtsmenue) { pricecheck = (pricecopy.Length < this.pricesearchstring.Length) || (pricecopy.Length != this.pricesearchstring.Length && pricesearchstring == ""); } else { pricecheck = pricecopy.Length > this.pricesearchstring.Length; }
@@ -2739,39 +2801,63 @@ namespace Auction.mod
                 }
                 // draw generate button!
 
-                
 
+                GUI.color = Color.white;
+                if (this.wtsmenue)
+                {
+                    if (this.generatedwtsmessage == "")
+                    { GUI.color=dblack;}
+                }
+                else
+                {
+                     if (this.generatedwtbmessage == "")
+                     { GUI.color = dblack; }
+                }
+                
                 if (GUI.Button(this.sbclrearpricesbutton, "Post to Network"))
                 {
                     if (this.contonetwork)
                     {
                         string wtsdings = this.genwtssettings.strings2;
                         string wtbdings = this.genwtbsettings.strings2;
-                        foreach (KeyValuePair<string, string> pair in this.aucusers)
+                        if (this.wtsmenue)
                         {
-                            if (wtsdings != "")
+                            foreach (KeyValuePair<string, string> pair in this.aucusers)
                             {
+                                if (wtsdings != "")
+                                {
 
-                                dowhisper(wtsdings, pair.Key);
+                                    dowhisper(wtsdings, pair.Key);
+                                }
                             }
-                            if (wtbdings != "")
+                        }
+                        else 
+                        {
+
+                            foreach (KeyValuePair<string, string> pair in this.aucusers)
                             {
-                                dowhisper(wtbdings, pair.Key);
+                                if (wtbdings != "")
+                                {
+                                    dowhisper(wtbdings, pair.Key);
+                                }
                             }
                         }
                     }
                     
                 }
+                GUI.color = Color.white;
                 
 
 
                      if (this.wtsmenue)
-                        {
-                            if (GUI.Button(sbgeneratebutton, "Gen WTS msg"))
-                            {
-                                // start trading with seller
-                                generatewtxmsg(this.ahlistfull);
-                            }
+                     {
+
+                                if (GUI.Button(sbgeneratebutton, "Gen WTS msg"))
+                                {
+                                    // start trading with seller
+                                    generatewtxmsg(this.ahlistfull);
+                                }
+                            
                         }
                         else
                         {
@@ -2976,7 +3062,7 @@ namespace Auction.mod
                 
                 if (GUI.Button(wtsbuttonrect, "WTS"))
                 {
-                    this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true;
+                    this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true; this.wtsingen = true;
                     setsettings(this.genwtssettings);
                     fullupdatelist(ahlist, ahlistfull);
                 }
@@ -2992,6 +3078,7 @@ namespace Auction.mod
                 if (GUI.Button(wtbbuttonrect, "WTB"))
                 {
                     this.ahlist = this.wtbPlayer; this.ahlistfull = this.allcardsavailable; this.wtsmenue = false;
+                    this.wtsingen = false ;
                     setsettings(this.genwtbsettings);
                     fullupdatelist(ahlist, ahlistfull);
                 }
@@ -3164,13 +3251,26 @@ namespace Auction.mod
                         this.generator = false;
                         this.clickableItems = false;
                         this.selectable = true;
-                        wtslistfull.Clear(); wtslistfull.AddRange(this.wtslistfulltimed);
+                        if (this.wtsinah)
+                        {
+                            wtslistfull.Clear(); wtslistfull.AddRange(this.wtslistfulltimed);
 
-                        sortlist(wtslistfull);
+                            sortlist(wtslistfull);
 
-                        this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true;
+                            this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true;
 
-                        setsettings(this.ahwtssettings);
+                            setsettings(this.ahwtssettings);
+                        }
+                        else 
+                        {
+                            wtblistfull.Clear(); wtblistfull.AddRange(this.wtblistfulltimed);
+
+                            sortlist(wtblistfull);
+
+                            this.ahlist = this.wtblist; this.ahlistfull = this.wtblistfull; this.wtsmenue = false;
+
+                            setsettings(this.ahwtbsettings);
+                        }
                         fullupdatelist(ahlist,ahlistfull);
                     }
                 // klick button Gen
@@ -3190,11 +3290,20 @@ namespace Auction.mod
                         this.clickableItems = false;
                         this.selectable = true;
 
-                        this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true;
+                        if (this.wtsingen)
+                        {
+                            this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true;
+                            setsettings(this.genwtssettings);
+                        }
+                        else
+                        {
+                            this.ahlist = this.wtbPlayer; this.ahlistfull = this.allcardsavailable; this.wtsmenue = false;
+                            setsettings(this.genwtbsettings);
+                        }
 
                         //this.genlist.AddRange(this.genlistfull);
 
-                        setsettings(this.genwtssettings);
+                        
                         fullupdatelist(ahlist, ahlistfull);
                     }
 
@@ -3487,6 +3596,11 @@ namespace Auction.mod
             GUI.skin = this.cardListPopupLeftButtonSkin;
 
             if (GUI.Button(tbok, "OK")) { this.showtradedialog = false; App.GameActionManager.TradeUser(this.globalusers[name]); };
+            if (GUI.Button(tbwhisper, "Whisper"))
+            { 
+                this.showtradedialog = false;
+                this.chatRooms.OpenWhisperRoom(name);
+            };
             if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false;};
         }
 
@@ -3571,8 +3685,11 @@ namespace Auction.mod
             this.tradingbox = new Rect(innerRect);
             this.tradingbox.x = tradingbox.x + this.cardWidth;
             this.tradingbox.width = tradingbox.width - this.cardWidth - this.costIconWidth;
+            
             this.tbok = new Rect(tradingbox.xMin + (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2*(float)Screen.height * 0.05f, (float)Screen.height * 0.05f-2f);
             this.tbcancel = new Rect(tradingbox.xMax - (float)Screen.width * 0.15f +  (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2 * (float)Screen.height * 0.05f, (float)Screen.height * 0.05f-2f);
+            this.tbwhisper = new Rect(tbok.xMax + (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2 * (float)Screen.height * 0.05f, (float)Screen.height * 0.05f - 2f);
+            
             this.tbmessage = new Rect(this.tradingbox.x, this.tradingbox.y, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f)/2f);
             this.tbmessagescroll = new Rect(this.tradingbox.x, this.tbmessage.yMax, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f) / 2f);
         }
