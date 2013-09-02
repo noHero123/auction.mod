@@ -1119,7 +1119,7 @@ namespace Auction.mod
 
                     if (text.StartsWith("aucrooms ") && !rooomsearched && this.contonetwork)
                     {
-                        if (text.EndsWith("aucrooms")) { this.realycontonetwork = true; }
+                        if (text.EndsWith("aucrooms ")) { this.realycontonetwork = true; }
                         else
                         {
                             string[] rms = (text.Remove(0, 9)).Split(' ');
