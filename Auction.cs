@@ -216,6 +216,7 @@ namespace Auction.mod
         private Dictionary<string, string> aucusers=new Dictionary<string,string>();
         int idtesting = 0;
 
+        bool realycontonetwork = false;
         bool contonetwork = false;
         List<string> roooms= new List<string>();
         DateTime joindate = DateTime.Now;
@@ -497,6 +498,7 @@ namespace Auction.mod
                                     App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
                                 }
                                 if (this.roooms.Count >= 1) { App.Communicator.sendRequest(new RoomEnterMessage(this.roooms[0])); this.roooms.RemoveAt(0); }
+                                else { this.realycontonetwork = true; }
 
                             }
 
@@ -1054,6 +1056,7 @@ namespace Auction.mod
                         App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
                         this.ownroomnumber = 0;
                         App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+                        Console.WriteLine("aucto1please");
                     
                     }
 
@@ -1080,13 +1083,10 @@ namespace Auction.mod
                         
                         
                         }
-
-                        if (respondstring != "") 
-                        { 
-                            respondstring = "aucrooms" + respondstring; 
-                            WhisperMessage sendrooms = new WhisperMessage(wmsg.from, respondstring); 
-                            App.Communicator.sendRequest(sendrooms); 
-                        }
+                        if (respondstring == "") respondstring = " ";
+                        respondstring = "aucrooms" + respondstring; 
+                        WhisperMessage sendrooms = new WhisperMessage(wmsg.from, respondstring); 
+                        App.Communicator.sendRequest(sendrooms); 
                         //send your offers
                         if (this.genwtssettings.strings2 != "")
                         {
@@ -1119,15 +1119,19 @@ namespace Auction.mod
 
                     if (text.StartsWith("aucrooms ") && !rooomsearched && this.contonetwork)
                     {
-                         string[] rms = (text.Remove(0, 9)).Split(' ');
-                         
-                         this.roooms.Clear();
-                         foreach (string str in rms)
-                         { roooms.Add("auc-" + str); Console.WriteLine("auc-" + str); }
-                         //App.Communicator.sendRequest(new RoomEnterMultiMessage(roooms));//doesnt seems to work prooperly, scrolls (not me) is producing an error when i receive an chatmassage form this rooms
-                         App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
-                         roooms.RemoveAt(0);
-                         this.rooomsearched = true;
+                        if (text.EndsWith("aucrooms")) { this.realycontonetwork = true; }
+                        else
+                        {
+                            string[] rms = (text.Remove(0, 9)).Split(' ');
+
+                            this.roooms.Clear();
+                            foreach (string str in rms)
+                            { roooms.Add("auc-" + str); Console.WriteLine("auc-" + str); }
+                            //App.Communicator.sendRequest(new RoomEnterMultiMessage(roooms));//doesnt seems to work prooperly, scrolls (not me) is producing an error when i receive an chatmassage form this rooms
+                            App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
+                            roooms.RemoveAt(0);
+                            this.rooomsearched = true;
+                        }
                     }
 
                     if (text.StartsWith("aucstop"))
@@ -1871,6 +1875,7 @@ namespace Auction.mod
             this.ownroomnumber = 0;
             this.rooomsearched = false;
             this.contonetwork = false;
+            this.realycontonetwork = false;
 
         }
 
@@ -2514,7 +2519,7 @@ namespace Auction.mod
                 
                 GUI.color = Color.white;
 
-                if (this.contonetwork)
+                if (this.realycontonetwork)
                 {
                     if (GUI.Button(this.updatebuttonrect, "discon"))
                     {
