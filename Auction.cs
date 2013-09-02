@@ -24,7 +24,7 @@ namespace Auction.mod
     public class Auction : BaseMod, ICommListener, iEffect, iCardRule, ICardListCallback
     {
 
-        private bool hidewispers = true; // = testmodus
+        private bool hidewispers = false; // = testmodus
 
 
 
@@ -1000,10 +1000,10 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    if (!hidewispers)
-                    {
+                    //if (!hidewispers)
+                    //{
                         if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                    }
+                    /*}
                     else
                     {
                         if (this.contonetwork)
@@ -1015,7 +1015,7 @@ namespace Auction.mod
                         {
                             if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
                         }
-                    }
+                    }*/
                 }
                 if (msg is RoomChatMessageMessage)
                 {
