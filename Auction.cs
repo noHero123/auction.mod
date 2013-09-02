@@ -24,7 +24,7 @@ namespace Auction.mod
     public class Auction : BaseMod, ICommListener, iEffect, iCardRule, ICardListCallback
     {
 
-        private bool hidewispers = false;
+        private bool hidewispers = true; // = testmodus
 
 
 
@@ -380,6 +380,7 @@ namespace Auction.mod
         private FieldInfo timeStampStyleinfo;
         private FieldInfo chatLogStyleinfo;
         private FieldInfo userContextMenuField;
+        private FieldInfo targetchathightinfo;
 
         private MethodInfo CloseUserMenuinfo;
         private MethodInfo createUserMenuinfo;
@@ -884,6 +885,8 @@ namespace Auction.mod
             chatScrollinfo = typeof(ChatUI).GetField("chatScroll", BindingFlags.Instance | BindingFlags.NonPublic);
             allowSendingChallengesinfo = typeof(ChatUI).GetField("allowSendingChallenges", BindingFlags.Instance | BindingFlags.NonPublic);
             userContextMenuinfo = typeof(ChatUI).GetField("userContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
             
             this.GUIObject = new GameObject();
             this.GUIObject.transform.parent = Camera.main.transform;
@@ -997,17 +1000,22 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                   
-                    /*if (this.contonetwork)
+                    if (!hidewispers)
                     {
-
                         if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
                     }
                     else
                     {
-                        if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
-                    }*/
+                        if (this.contonetwork)
+                        {
+
+                            if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                        }
+                        else
+                        {
+                            if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
+                        }
+                    }
                 }
                 if (msg is RoomChatMessageMessage)
                 {
@@ -3272,6 +3280,7 @@ namespace Auction.mod
                             setsettings(this.ahwtbsettings);
                         }
                         fullupdatelist(ahlist,ahlistfull);
+                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
                     }
                 // klick button Gen
                     
@@ -3305,6 +3314,7 @@ namespace Auction.mod
 
                         
                         fullupdatelist(ahlist, ahlistfull);
+                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
                     }
 
                     // draw ah oder gen-menu
