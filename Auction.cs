@@ -1407,7 +1407,18 @@ namespace Auction.mod
         {
             //Console.WriteLine("##addcars");
             if (this.generator||!this.inauchouse) { this.newwtsmsgs = true; this.newwtbmsgs = true; }
-            else { if (this.wtsmenue) { this.newwtbmsgs = true; } else { this.newwtsmsgs = true; } }
+            else 
+            { 
+                if (this.wtsmenue) 
+                { 
+                    if (addingwtbcards.Count() > 0) this.newwtbmsgs = true; 
+                } 
+                else 
+                {
+                    if (addingwtscards.Count() > 0) this.newwtsmsgs = true;
+                } 
+            
+            }
             if (addingwtscards.Count() > 0)
             {
                 addingwtscards.Reverse();
