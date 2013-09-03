@@ -2450,7 +2450,11 @@ namespace Auction.mod
                         if (ts.Minutes >= 1) { sellername = "" + ts.Minutes + " minutes ago"; }
                         else { 
                             //sellername = "" + ts.Seconds + " seconds ago"; // to mutch changing numbers XD
-                            sellername = "seconds ago";
+                            if (ts.Seconds >= 40) { sellername = "40 seconds ago"; }
+                            else if (ts.Seconds >= 20) { sellername = "20 seconds ago"; }
+                            else if (ts.Seconds >= 10) { sellername = "10 seconds ago"; }
+                            else if (ts.Seconds >= 5) { sellername = "5 seconds ago"; }
+                            else sellername = "seconds ago";
                         }
                        
                         Rect position13 = new Rect(restyperect.xMax + 2f, position9.y, this.labelsWidth, this.fieldHeight);
