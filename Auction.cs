@@ -24,7 +24,7 @@ namespace Auction.mod
     public class Auction : BaseMod, ICommListener, iEffect, iCardRule, ICardListCallback
     {
 
-        private bool hidewispers = false; // = testmodus
+        private bool hidewispers = true; //  false = testmodus
 
 
 
@@ -424,12 +424,43 @@ namespace Auction.mod
         Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
         FieldInfo buymen; FieldInfo sellmen;
 
+        string postmsgmsg = "";
+        bool postmsgontrading = false;
+        bool postmsggetnextroomenter = false;
+
         bool chatisshown = false;
 
         string[] auccontroler = new string[] { };
 
         public void handleMessage(Message msg)
         {
+            if (msg is TradeResponseMessage)
+            {
+                TradeResponseMessage trm = (TradeResponseMessage)msg;
+                if (trm.status != "ACCEPT")
+                {
+                    this.postmsgontrading = false;
+                    this.postmsggetnextroomenter = false;
+                    this.postmsgmsg = "";
+                }
+            }
+
+
+            if (msg is RoomEnterMessage && this.postmsggetnextroomenter)
+            {
+                RoomEnterMessage rmem = (RoomEnterMessage)msg;
+                if (rmem.roomName.StartsWith("trade-"))
+                {
+                    this.postmsggetnextroomenter = false;
+                    // post the msg here!:
+                    RoomChatMessageMessage joinmessage = new RoomChatMessageMessage(rmem.roomName, "<color=#777460>" + postmsgmsg + "</color>");
+                    joinmessage.from = "Scrolls";
+
+                    //App.ChatUI.handleMessage(new RoomChatMessageMessage(rmem.roomName, "<color=#777460>" + postmsgmsg + "</color>"));
+                    App.ArenaChat.ChatRooms.ChatMessage(joinmessage);
+                    this.postmsgmsg = "";
+                }
+            }
 
             if (msg is GameInfoMessage && this.contonetwork)
             {
@@ -735,22 +766,31 @@ namespace Auction.mod
             list.Clear();
             foreach (aucitem card in temp)//this.orgicardsPlayer1)
             {
-                if (this.takepriceformgenarator)
+                if (card.priceinint == 0 && !this.ignore0) 
+                { 
+                    list.Add(card);
+                }
+                else
                 {
-                    if (wtspricelist1[card.card.getName().ToLower()] != "")
+                    if (this.takepriceformgenarator)
                     {
-                        //Console.WriteLine(card.card.getName() + " " + wtspricelist1[card.card.getName().ToLower()]);
-                        if (card.priceinint >= Convert.ToInt32(wtspricelist1[card.card.getName().ToLower()])) { list.Add(card); };
+
+                        if (wtspricelist1[card.card.getName().ToLower()] != "")
+                        {
+                            //Console.WriteLine(card.card.getName() + " " + wtspricelist1[card.card.getName().ToLower()]);
+                            if (card.priceinint >= Convert.ToInt32(wtspricelist1[card.card.getName().ToLower()])) { list.Add(card); };
+                        }
+                        else
+                        {
+                            if (card.priceinint >= priceinint) { list.Add(card); };
+                        }
+
+
                     }
                     else
                     {
                         if (card.priceinint >= priceinint) { list.Add(card); };
                     }
-               
-                }
-                else
-                {
-                    if (card.priceinint >= priceinint) { list.Add(card); };
                 }
             }
 
@@ -955,6 +995,7 @@ namespace Auction.mod
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
+                     scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
 
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
@@ -1000,12 +1041,12 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    //if (!hidewispers)
-                    //{
+                    if (hidewispers)
+                    { // hides all whisper messages from auc-mod
                         if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                    /*}
+                    }
                     else
-                    {
+                    {// show some whispers if not connected (testmode)
                         if (this.contonetwork)
                         {
 
@@ -1015,7 +1056,7 @@ namespace Auction.mod
                         {
                             if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
                         }
-                    }*/
+                    }
                 }
                 if (msg is RoomChatMessageMessage)
                 {
@@ -1166,7 +1207,10 @@ namespace Auction.mod
 
                             this.roooms.Clear();
                             foreach (string str in rms)
-                            { roooms.Add("auc-" + str); Console.WriteLine("auc-" + str); }
+                            { 
+                                roooms.Add("auc-" + str); 
+                                //Console.WriteLine("auc-" + str);
+                            }
                             //App.Communicator.sendRequest(new RoomEnterMultiMessage(roooms));//doesnt seems to work prooperly, scrolls (not me) is producing an error when i receive an chatmassage form this rooms
                             App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
                             roooms.RemoveAt(0);
@@ -1621,14 +1665,15 @@ namespace Auction.mod
             //words = Regex.Split(msg, @"");
 
             if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return;
-
+            bool wtxfound = false;
             for (int i = 0; i < words.Length; i++)
             {
                 Card c; int price=0;
                 string word = words[i].ToLower();
                 // save in wts or wtb?
-                if (word.Contains("wts") || word.Contains("sell")) { wts = true; }
-                if (word.Contains("wtb") || word.Contains("buy")) { wts = false; }
+                if (word.Contains("wts") || word.Contains("sell")) { wts = true; wtxfound = true; }
+                if (word.Contains("wtb") || word.Contains("buy")) { wts = false; wtxfound = true; }
+                if (!wtxfound) continue;// if no wts or wtb was found, skip card search
                 int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
                 int iadder = 0;
                 if (arrindex >= 0) // wort in cardlist enthalten
@@ -1769,7 +1814,8 @@ namespace Auction.mod
                 msg = msg.Remove(msg.Length - 2);
                 shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
-            
+            if (msg.Length >= 512) { msg = "msg to long"; }
+            if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
             if (this.wtsmenue) { this.generatedwtsmessage = msg; this.shortgeneratedwtsmessage = shortmsg; } else { this.generatedwtbmessage = msg; this.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
             //Console.WriteLine(shortmsg);
@@ -1856,7 +1902,10 @@ namespace Auction.mod
                 
             
 
-            if (this.ignore0) { this.musthaveprice(list); }
+            if (this.ignore0) { 
+                //this.musthaveprice(list);
+                this.priceishigher("1", ahlist);
+            }
 
             this.searchforownenergy(res, list);
             this.searchforownrarity(rare, list);
@@ -2046,7 +2095,7 @@ namespace Auction.mod
                 else { GUI.Label(sbtpfgenlabel, "Price >= wts-generator"); }
                 
 
-                /*
+                // only scrolls with price
                 bool owp= GUI.Button(sbonlywithpricebox, "");
                 if (this.ignore0)
                 {
@@ -2058,7 +2107,6 @@ namespace Auction.mod
                 }
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 GUI.Label(sbonlywithpricelabelbox, "only Scrolls with Price");
-                 */
 
                 GUI.skin = this.cardListPopupSkin;
 
@@ -2080,7 +2128,7 @@ namespace Auction.mod
                 if (rareclick) { rarebool = !rarebool; };
                 if (mt3click) { threebool = !threebool; }
                 if (mt0click) { onebool = !onebool; }
-                //if (owp) { ignore0 = !ignore0; }
+                if (owp) { ignore0 = !ignore0; }
                 if (tpfgen) { takepriceformgenarator = !takepriceformgenarator; }
                 if (closeclick)
                 {
@@ -2111,7 +2159,7 @@ namespace Auction.mod
                 
                 //clear p1moddedlist only if necessary
                 //if (selfcopy.Length > this.wtssearchstring.Length || (owp&&!ignore0)|| sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
-                if (selfcopy.Length > this.wtssearchstring.Length || sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
+                if (selfcopy.Length > this.wtssearchstring.Length || (owp && !ignore0) || sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
                 {
                     //Console.WriteLine("delete dings####");
                     this.fullupdatelist(ahlist, ahlistfull);
@@ -2132,7 +2180,8 @@ namespace Auction.mod
                     }
                     if (ignore0)
                     {
-                        this.musthaveprice(ahlist);
+                        //this.musthaveprice(ahlist);
+                        this.priceishigher("1", ahlist);
                     }
 
                     if (sellercopy != this.sellersearchstring)
@@ -2162,8 +2211,6 @@ namespace Auction.mod
                         if (this.pricesearchstring2 != "")
                         {
                             this.priceislower(this.pricesearchstring2, ahlist);
-                            
-
                         }
 
 
@@ -2813,12 +2860,12 @@ namespace Auction.mod
                 GUI.color = Color.white;
                 if (this.wtsmenue)
                 {
-                    if (this.generatedwtsmessage == "")
+                    if (this.shortgeneratedwtsmessage == "")
                     { GUI.color=dblack;}
                 }
                 else
                 {
-                     if (this.generatedwtbmessage == "")
+                     if (this.shortgeneratedwtbmessage == "")
                      { GUI.color = dblack; }
                 }
                 
@@ -3136,6 +3183,15 @@ namespace Auction.mod
             
             }
 
+            if (info.target is TradeSystem && info.targetMethod.Equals("StartTrade"))
+            {
+                if (this.postmsgontrading == true)
+                {
+                    this.postmsgontrading = false;
+                    this.postmsggetnextroomenter = true;// the next RoomEnterMsg is the tradeRoom!
+                }
+            }
+
             if (info.target is Store && info.targetMethod.Equals("Start"))
             {
                 this.lobbySkin = (GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target);
@@ -3367,7 +3423,10 @@ namespace Auction.mod
             {
                 //get trademessages from chatmessages
                 RoomChatMessageMessage msg = (RoomChatMessageMessage)info.arguments[0];
-                getaucitemsformmsg(msg.text, msg.from, msg.roomName);
+                if (msg.from != "Scrolls")
+                {
+                    getaucitemsformmsg(msg.text, msg.from, msg.roomName);
+                }
             }
 
             return;
@@ -3596,16 +3655,21 @@ namespace Auction.mod
             GUI.skin = this.cardListPopupBigLabelSkin;
             
             GUI.Label(new Rect(5f, 5f, tbmessagescroll.width - 30f, msghigh), orgmsg);
-            //GUI.skin.label.wordWrap = false;
-            //GUI.Label(tbmessage, message);
-            Console.WriteLine(message);
+
+            //Console.WriteLine(message);
             
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             GUI.EndScrollView();
             GUI.skin.label.wordWrap = false;
             GUI.skin = this.cardListPopupLeftButtonSkin;
 
-            if (GUI.Button(tbok, "OK")) { this.showtradedialog = false; App.GameActionManager.TradeUser(this.globalusers[name]); };
+            if (GUI.Button(tbok, "OK"))
+            { 
+                this.showtradedialog = false;
+                App.GameActionManager.TradeUser(this.globalusers[name]);
+                this.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + " Gold" + ". You own this card " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
+                this.postmsgontrading = true;
+            };
             if (GUI.Button(tbwhisper, "Whisper"))
             { 
                 this.showtradedialog = false;
@@ -3677,7 +3741,7 @@ namespace Auction.mod
             this.sbtimelabel = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
             this.sbtimerect = new Rect(sbsellerrect.x, sbtimelabel.y, sbsellerrect.width, texthight);
 
-            this.sbtpfgen = new Rect(sbarlabelrect.x, sbtimelabel.yMax + 4, texthight, texthight);
+            this.sbtpfgen = new Rect(sbarlabelrect.x, sbtimelabel.yMax + 4, texthight, texthight);//take price from gen = tpfgen 
             this.sbtpfgenlabel = new Rect(sbtpfgen.xMax + 4, sbtimelabel.yMax + 4, filtermenurect.width - sbtpfgen.width - num2, texthight);
 
             this.sbonlywithpricebox = new Rect(sbarlabelrect.x, sbtpfgen.yMax + 4, texthight, texthight);
