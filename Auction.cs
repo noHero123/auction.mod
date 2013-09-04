@@ -186,6 +186,8 @@ namespace Auction.mod
             public string strings2;
             public string strings3;
             public string strings4;
+            public int sorting;
+            public bool sortreverse;
 
         
         }
@@ -666,6 +668,8 @@ namespace Auction.mod
             copy.strings2 = pricesearchstring;//shortwts/wtbstring
             copy.strings3 = timesearchstring;
             copy.strings4 = pricesearchstring2;
+            copy.sorting = this.sortmode;
+            copy.sortreverse = this.reverse;
         }
 
         private void setsettings(settingcopy copy)
@@ -686,6 +690,8 @@ namespace Auction.mod
              pricesearchstring = copy.strings2;
              timesearchstring=copy.strings3 ;
              pricesearchstring2 = copy.strings4;
+             this.sortmode = copy.sorting;
+             this.reverse = copy.sortreverse;
 
         }
 
@@ -955,6 +961,8 @@ namespace Auction.mod
             this.pricesearchstring = "";
             this.timesearchstring = "";
             this.pricesearchstring2 = "";
+            this.sortmode = 0;
+            this.reverse = false;
             savesettings(this.ahwtssettings);
             savesettings(this.ahwtbsettings);
             savesettings(this.genwtssettings);
@@ -1377,7 +1385,7 @@ namespace Auction.mod
                 if (index < 0) index = ~index;
                 list.Insert(index, ai);
             }
-            if (this.sortmode == 2)
+            if (this.sortmode == 3)
             {
                 var index = list.BinarySearch(ai, new aucitemsellercomparer());
                 if (index < 0) index = ~index;
@@ -2581,10 +2589,11 @@ namespace Auction.mod
                 {
 
                     wtslistfull.Clear(); wtslistfull.AddRange(this.wtslistfulltimed);
-                    sortlist(wtslistfull);
+                    //sortlist(wtslistfull);
 
                     this.ahlist = this.wtslist; this.ahlistfull = this.wtslistfull; this.wtsmenue = true; this.wtsinah = true;
                     setsettings(this.ahwtssettings);
+                    sortlist(ahlist); sortlist(ahlistfull);
                     fullupdatelist(ahlist, ahlistfull);
                     this.newwtsmsgs = false;
                 }
@@ -2611,9 +2620,10 @@ namespace Auction.mod
                 {
                     wtblistfull.Clear(); wtblistfull.AddRange(this.wtblistfulltimed);
                     //sortmode==0 = sort by date so dont sort wtsfulltimed
-                    sortlist(wtblistfull);
+                    //sortlist(wtblistfull);
                     this.ahlist = this.wtblist; this.ahlistfull = this.wtblistfull; this.wtsmenue = false; this.wtsinah = false;
                     setsettings(this.ahwtbsettings);
+                    sortlist(ahlist); sortlist(ahlistfull);
                     fullupdatelist(ahlist, ahlistfull);
                     this.newwtbmsgs = false;
                 }
