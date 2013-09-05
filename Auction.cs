@@ -373,30 +373,16 @@ namespace Auction.mod
         private MethodInfo hideInformationinfo;
         private FieldInfo showBuyinfo;
         private FieldInfo showSellinfo;
-
-        private FieldInfo chatScrollinfo;
-        private FieldInfo allowSendingChallengesinfo; 
-        private FieldInfo userContextMenuinfo ;
-        private FieldInfo chatlogAreaInnerinfo;
         private FieldInfo chatRoomsinfo;
-        private FieldInfo timeStampStyleinfo;
         private FieldInfo chatLogStyleinfo;
-        private FieldInfo userContextMenuField;
         private FieldInfo targetchathightinfo;
-
-        private MethodInfo CloseUserMenuinfo;
-        private MethodInfo createUserMenuinfo;
-        private MethodInfo challengeUserMethod;    
-        private MethodInfo profileUserMethod;
-        private MethodInfo tradeUserMethod;
         private MethodInfo drawsubmenu;
-        private MethodInfo getchatlogMethod;
 
         private ChatUI target = null;
         private ChatRooms chatRooms;
         private GUIStyle chatLogStyle;
         
-        //private MethodInfo createUserMenu;
+        
         private Regex userRegex;
         private Regex linkFinder;
         private Regex cardlinkfinder;
@@ -408,10 +394,9 @@ namespace Auction.mod
         private string[] cardType;
 
         private GameObject cardRule;
-        private GameObject GUIObject;
+
         bool mytext=false;
         Dictionary<string, int> available = new Dictionary<string, int>();
-        //CardOverlay cardOverlay;
         
 
         private int cardnametoid(string name) { return cardids[Array.FindIndex(cardnames, element => element.Equals(name))]; }
@@ -900,6 +885,8 @@ namespace Auction.mod
             priceregexpriceonname = new Regex(@"[^x0-9]{2,}[0-9]{2,9}[g]?[^x0-9]+.*");
             numberregx = new Regex(@"[0-9]{2,9}");
 
+
+            //needed for getting the textures of the drawing card
             statsBGField = typeof(CardView).GetField("statsBG", BindingFlags.Instance | BindingFlags.NonPublic);
             icoBGField = typeof(CardView).GetField("icoBG", BindingFlags.Instance | BindingFlags.NonPublic);
             icoField = typeof(CardView).GetField("ico", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -916,28 +903,10 @@ namespace Auction.mod
             showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
 
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            CloseUserMenuinfo = typeof(ChatUI).GetMethod("CloseUserMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            createUserMenuinfo = typeof(ChatUI).GetMethod("CreateUserMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            challengeUserMethod = typeof(ChatUI).GetMethod("ChallengeUser", BindingFlags.Instance | BindingFlags.NonPublic);
-            tradeUserMethod = typeof(ChatUI).GetMethod("TradeUser", BindingFlags.Instance | BindingFlags.NonPublic);
-            profileUserMethod = typeof(ChatUI).GetMethod("ProfileUser", BindingFlags.Instance | BindingFlags.NonPublic);
-            getchatlogMethod = typeof(ChatRooms).GetMethod("GetChatLog", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            userContextMenuField = typeof(ChatUI).GetField("userContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             chatRoomsinfo = typeof(ChatUI).GetField("chatRooms", BindingFlags.Instance | BindingFlags.NonPublic);
-            timeStampStyleinfo = typeof(ChatUI).GetField("timeStampStyle", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
-            chatlogAreaInnerinfo = typeof(ChatUI).GetField("chatlogAreaInner", BindingFlags.Instance | BindingFlags.NonPublic);
-            chatScrollinfo = typeof(ChatUI).GetField("chatScroll", BindingFlags.Instance | BindingFlags.NonPublic);
-            allowSendingChallengesinfo = typeof(ChatUI).GetField("allowSendingChallenges", BindingFlags.Instance | BindingFlags.NonPublic);
-            userContextMenuinfo = typeof(ChatUI).GetField("userContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-
             targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
             
-            this.GUIObject = new GameObject();
-            this.GUIObject.transform.parent = Camera.main.transform;
-            this.GUIObject.transform.localPosition = new Vector3(0f, 0f, Camera.main.transform.position.y - 0.3f);
-
             this.cardListPopupSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopup");
             this.cardListPopupGradientSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient");
             this.cardListPopupBigLabelSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel");
@@ -1322,7 +1291,7 @@ namespace Auction.mod
                 cardView.setLayer(8);
                 Vector3 vccopy = Camera.main.transform.localPosition;
                 Camera.main.transform.localPosition = new Vector3(0f, 1f, -10f);
-                cardRule.transform.localPosition = Camera.main.ScreenToWorldPoint(new Vector3((float)Screen.width * 0.6f, (float)Screen.height * 0.6f, 0.9f)); ;
+                cardRule.transform.localPosition = Camera.main.ScreenToWorldPoint(new Vector3((float)Screen.width * 0.3f, (float)Screen.height * 0.6f, 0.9f)); ;
 
                 cardRule.transform.localEulerAngles = new Vector3(90f, 180f, 0f);
                 cardRule.transform.localScale = new Vector3(9.3f, 0.1f, 15.7f);// CardView.CardLocalScale(100f);
@@ -3329,12 +3298,15 @@ namespace Auction.mod
                         //this.hideInformation();
                         hideInformationinfo.Invoke(storeinfo, null);
 
-                        showBuyinfo.SetValue(storeinfo, false);
+                        
                         iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+                        showBuyinfo.SetValue(storeinfo, false);
 
-                        showSellinfo.SetValue(storeinfo, false);
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
                         iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
+                        showSellinfo.SetValue(storeinfo, false);
+                        
                         Store.ENABLE_SHARD_PURCHASES = false;
                         
                         this.generator = false;
