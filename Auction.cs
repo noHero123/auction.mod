@@ -613,7 +613,6 @@ namespace Auction.mod
                     cardImageid[i] = Convert.ToInt32(d[i]["cardImage"]);
                     cardType[i] = d[i]["kind"].ToString();
                     if (cardnames[i].Split(' ').Length > longestcardname) { longestcardname = cardnames[i].Split(' ').Length; };
-
                 }
                 
                 this.wtbpricelist1.Clear();
@@ -2475,7 +2474,7 @@ namespace Auction.mod
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
                         // draw suggested price
-                        int index=Array.FindIndex(cardids, element => element == current.card.getId());
+                        int index=Array.FindIndex(cardids, element => element == current.card.getType());
                         string suggeprice ="";
                         if (index >= 0)
                         {
