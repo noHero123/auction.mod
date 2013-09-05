@@ -12,6 +12,7 @@ using Mono.Cecil;
 using Irrelevant.Assets;
 using ScrollsModLoader;
 using System.Net;
+using System.IO;
 
 namespace Auction.mod
 {
@@ -33,6 +34,7 @@ namespace Auction.mod
 
         int[] lowerprice=new int[0];
         int[] upperprice = new int[0];
+        int[] sugprice = new int[0];
 
         public void totalpricecheck()
             {
@@ -54,14 +56,15 @@ namespace Auction.mod
                 {
                     int id = Convert.ToInt32(dictionary[i]["card_id"]); 
                     Dictionary<string, object> d = (Dictionary<string, object>)dictionary[i]["price"];
-                    int lower = 0; int higher = 0;
+                    int lower = 0; int higher = 0; int sugger = 0;
 
                     int sug = (int)d["suggested"];
                     int high = (int)d["buy"];
                     int low = (int)d["sell"];
                     if (sug != 0) 
                     { lower = sug; 
-                        higher = lower; 
+                      higher = lower;
+                      sugger = sug;
                     }
                     if (high != 0) 
                     {
@@ -82,6 +85,7 @@ namespace Auction.mod
                     {
                         lowerprice[index] = lower;
                         upperprice[index] = higher;
+                        sugprice[index] = sugger;
                     }
 
                 }
@@ -229,6 +233,11 @@ namespace Auction.mod
         private bool wtsinah = true;
         private bool wtsingen = true;
 
+        private string ownaucpath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar;
+        private bool wtsmsgload = false;
+        private bool wtbmsgload = false;
+        private string[] aucfiles;
+
         private bool inbattle = false;
         private bool newwtsmsgs = false;
         private bool newwtbmsgs = false;
@@ -304,7 +313,7 @@ namespace Auction.mod
         private Rect sbgrect; private Rect sborect; private Rect sberect; private Rect sbdrect;
         private Rect sbcommonrect; private Rect sbuncommonrect; private Rect sbrarerect; private Rect sbthreerect; private Rect sbonerect;
         private Rect sbsellerlabelrect;private Rect sbsellerrect;
-        private Rect sbpricelabelrect; private Rect sbpricerect; private Rect sbclearrect; private Rect sbgeneratebutton;
+        private Rect sbpricelabelrect; private Rect sbpricerect; private Rect sbclearrect; private Rect sbgeneratebutton; private Rect sbloadbutton; private Rect sbsavebutton;
         private Rect sbpricerect2;
         private Rect sbonlywithpricebox; private Rect sbonlywithpricelabelbox;
         private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbwhisper; private Rect tbmessage; private Rect tbmessagescroll;
@@ -596,6 +605,7 @@ namespace Auction.mod
                 this.longestcardname = 0;
                 this.lowerprice = new int[d.GetLength(0)]; 
                 this.upperprice = new int[d.GetLength(0)];
+                this.sugprice = new int[d.GetLength(0)];
                 for (int i = 0; i < d.GetLength(0); i++)
                 {
                     cardids[i] = Convert.ToInt32(d[i]["id"]);
@@ -936,6 +946,16 @@ namespace Auction.mod
             savesettings(this.ahwtbsettings);
             savesettings(this.genwtssettings);
             savesettings(this.genwtbsettings);
+            Directory.CreateDirectory(this.ownaucpath);
+            this.aucfiles = Directory.GetFiles(this.ownaucpath, "*auc.txt");
+            if (aucfiles.Contains(this.ownaucpath +  "wtsauc.txt"))//File.Exists() was slower
+            {
+                this.wtsmsgload = true;
+            }
+            if (aucfiles.Contains(this.ownaucpath + "wtbauc.txt"))//File.Exists() was slower
+            {
+                this.wtbmsgload = true;
+            }
 
             try
             {
@@ -2449,10 +2469,23 @@ namespace Auction.mod
                         GUI.skin = this.cardListPopupBigLabelSkin;
                         vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
-                        Rect position12 = new Rect(nextx + 2f, (float)num * this.fieldHeight, this.labelsWidth / 2f, this.fieldHeight);
+                        Rect position12 = new Rect(nextx + 2f, position8.yMin, this.labelsWidth / 2f, this.cardHeight);
                         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                         GUI.Label(position12, gold);
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+                        // draw suggested price
+                        int index=Array.FindIndex(cardids, element => element == current.card.getId());
+                        string suggeprice ="";
+                        if (index >= 0)
+                        {
+                            suggeprice = "sug: "+this.sugprice[index];
+                        }
+                        GUI.skin = this.cardListPopupSkin;
+                        Rect position14 = new Rect(nextx + 2f, position9.y, this.labelsWidth / 2f, this.fieldHeight);
+                        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                        GUI.Label(position14, suggeprice);
+                        GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
 
 
@@ -2553,8 +2586,8 @@ namespace Auction.mod
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
 
-                
-                if (GUI.Button(wtsbuttonrect, "WTS"))
+
+                if (GUI.Button(wtsbuttonrect, "WTS") && !this.showtradedialog)
                 {
 
                     wtslistfull.Clear(); wtslistfull.AddRange(this.wtslistfulltimed);
@@ -2585,7 +2618,7 @@ namespace Auction.mod
                     GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
-                if (GUI.Button(wtbbuttonrect, "WTB"))
+                if (GUI.Button(wtbbuttonrect, "WTB") && !this.showtradedialog)
                 {
                     wtblistfull.Clear(); wtblistfull.AddRange(this.wtblistfulltimed);
                     //sortmode==0 = sort by date so dont sort wtsfulltimed
@@ -2917,8 +2950,88 @@ namespace Auction.mod
                             }
                         }
 
+                // draw message save/load buttons
+                     GUI.color = Color.white;
+                     if (this.wtsmenue)
+                     {
+                         if (!this.wtsmsgload) GUI.color = dblack;
+                         if (GUI.Button(sbloadbutton, "load WTS msg") && this.wtsmsgload)
+                         {
+
+                             for (int i = 0; i < this.wtspricelist1.Count; i++)
+                             {
+                                 KeyValuePair<string, string> item = this.wtspricelist1.ElementAt(i);
+                                 this.wtspricelist1[item.Key] = "";
+
+                             }
+                             
+                                
+                                 string textel = System.IO.File.ReadAllText(this.ownaucpath + "wtsauc.txt");
+
+                                 string secmsg = (textel.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
+                                 string[] words = secmsg.Split(';');
+                                 foreach (string w in words)
+                                 {
+                                     if (w == "" || w == " ") continue;
+                                     string cardname = cardnames[Array.FindIndex(cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                     this.wtspricelist1[cardname] = w.Split(' ')[1];
+                                 }
+                                 generatewtxmsg(this.ahlistfull);
+                             
+
+                         }
+
+                     }
+                     else
+                     {
+                         if (!this.wtbmsgload) GUI.color = dblack;
+                         if (GUI.Button(sbloadbutton, "load WTB msg") && this.wtbmsgload)
+                         {
+                             for (int i = 0; i < this.wtbpricelist1.Count; i++)
+                             {
+                                 KeyValuePair<string, string> item = this.wtbpricelist1.ElementAt(i);
+                                 this.wtbpricelist1[item.Key] = "";
+
+                             }
+                             string textel=System.IO.File.ReadAllText(this.ownaucpath + "wtbauc.txt");
+                             string secmsg = (textel.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
+                             string[] words = secmsg.Split(';');
+                             foreach (string w in words)
+                             {
+                                 if (w == "" || w == " ") continue;
+                                 string cardname = cardnames[Array.FindIndex(cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                 this.wtbpricelist1[cardname] = w.Split(' ')[1];
+                             }
+                             generatewtxmsg(this.ahlistfull);
+                         }
+                     }
+                     GUI.color = Color.white;
+
+                     GUI.color = Color.white;
+                     if (this.wtsmenue)
+                     {
+                         if (this.generatedwtsmessage=="") GUI.color = dblack;
+                         if (GUI.Button(sbsavebutton, "save WTS msg"))
+                         {
+                             showtradedialog = true;
+
+
+                         }
+
+                     }
+                     else
+                     {
+                         if (this.generatedwtbmessage == "") GUI.color = dblack;
+                         if (GUI.Button(sbsavebutton, "save WTB msg"))
+                         {
+                             showtradedialog = true;
+                            
+                         }
+                     }
+                     GUI.color = Color.white;
+
             }
-            // Draw Auctionhouse here:
+            // Draw generator here:
             if (this.generator)
             {
                 //Console.WriteLine(GUI.GetNameOfFocusedControl());
@@ -3108,8 +3221,8 @@ namespace Auction.mod
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
-                
-                if (GUI.Button(wtsbuttonrect, "WTS"))
+
+                if (GUI.Button(wtsbuttonrect, "WTS") && !this.showtradedialog)
                 {
                     this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true; this.wtsingen = true;
                     setsettings(this.genwtssettings);
@@ -3124,7 +3237,7 @@ namespace Auction.mod
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
-                if (GUI.Button(wtbbuttonrect, "WTB"))
+                if (GUI.Button(wtbbuttonrect, "WTB") && !this.showtradedialog)
                 {
                     this.ahlist = this.wtbPlayer; this.ahlistfull = this.allcardsavailable; this.wtsmenue = false;
                     this.wtsingen = false ;
@@ -3155,7 +3268,7 @@ namespace Auction.mod
                     }
                     
                 }
-                
+                if (this.showtradedialog) { this.reallywanttosave(this.wtsmenue); }
 
             }
         }
@@ -3190,6 +3303,7 @@ namespace Auction.mod
             {
                 this.lobbySkin = (GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target);
                 this.storeinfo=(Store)info.target;
+                this.showtradedialog = false;
                 //this.AHFrame = new GameObject("Card List / AH List").AddComponent<CardListPopup>();
                 //this.AHFrame.Init(new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.height * 0.8f, (float)Screen.height * 0.7f), false, true, this.ahlist, this, null, new GUIContent("BLUBB"), false, true, false, false, null, false);
                 //this.AHFrame.SetOpacity(1f);
@@ -3292,7 +3406,7 @@ namespace Auction.mod
                     //auction house...
                     GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 4);
                     //klick button AH
-                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(2f), "AH", this.lobbySkin))
+                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(2f), "AH", this.lobbySkin) && !this.showtradedialog)
                     {
                         this.inauchouse = true;
                         //this.hideInformation();
@@ -3336,8 +3450,8 @@ namespace Auction.mod
                         this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
                     }
                 // klick button Gen
-                    
-                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(3f), "Gen", this.lobbySkin))
+
+                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(3f), "Gen", this.lobbySkin) && !this.showtradedialog)
                     {
                         //this.hideInformation();
                         hideInformationinfo.Invoke(storeinfo, null);
@@ -3413,6 +3527,7 @@ namespace Auction.mod
                 Store.ENABLE_SHARD_PURCHASES = true;
                 inauchouse = false;
                 generator = false;
+                this.showtradedialog=false;
 
             }
 
@@ -3675,6 +3790,36 @@ namespace Auction.mod
             if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false;};
         }
 
+        private void reallywanttosave(bool wts)
+        {
+            // asks the user if he wants to trade
+            GUI.skin = this.cardListPopupSkin;
+            GUI.Box(tradingbox, "");
+            GUI.skin = this.cardListPopupBigLabelSkin;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+
+            string message = "You want to override existing file?";
+            GUI.Label(tradingbox, message);
+            
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+
+            if (GUI.Button(tbok, "OK"))
+            {
+                if (wts)
+                {
+                    System.IO.File.WriteAllText(this.ownaucpath + "wtsauc.txt", this.shortgeneratedwtsmessage);
+                    this.wtsmsgload = true;
+                }
+                else
+                {
+                    System.IO.File.WriteAllText(this.ownaucpath + "wtbauc.txt", this.shortgeneratedwtbmessage);
+                    this.wtbmsgload = true;
+                }
+                this.showtradedialog = false;
+            };
+            if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false; };
+        }
+
         private void setupPositions()
         {// set rects for menus
             this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.57f);
@@ -3747,6 +3892,9 @@ namespace Auction.mod
             this.sbclearrect = new Rect(filtermenurect.xMax - num2 - costIconWidth, filtermenurect.yMax - num2 - texthight, costIconWidth, texthight);
             this.sbclrearpricesbutton= new Rect(sbarlabelrect.x, sbclearrect.y, sbclearrect.x - sbarlabelrect.x - num2, texthight);
             this.sbgeneratebutton = new Rect(sbarlabelrect.x, sbclearrect.y - 4 - texthight, sbclearrect.x - sbarlabelrect.x - num2, texthight);
+            this.sbloadbutton = new Rect(sbarlabelrect.x, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2-4f) / 2f, texthight);
+            this.sbsavebutton = new Rect(sbloadbutton.xMax+4, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2-4f) / 2f, texthight);
+
 
             GUI.skin = this.cardListPopupSkin;
             float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("LOL"),1000);
