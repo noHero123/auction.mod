@@ -3125,13 +3125,16 @@ namespace Auction.mod
                         // priceinint wurde bei der genliste missbraucht
 
                         this.chatLogStyle.alignment = TextAnchor.MiddleCenter;
-                        if (this.wtsmenue)
+                        if (!this.showtradedialog) //otherwise you cant hit the cancel button
                         {
-                            this.wtspricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, this.wtspricelist1[current.card.getName().ToLower()], chatLogStyle), @"[^0-9]", "");
-                        }
-                        else
-                        {
-                            this.wtbpricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, this.wtbpricelist1[current.card.getName().ToLower()], chatLogStyle), @"[^0-9]", "");
+                            if (this.wtsmenue)
+                            {
+                                this.wtspricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, this.wtspricelist1[current.card.getName().ToLower()], chatLogStyle), @"[^0-9]", "");
+                            }
+                            else
+                            {
+                                this.wtbpricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, this.wtbpricelist1[current.card.getName().ToLower()], chatLogStyle), @"[^0-9]", "");
+                            }
                         }
                         this.chatLogStyle.alignment = TextAnchor.MiddleLeft;
                         //string sellername = current.seller;
@@ -3817,6 +3820,7 @@ namespace Auction.mod
                 this.showtradedialog = false;
             };
             if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false; };
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
         }
 
         private void setupPositions()
