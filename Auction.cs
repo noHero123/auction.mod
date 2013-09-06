@@ -3801,8 +3801,9 @@ namespace Auction.mod
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 
             string message = "You want to override existing file?";
-            GUI.Label(tradingbox, message);
             
+            GUI.Label(tradingbox, message);
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             GUI.skin = this.cardListPopupLeftButtonSkin;
 
             if (GUI.Button(tbok, "OK"))
@@ -3820,7 +3821,7 @@ namespace Auction.mod
                 this.showtradedialog = false;
             };
             if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false; };
-            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            
         }
 
         private void setupPositions()
