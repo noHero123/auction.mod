@@ -1696,8 +1696,8 @@ namespace Auction.mod
                     foreach (string n in nickes)
                     {
                         nickelement nele;
-                        nele.nick = n;
-                        nele.cardname = cardname;
+                        nele.nick = n.ToLower();
+                        nele.cardname = cardname.ToLower();
                         this.loadedscrollsnicks.Add(nele);
 
                     }
