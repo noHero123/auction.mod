@@ -1402,7 +1402,11 @@ namespace Auction.mod
         private void addcardstolist()
         {
             //Console.WriteLine("##addcars");
-            if (this.generator||!this.inauchouse) { this.newwtsmsgs = true; this.newwtbmsgs = true; }
+            if (this.generator||!this.inauchouse) {
+                if (addingwtbcards.Count() > 0) this.newwtbmsgs = true;
+                if (addingwtscards.Count() > 0) this.newwtsmsgs = true;
+            
+            }
             else 
             { 
                 if (this.wtsmenue) 
@@ -3450,6 +3454,7 @@ namespace Auction.mod
                         }
                         fullupdatelist(ahlist,ahlistfull);
                         this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
+                        if (this.wtsmenue) { this.newwtsmsgs = false; } else { this.newwtbmsgs = false; }
                     }
                 // klick button Gen
 
