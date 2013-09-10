@@ -146,6 +146,11 @@ namespace Auction.mod
             }
         }
 
+        struct nickelement
+        {
+            public string nick;
+            public string cardname;
+        }
 
         struct cardtextures
         {
@@ -218,6 +223,10 @@ namespace Auction.mod
                 return (x.seller).CompareTo(y.seller);
             }
         }
+
+        private bool nicks = false;
+        private List<nickelement> loadedscrollsnicks = new List<nickelement>();
+        private List<nickelement> searchscrollsnicks = new List<nickelement>(); // = realcardnames + loadedscrollsnicks
 
         private Dictionary<string, string> aucusers=new Dictionary<string,string>();
         int idtesting = 0;
@@ -614,7 +623,9 @@ namespace Auction.mod
                     cardType[i] = d[i]["kind"].ToString();
                     if (cardnames[i].Split(' ').Length > longestcardname) { longestcardname = cardnames[i].Split(' ').Length; };
                 }
-                
+
+
+                this.searchscrollsnicks.Clear();
                 this.wtbpricelist1.Clear();
                 allcardsavailable.Clear();
                 for (int j = 0; j < cardnames.Length; j++)
@@ -628,7 +639,13 @@ namespace Auction.mod
                     ai.priceinint = allcardsavailable.Count;
                     ai.seller="me";
                     allcardsavailable.Add(ai);
+                    nickelement nele;
+                    nele.nick = cardnames[j];
+                    nele.cardname = cardnames[j];
+                    this.searchscrollsnicks.Add(nele);
                 };
+                this.searchscrollsnicks.AddRange(this.loadedscrollsnicks);
+
                 this.allcardsavailable.Sort(delegate(aucitem p1, aucitem p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
                 //test
                 //foreach (aucitem ai in allcardsavailable)
@@ -954,6 +971,11 @@ namespace Auction.mod
             if (aucfiles.Contains(this.ownaucpath + "wtbauc.txt"))//File.Exists() was slower
             {
                 this.wtbmsgload = true;
+            }
+            if (aucfiles.Contains(this.ownaucpath + "nicauc.txt"))//File.Exists() was slower
+            {
+                this.nicks = true;
+                this.readnicksfromfile();
             }
 
             try
@@ -1660,6 +1682,34 @@ namespace Auction.mod
             addcardstolist();
         }
 
+
+        private void readnicksfromfile()
+        {
+            if (this.nicks)
+            {
+                string[] lines = System.IO.File.ReadAllLines(this.ownaucpath + "nicauc.txt");
+                foreach (string s in lines)
+                {
+                    if (s == "" || s == " ") continue;
+                    string cardname = s.Split(':')[0];
+                    string[] nickes = (s.Split(':')[1]).Split(',');
+                    foreach (string n in nickes)
+                    {
+                        nickelement nele;
+                        nele.nick = n;
+                        nele.cardname = cardname;
+                        this.loadedscrollsnicks.Add(nele);
+
+                    }
+
+                }
+
+
+            }
+        }
+
+
+
         private void getaucitemsformmsg(string msgg, string from, string room)
         {
             string msg = Regex.Replace(msgg, @"(<color=#[A-Za-z0-9]{0,6}>)|(</color>)", String.Empty);
@@ -1677,6 +1727,7 @@ namespace Auction.mod
 
             if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return;
             bool wtxfound = false;
+
             for (int i = 0; i < words.Length; i++)
             {
                 Card c; int price=0;
@@ -1685,22 +1736,25 @@ namespace Auction.mod
                 if (word.Contains("wts") || word.Contains("sell")) { wts = true; wtxfound = true; }
                 if (word.Contains("wtb") || word.Contains("buy")) { wts = false; wtxfound = true; }
                 if (!wtxfound) continue;// if no wts or wtb was found, skip card search
-                int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
+                //int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
+                int arrindex = this.searchscrollsnicks.FindIndex(element => word.Contains(element.nick.Split(' ')[0]));
                 int iadder = 0;
                 if (arrindex >= 0) // wort in cardlist enthalten
                 {
                     //Console.WriteLine(word + " " + arrindex);
-                    string[] possiblecards = Array.FindAll(this.cardnames, element => word.Contains(element.Split(' ')[0]));
+                    //string[] possiblecards = Array.FindAll(this.cardnames, element => word.Contains(element.Split(' ')[0]));
+                    List<nickelement> possibnics = this.searchscrollsnicks.FindAll(element => word.Contains(element.nick.Split(' ')[0]));
                     bool findcard = false;
                     string foundedcard = "";
                     string textplace = "";
-                    
-                    for (int ii = 0; ii < possiblecards.Length; ii++)
+
+                    for (int ii = 0; ii < possibnics.Count; ii++)
                     {
-                        string match = possiblecards[ii].ToLower();
+                        //string match = possiblecards[ii].ToLower();
+                        string match = possibnics[ii].nick.ToLower();
                         int posleng = Math.Min(match.Split(' ').Length,words.Length-i);
                         string searchob = string.Join(" ", words, i, posleng).ToLower();
-                        if (searchob.Contains(match)) { findcard = true; foundedcard = match; iadder = posleng; textplace = searchob; break; };
+                        if (searchob.Contains(match)) { findcard = true; foundedcard = possibnics[ii].cardname.ToLower(); iadder = posleng; textplace = searchob; break; };
 
 
                     }
@@ -1711,7 +1765,8 @@ namespace Auction.mod
                     if (findcard)
                     {
                         CardType type = CardTypeManager.getInstance().get(cardnametoid(foundedcard.ToLower()));
-                        c = new Card(cardids[arrindex], type, true);
+                        int realarrindex = Array.FindIndex(this.cardnames, element => foundedcard.Equals(element));
+                        c = new Card(cardids[realarrindex], type, true);
                         //Console.WriteLine("found " + foundedcard + " in " + textplace);
                         string tmpgold = pricetestfirst((textplace.Split(' '))[(textplace.Split(' ')).Length - 1]);
                         if (!(tmpgold == "") ) // && iadder >1
