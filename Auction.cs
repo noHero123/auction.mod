@@ -141,8 +141,8 @@ namespace Auction.mod
             int index=Array.FindIndex(cardnames, element => element.Equals(search.ToLower()));
             if (index >= 0)
             {
-                if (this.SPtarget) { wtspricelist1[SPretindex.ToLower()] = this.lowerprice[index].ToString(); }
-                else { wtbpricelist1[SPretindex.ToLower()] = this.upperprice[index].ToString(); }
+                if (this.SPtarget) { wtspricelist1[SPretindex.ToLower()] = this.upperprice[index].ToString(); }
+                else { wtbpricelist1[SPretindex.ToLower()] = this.lowerprice[index].ToString(); }
             }
         }
 
@@ -224,6 +224,11 @@ namespace Auction.mod
             }
         }
 
+        // some settings variables
+        private string spampreventtime="";
+        private int spamprevint;
+
+        // some nicknames variables
         private bool nicks = false;
         private List<nickelement> loadedscrollsnicks = new List<nickelement>();
         private List<nickelement> searchscrollsnicks = new List<nickelement>(); // = realcardnames + loadedscrollsnicks
@@ -261,8 +266,9 @@ namespace Auction.mod
         private bool selectable;
         private bool clickableItems;
         private Store storeinfo;
-        private bool generator;
-        private bool inauchouse;
+        private bool settings=false;
+        private bool generator=false;
+        private bool inauchouse=false;
         private string ownname;
         private string ownid;
 
@@ -315,6 +321,15 @@ namespace Auction.mod
         private settingcopy genwtbsettings = new settingcopy();
 
 
+        //settings
+        private Rect settingRect; private Rect setsave;
+        private Rect setpreventspammlabel; private Rect setpreventspammrect; private Rect setpreventspammlabel2;
+        private Rect setowncardsanzbox; private Rect setowncardsanzlabel;
+        private bool shownumberscrolls;
+        private Rect setsugrangebox; private Rect setsugrangelabel;
+        private bool showsugrange;
+
+        //filter
         
         private Rect filtermenurect;
         private Rect sbarlabelrect;
@@ -358,6 +373,7 @@ namespace Auction.mod
         Rect wtsbuttonrect;
         Rect wtbbuttonrect;
         Rect updatebuttonrect;
+        Rect fillbuttonrect;
 
         private float fieldHeight;
         private GUISkin cardListPopupSkin ;
@@ -1030,7 +1046,7 @@ namespace Auction.mod
         {
             if (info.target is Store && info.targetMethod.Equals("OnGUI"))
             {
-                if (this.inauchouse || this.generator) return true;
+                if (this.inauchouse || this.generator || this.settings) return true;
             }
             
             if (info.target is BattleMode && info.targetMethod.Equals("_handleMessage"))
@@ -1424,7 +1440,7 @@ namespace Auction.mod
         private void addcardstolist()
         {
             //Console.WriteLine("##addcars");
-            if (this.generator||!this.inauchouse) {
+            if (this.generator||!this.inauchouse|| this.settings) {
                 if (addingwtbcards.Count() > 0) this.newwtbmsgs = true;
                 if (addingwtscards.Count() > 0) this.newwtsmsgs = true;
             
@@ -1516,6 +1532,23 @@ namespace Auction.mod
 
         private void additemtolist(Card c, string from, int gold, bool wts,string wholemsg)
         {
+            if(wts)
+            {
+                if (wtslistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts")|| (element.whole.ToLower().Contains("sell"))) ) >= 0)
+                {
+                    aucitem aii = (wtslistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts") || (element.whole.ToLower().Contains("sell")))));
+                    if (aii.whole.Equals(wholemsg) && this.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * this.spamprevint)) > 0) { return; }
+                }
+            }
+            else
+            {
+                if (wtblistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))) >= 0)
+                {
+                    aucitem aii = (wtblistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))));
+                    if (aii.whole.Equals(wholemsg) && this.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * this.spamprevint)) > 0) { return; }
+                }
+            }
+            
             aucitem ai = new aucitem();
             ai.card = c;
             ai.seller = from;
@@ -1876,7 +1909,7 @@ namespace Auction.mod
 
             if (msg!="")
             {
-                if (this.wtsmenue) { msg = "wts " + msg; shortmsg = "aucs " + shortmsg; } else { msg = "wtb " + msg; shortmsg = "aucb " + shortmsg; }
+                if (this.wtsmenue) { msg = "WTS " + msg; shortmsg = "aucs " + shortmsg; } else { msg = "WTB " + msg; shortmsg = "aucb " + shortmsg; }
                 msg = msg.Remove(msg.Length - 2);
                 shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
@@ -2457,9 +2490,10 @@ namespace Auction.mod
                             GUI.Box(position7, string.Empty);
                         }
                         string name = current.card.getName();
+                        
                         string txt = cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-
+                        if (this.shownumberscrolls) name = name + " (" + this.available[current.card.getName()] + ")";
                         GUI.skin = this.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -2477,7 +2511,7 @@ namespace Auction.mod
                             text2 = string.Concat(new object[] { text3, "<color=#ddbb44>Tier ", current.card.level + 1, "</color>, " });
                             num2 += "<color=#rrggbb></color>".Length;
                         }
-                        text2 = text2 + current.card.getRarityString() + ", " + str;
+                        text2 = text2 + current.card.getRarityString() + ", " + str ;
                         Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
                         
                         Rect position9 = new Rect(this.labelX, (float)num * this.fieldHeight - 3f + this.fieldHeight * 0.57f, this.labelsWidth, this.cardHeight);
@@ -2538,6 +2572,7 @@ namespace Auction.mod
                         if (index >= 0)
                         {
                             suggeprice = "sug: "+this.sugprice[index];
+                            if (this.showsugrange && !this.lowerprice[index].Equals(this.upperprice[index])) suggeprice = "sug: " + this.lowerprice[index] + "-" + this.upperprice[index];
                         }
                         GUI.skin = this.cardListPopupSkin;
                         Rect position14 = new Rect(nextx + 2f, position9.y, this.labelsWidth / 2f, this.fieldHeight);
@@ -3140,8 +3175,10 @@ namespace Auction.mod
                             GUI.Box(position7, string.Empty);  
                         }
                         string name = current.card.getName();
+                        
                         string txt = cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
+                        if (this.shownumberscrolls) name = name + " (" + this.available[current.card.getName()] + ")";
                         GUI.skin = this.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -3306,6 +3343,27 @@ namespace Auction.mod
                     fullupdatelist(ahlist, ahlistfull);
                 }
                 GUI.color = Color.white;
+                if (GUI.Button(fillbuttonrect, "Fill"))
+                {
+                    if (this.wtsmenue)
+                    {
+                        foreach( aucitem c in this.ahlist)
+                        {
+                            this.wtspricelist1[c.card.getName().ToLower()] = this.upperprice[Array.FindIndex(cardids, element => element == c.card.getType())].ToString();
+
+                        }
+                    }
+                    else
+                    {
+                        foreach (aucitem c in this.ahlist)
+                        {
+                            this.wtbpricelist1[c.card.getName().ToLower()] = this.lowerprice[Array.FindIndex(cardids, element => element == c.card.getType())].ToString();
+
+                        }
+                    }
+
+                }
+
                 if (GUI.Button(updatebuttonrect, "Clear"))
                 {
                     if (this.wtsmenue)
@@ -3334,6 +3392,62 @@ namespace Auction.mod
             }
         }
 
+        private void drawsettings()
+        {
+            GUI.depth = 15;
+            GUI.color = Color.white;
+            GUI.skin = this.cardListPopupSkin;
+            GUI.Box(this.settingRect, string.Empty);
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            if (GUI.Button(setsave, "Save"))
+            {
+               //save stuff
+
+            }
+
+            // spam preventor
+            GUI.Label(setpreventspammlabel, "dont update messages which are younger than:");
+            GUI.Label(setpreventspammlabel2, "minutes");
+
+            GUI.Box(setpreventspammrect, "");
+            GUI.skin = this.cardListPopupSkin;
+            GUI.Box(this.setpreventspammrect, string.Empty);
+            chatLogStyle.alignment = TextAnchor.MiddleCenter;
+            spampreventtime = Regex.Replace(GUI.TextField(setpreventspammrect, spampreventtime, chatLogStyle), @"[^0-9]", "");
+            chatLogStyle.alignment = TextAnchor.MiddleLeft;
+            if (spampreventtime!="")spamprevint = Convert.ToInt32(spampreventtime);
+            if (spamprevint > 30) { spampreventtime = "30"; spamprevint = 30; }
+
+            //anz cards
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            GUI.Label(setowncardsanzlabel, "show owned number of scrolls after scrollname");
+            bool owp = GUI.Button(setowncardsanzbox, "");
+            if (owp) this.shownumberscrolls = !this.shownumberscrolls;
+            if (this.shownumberscrolls)
+            {
+                GUI.DrawTexture(setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+            }
+            else
+            {
+                GUI.DrawTexture(setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+            }
+
+            // show range
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            GUI.Label(setsugrangelabel, "show sug. price as rage");
+            bool oowp = GUI.Button(setsugrangebox, "");
+            if (oowp) this.showsugrange = !this.showsugrange;
+            if (this.showsugrange)
+            {
+                GUI.DrawTexture(setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+            }
+            else
+            {
+                GUI.DrawTexture(setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+            }
+
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+        }
 
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
@@ -3365,6 +3479,9 @@ namespace Auction.mod
                 this.lobbySkin = (GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target);
                 this.storeinfo=(Store)info.target;
                 this.showtradedialog = false;
+                this.inauchouse = false;
+                this.generator = false;
+                this.settings = false;
                 //this.AHFrame = new GameObject("Card List / AH List").AddComponent<CardListPopup>();
                 //this.AHFrame.Init(new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.height * 0.8f, (float)Screen.height * 0.7f), false, true, this.ahlist, this, null, new GUIContent("BLUBB"), false, true, false, false, null, false);
                 //this.AHFrame.SetOpacity(1f);
@@ -3465,11 +3582,13 @@ namespace Auction.mod
                     if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && this.clicked >=3) { this.clearallpics(); }
 
                     //auction house...
-                    GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 4);
+                    GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
                     //klick button AH
                     if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(2f), "AH", this.lobbySkin) && !this.showtradedialog)
                     {
                         this.inauchouse = true;
+                        this.settings = false;
+                        this.generator = false;
                         //this.hideInformation();
                         hideInformationinfo.Invoke(storeinfo, null);
 
@@ -3484,8 +3603,9 @@ namespace Auction.mod
                         
                         Store.ENABLE_SHARD_PURCHASES = false;
                         
-                        this.generator = false;
+                        
                         this.clickableItems = false;
+
                         this.selectable = true;
                         if (this.wtsinah)
                         {
@@ -3517,13 +3637,16 @@ namespace Auction.mod
                     {
                         //this.hideInformation();
                         hideInformationinfo.Invoke(storeinfo, null);
-                        showBuyinfo.SetValue(storeinfo, false);
                         iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        showSellinfo.SetValue(storeinfo, false);
+                        showBuyinfo.SetValue(storeinfo, false);
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
                         iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
+                        showSellinfo.SetValue(storeinfo, false);
                         Store.ENABLE_SHARD_PURCHASES = false;
                         this.inauchouse = false;
                         this.generator = true;
+                        this.settings = false;
 
                         this.clickableItems = false;
                         this.selectable = true;
@@ -3545,6 +3668,23 @@ namespace Auction.mod
                         fullupdatelist(ahlist, ahlistfull);
                         this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
                     }
+                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(4f), "settings", this.lobbySkin) && !this.showtradedialog)
+                    {
+                        //this.hideInformation();
+                        hideInformationinfo.Invoke(storeinfo, null);
+                        iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+                        showBuyinfo.SetValue(storeinfo, false);
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
+                        iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
+                        showSellinfo.SetValue(storeinfo, false);
+                        Store.ENABLE_SHARD_PURCHASES = false;
+                        this.inauchouse = false;
+                        this.generator = false;
+                        this.settings = true;
+                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
+                    }    
+
 
                     // draw ah oder gen-menu
 
@@ -3552,6 +3692,9 @@ namespace Auction.mod
                     GUI.color = Color.white;
                     GUI.contentColor = Color.white;
                     if (this.generator) drawgenerator();
+                    GUI.color = Color.white;
+                    GUI.contentColor = Color.white;
+                    if (this.settings) drawsettings();
                     GUI.color = Color.white;
                     GUI.contentColor = Color.white;
                     // draw cardoverlay again!
@@ -3589,6 +3732,7 @@ namespace Auction.mod
                 Store.ENABLE_SHARD_PURCHASES = true;
                 inauchouse = false;
                 generator = false;
+                this.settings = false;
                 this.showtradedialog=false;
 
             }
@@ -3903,6 +4047,7 @@ namespace Auction.mod
             this.wtsbuttonrect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
             this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
             this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+            this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
 
             num = (float)Screen.height / (float)Screen.width * 0.16f;
             this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);
@@ -3961,7 +4106,7 @@ namespace Auction.mod
 
 
             GUI.skin = this.cardListPopupSkin;
-            float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("LOL"),1000);
+            float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("Jg"),1000);
             this.sbnetworklabel = new Rect(filtermenurect.x+4, filtermenurect.yMax - smalltexthight-4, filtermenurect.width, smalltexthight);
 
             this.tradingbox = new Rect((float)Screen.width / 2f - (float)Screen.width * 0.15f, (float)Screen.height / 2f - (float)Screen.height * 0.15f, (float)Screen.width * 0.3f, (float)Screen.height * 0.3f);
@@ -3975,6 +4120,34 @@ namespace Auction.mod
             
             this.tbmessage = new Rect(this.tradingbox.x, this.tradingbox.y, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f)/2f);
             this.tbmessagescroll = new Rect(this.tradingbox.x, this.tbmessage.yMax, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f) / 2f);
+            setupsettingpositions();
+        }
+
+        private void setupsettingpositions()
+        {
+            float num = 0.005f * (float)Screen.width;
+            
+            this.settingRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.98f, (float)Screen.height * 0.57f);
+            float buttonleng = this.settingRect.width * 0.10f;
+            float chatheight = this.chatLogStyle.CalcHeight(new GUIContent("JSllg"), 1000);
+            float texthight = chatheight + 2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
+            this.setsave = new Rect(settingRect.xMax - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent("dont update Messages which are younger than:"));
+            this.setpreventspammlabel = new Rect(settingRect.x + 4, settingRect.y + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("9999"));
+            this.setpreventspammrect = new Rect(setpreventspammlabel.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("minutes"));
+            this.setpreventspammlabel2 = new Rect(setpreventspammrect.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
+
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls below cardname"));
+            this.setowncardsanzbox = new Rect(setpreventspammlabel.x, setpreventspammlabel.yMax + 4, texthight, texthight);
+            this.setowncardsanzlabel = new Rect(setowncardsanzbox.xMax + 4, setpreventspammlabel.yMax + 4, vector2.x, texthight);
+
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show sug. price as rage"));
+            this.setsugrangebox = new Rect(setowncardsanzbox.x, setowncardsanzbox.yMax + 4, texthight, texthight);
+            this.setsugrangelabel = new Rect(setsugrangebox.xMax + 4, setowncardsanzbox.yMax + 4, vector2.x, texthight);
+
         }
         
         private void RenderCost(Rect rect, Card card)
