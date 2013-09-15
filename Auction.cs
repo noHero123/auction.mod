@@ -450,11 +450,41 @@ namespace Auction.mod
         bool postmsggetnextroomenter = false;
 
         bool chatisshown = false;
+        bool deckchanged = false;
 
         string[] auccontroler = new string[] { };
 
         public void handleMessage(Message msg)
         {
+
+            if (msg is BuyStoreItemResponseMessage)
+            {
+                List<Card> boughtCards = null;
+                BuyStoreItemResponseMessage buyStoreItemResponseMessage = (BuyStoreItemResponseMessage)msg;
+                if (buyStoreItemResponseMessage.cards.Length > 0)
+                {
+                    boughtCards = new List<Card>(buyStoreItemResponseMessage.cards);
+                }
+                else
+                {
+                    boughtCards = null;
+                }
+                DeckInfo deckInfo = buyStoreItemResponseMessage.deckInfo;
+                if (boughtCards != null)
+                {
+                    deckchanged = true;
+                }
+                else
+                {
+                    if (deckInfo != null)
+                    {
+                        deckchanged = true; 
+                    }
+                }
+            }
+
+
+
             if (msg is TradeResponseMessage)
             {
                 TradeResponseMessage trm = (TradeResponseMessage)msg;
@@ -3586,6 +3616,8 @@ namespace Auction.mod
                     //klick button AH
                     if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(2f), "AH", this.lobbySkin) && !this.showtradedialog)
                     {
+                        if (this.deckchanged)
+                        { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
                         this.inauchouse = true;
                         this.settings = false;
                         this.generator = false;
@@ -3635,6 +3667,8 @@ namespace Auction.mod
 
                     if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(3f), "Gen", this.lobbySkin) && !this.showtradedialog)
                     {
+                        if (this.deckchanged)
+                        { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
                         //this.hideInformation();
                         hideInformationinfo.Invoke(storeinfo, null);
                         iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
@@ -3734,6 +3768,7 @@ namespace Auction.mod
                 generator = false;
                 this.settings = false;
                 this.showtradedialog=false;
+                if (info.targetMethod.Equals("showSellMenu")) { this.deckchanged = false; }
 
             }
 
