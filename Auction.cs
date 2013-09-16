@@ -327,6 +327,9 @@ namespace Auction.mod
         private Rect setowncardsanzbox; private Rect setowncardsanzlabel;
         private bool shownumberscrolls;
         private Rect setsugrangebox; private Rect setsugrangelabel;
+        private Rect setrowhightbox; private Rect setrowhightlabel, setrowhightlabel2;
+        private string rowscalestring="10";
+        private float rowscale=1.0f;
         private bool showsugrange;
 
         //filter
@@ -3450,7 +3453,7 @@ namespace Auction.mod
 
             //anz cards
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setowncardsanzlabel, "show owned number of scrolls after scrollname");
+            GUI.Label(setowncardsanzlabel, "show owned number of scrolls beside scrollname");
             bool owp = GUI.Button(setowncardsanzbox, "");
             if (owp) this.shownumberscrolls = !this.shownumberscrolls;
             if (this.shownumberscrolls)
@@ -3475,6 +3478,20 @@ namespace Auction.mod
             {
                 GUI.DrawTexture(setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
+
+            GUI.Label(setrowhightlabel, "scale row hight by factor");
+            GUI.Label(setrowhightlabel2, "/10");
+            GUI.Box(setrowhightbox, "");
+            GUI.skin = this.cardListPopupSkin;
+            GUI.Box(this.setrowhightbox, string.Empty);
+            chatLogStyle.alignment = TextAnchor.MiddleCenter;
+            string rowcopy = rowscalestring;
+            rowscalestring = Regex.Replace(GUI.TextField(setrowhightbox, rowscalestring, chatLogStyle), @"[^0-9]", "");
+            chatLogStyle.alignment = TextAnchor.MiddleLeft;
+            if (rowscalestring != "") { rowscale = (float)Convert.ToDouble(rowscalestring) / 10f; } else { rowscale = 1.0f; }
+            if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
+            if (rowscale < 0.5f) { rowscale = .5f; rowscalestring = "5"; }
+            if (!rowcopy.Equals(rowscalestring)) { this.setupPositions(); }
 
             GUI.skin = this.cardListPopupLeftButtonSkin;
         }
@@ -4084,7 +4101,7 @@ namespace Auction.mod
             this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
             this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
 
-            num = (float)Screen.height / (float)Screen.width * 0.16f;
+            num = (float)Screen.height / (float)Screen.width * 0.16f * this.rowscale;//0.16
             this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);
             this.costIconSize = this.fieldHeight;
             this.costIconWidth = this.fieldHeight / 1.1f;
@@ -4170,18 +4187,27 @@ namespace Auction.mod
             GUI.skin = this.cardListPopupLeftButtonSkin;
             Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent("dont update Messages which are younger than:"));
             this.setpreventspammlabel = new Rect(settingRect.x + 4, settingRect.y + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("9999"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("99999"));
             this.setpreventspammrect = new Rect(setpreventspammlabel.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent("minutes"));
             this.setpreventspammlabel2 = new Rect(setpreventspammrect.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
 
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls below cardname"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls beside cardname"));
             this.setowncardsanzbox = new Rect(setpreventspammlabel.x, setpreventspammlabel.yMax + 4, texthight, texthight);
             this.setowncardsanzlabel = new Rect(setowncardsanzbox.xMax + 4, setpreventspammlabel.yMax + 4, vector2.x, texthight);
 
             vector2 = GUI.skin.label.CalcSize(new GUIContent("show sug. price as range"));
             this.setsugrangebox = new Rect(setowncardsanzbox.x, setowncardsanzbox.yMax + 4, texthight, texthight);
             this.setsugrangelabel = new Rect(setsugrangebox.xMax + 4, setowncardsanzbox.yMax + 4, vector2.x, texthight);
+
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("scale row hight by factor"));
+            this.setrowhightlabel = new Rect(setowncardsanzbox.x, setsugrangebox.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("99999"));
+            this.setrowhightbox = new Rect(setrowhightlabel.xMax + 4, setsugrangebox.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("/10"));
+            this.setrowhightlabel2 = new Rect(setrowhightbox.xMax + 4, setsugrangebox.yMax + 4, vector2.x, texthight);
+
+
 
         }
         
