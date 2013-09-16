@@ -3490,7 +3490,7 @@ namespace Auction.mod
             chatLogStyle.alignment = TextAnchor.MiddleLeft;
             if (rowscalestring != "") { rowscale = (float)Convert.ToDouble(rowscalestring) / 10f; } else { rowscale = 1.0f; }
             if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
-            if (rowscale < 0.5f) { rowscale = .5f; rowscalestring = "5"; }
+            if (rowscale < 0.5f) { rowscale = .5f; }
             if (!rowcopy.Equals(rowscalestring)) { this.setupPositions(); }
 
             GUI.skin = this.cardListPopupLeftButtonSkin;
