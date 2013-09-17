@@ -1855,7 +1855,7 @@ namespace Auction.mod
                 {
                     if (s == "" || s == " ") continue;
                     string cardname = s.Split(':')[0];
-                    if (cardnames.Contains(cardname))
+                    if (cardnames.Contains(cardname.ToLower()))
                     {
                         string[] nickes = (s.Split(':')[1]).Split(',');
                         foreach (string n in nickes)
