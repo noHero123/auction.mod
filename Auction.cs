@@ -138,11 +138,35 @@ namespace Auction.mod
 
         public void PriceChecker( String search)
         {
+            
             int index=Array.FindIndex(cardnames, element => element.Equals(search.ToLower()));
             if (index >= 0)
             {
-                if (this.SPtarget) { wtspricelist1[SPretindex.ToLower()] = this.upperprice[index].ToString(); }
-                else { wtbpricelist1[SPretindex.ToLower()] = this.lowerprice[index].ToString(); }
+                if (this.SPtarget)
+                {
+                    int price = this.upperprice[index];
+                    if (roundwts)
+                    {
+                        price = pricerounder(price, SPtarget);
+                    }
+
+
+                    wtspricelist1[SPretindex.ToLower()] = price.ToString(); 
+                
+                }
+                else 
+                {
+
+                    int price = this.lowerprice[index];
+                    if (roundwtb)
+                    {
+                        price = pricerounder(price, SPtarget);
+                    }
+
+                    wtbpricelist1[SPretindex.ToLower()] = price.ToString();
+                
+                
+                }
             }
         }
 
@@ -322,7 +346,7 @@ namespace Auction.mod
 
 
         //settings
-        private Rect settingRect; private Rect setsave;
+        private Rect settingRect; private Rect setsave, setreset, setload;
         private Rect setpreventspammlabel; private Rect setpreventspammrect; private Rect setpreventspammlabel2;
         private Rect setowncardsanzbox; private Rect setowncardsanzlabel;
         private bool shownumberscrolls;
@@ -331,6 +355,11 @@ namespace Auction.mod
         private string rowscalestring="10";
         private float rowscale=1.0f;
         private bool showsugrange;
+        private Rect setwtslabel1, setwtslabel2, setwtsbutton1, setwtsbutton2, setwtsbox;
+        private bool wtsroundup = true; private int wtsroundmode = 0; private bool roundwts = false;
+
+        private Rect setwtblabel1, setwtblabel2, setwtbbutton1, setwtbbutton2, setwtbbox;
+        private bool wtbroundup = false; private int wtbroundmode = 0; private bool roundwtb = false;
 
         //filter
         
@@ -673,7 +702,7 @@ namespace Auction.mod
                     if (cardnames[i].Split(' ').Length > longestcardname) { longestcardname = cardnames[i].Split(' ').Length; };
                 }
 
-
+                if (this.nicks) readnicksfromfile();
                 this.searchscrollsnicks.Clear();
                 this.wtbpricelist1.Clear();
                 allcardsavailable.Clear();
@@ -944,6 +973,68 @@ namespace Auction.mod
 
         }
 
+        private void loadsettings()
+        {
+
+            string text = System.IO.File.ReadAllText(this.ownaucpath + "settingsauc.txt");
+            string[] txt = text.Split(';');
+            foreach (string t in txt)
+            {
+                string setting = t.Split(' ')[0];
+                string value = "";
+                if (t.Split(' ').Length == 2)
+                {
+                    value = t.Split(' ')[1];
+                }
+                if (setting.Equals("spam"))
+                {
+                    spampreventtime = value;
+                    if (spampreventtime != "") spamprevint = Convert.ToInt32(spampreventtime);
+                    if (spamprevint > 30) { spampreventtime = "30"; spamprevint = 30; }
+                }
+                if (setting.Equals("numbers"))
+                {
+                    shownumberscrolls = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("range"))
+                {
+                    showsugrange = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("rowscale"))
+                {
+                    rowscalestring = value;
+                    if (rowscalestring != "") { rowscale = (float)Convert.ToDouble(rowscalestring) / 10f; } else { rowscale = 1.0f; }
+                    if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
+                    if (rowscale < 0.5f) { rowscale = .5f; }
+                }
+                if (setting.Equals("sround"))
+                {
+                    roundwts = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("sroundu"))
+                {
+                    wtsroundup = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("sroundm"))
+                {
+                    wtsroundmode = Convert.ToInt32(value);
+                }
+                if (setting.Equals("bround"))
+                {
+                    roundwtb = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("broundu"))
+                {
+                    wtbroundup = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("broundm"))
+                {
+                    wtbroundmode = Convert.ToInt32(value);
+                }
+
+            }
+
+        }
 
         public Auction()
         {
@@ -1024,8 +1115,14 @@ namespace Auction.mod
             if (aucfiles.Contains(this.ownaucpath + "nicauc.txt"))//File.Exists() was slower
             {
                 this.nicks = true;
-                this.readnicksfromfile();
             }
+
+            if (aucfiles.Contains(this.ownaucpath + "settingsauc.txt"))//File.Exists() was slower
+            {
+                loadsettings();
+            }
+
+
 
             try
             {
@@ -1758,14 +1855,17 @@ namespace Auction.mod
                 {
                     if (s == "" || s == " ") continue;
                     string cardname = s.Split(':')[0];
-                    string[] nickes = (s.Split(':')[1]).Split(',');
-                    foreach (string n in nickes)
+                    if (cardnames.Contains(cardname))
                     {
-                        nickelement nele;
-                        nele.nick = n.ToLower();
-                        nele.cardname = cardname.ToLower();
-                        this.loadedscrollsnicks.Add(nele);
+                        string[] nickes = (s.Split(':')[1]).Split(',');
+                        foreach (string n in nickes)
+                        {
+                            nickelement nele;
+                            nele.nick = n.ToLower();
+                            nele.cardname = cardname.ToLower();
+                            this.loadedscrollsnicks.Add(nele);
 
+                        }
                     }
 
                 }
@@ -3382,7 +3482,12 @@ namespace Auction.mod
                     {
                         foreach( aucitem c in this.ahlist)
                         {
-                            this.wtspricelist1[c.card.getName().ToLower()] = this.upperprice[Array.FindIndex(cardids, element => element == c.card.getType())].ToString();
+                            int price=this.upperprice[Array.FindIndex(cardids, element => element == c.card.getType())];
+                            if (roundwts)
+                            {
+                                price = pricerounder(price, wtsmenue);
+                            }
+                            this.wtspricelist1[c.card.getName().ToLower()] = price.ToString();
 
                         }
                     }
@@ -3390,7 +3495,13 @@ namespace Auction.mod
                     {
                         foreach (aucitem c in this.ahlist)
                         {
-                            this.wtbpricelist1[c.card.getName().ToLower()] = this.lowerprice[Array.FindIndex(cardids, element => element == c.card.getType())].ToString();
+
+                            int price = this.lowerprice[Array.FindIndex(cardids, element => element == c.card.getType())];
+                            if (roundwtb)
+                            {
+                                price = pricerounder(price, wtsmenue);
+                            }
+                            this.wtbpricelist1[c.card.getName().ToLower()] = price.ToString();
 
                         }
                     }
@@ -3425,6 +3536,108 @@ namespace Auction.mod
             }
         }
 
+        private int pricerounder(int price, bool wts)
+        {
+            if (wts)
+            {
+                if (wtsroundup)
+                {
+
+
+                    if (wtsroundmode == 0)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0 && lastdigit < 5) { price = price + 5 - lastdigit; }
+                        if (lastdigit > 5) { price = price + 10 - lastdigit; }
+                    }
+                    if (wtsroundmode == 1)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0) { price = price + 10 - lastdigit; }
+                    }
+                    if (wtsroundmode == 2)
+                    {
+                        int lastdigit = price % 100;
+                        if (lastdigit > 0 && lastdigit < 50) { price = price + 50 - lastdigit; }
+                        if (lastdigit > 50) { price = price + 100 - lastdigit; }
+                    }
+
+                }
+                else
+                {
+                    if (wtsroundmode == 0)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0 && lastdigit < 5) { price = price - lastdigit; }
+                        if (lastdigit > 5) { price = price + 5 - lastdigit; }
+                    }
+                    if (wtsroundmode == 1)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0) { price = price - lastdigit; }
+                    }
+                    if (wtsroundmode == 2)
+                    {
+                        int lastdigit = price % 100;
+                        if (lastdigit > 0 && lastdigit < 50) { price = price - lastdigit; }
+                        if (lastdigit > 50) { price = price + 50 - lastdigit; }
+                    }
+
+                }
+            }
+            else
+            {
+                if (wtbroundup)
+                {
+
+
+                    if (wtbroundmode == 0)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0 && lastdigit < 5) { price = price + 5 - lastdigit; }
+                        if (lastdigit > 5) { price = price + 10 - lastdigit; }
+                    }
+                    if (wtbroundmode == 1)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0) { price = price + 10 - lastdigit; }
+                    }
+                    if (wtbroundmode == 2)
+                    {
+                        int lastdigit = price % 100;
+                        if (lastdigit > 0 && lastdigit < 50) { price = price + 50 - lastdigit; }
+                        if (lastdigit > 50) { price = price + 100 - lastdigit; }
+                    }
+
+                }
+                else
+                {
+                    if (wtbroundmode == 0)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0 && lastdigit < 5) { price = price - lastdigit; }
+                        if (lastdigit > 5) { price = price + 5 - lastdigit; }
+                    }
+                    if (wtbroundmode == 1)
+                    {
+                        int lastdigit = price % 10;
+                        if (lastdigit > 0) { price = price - lastdigit; }
+                    }
+                    if (wtbroundmode == 2)
+                    {
+                        int lastdigit = price % 100;
+                        if (lastdigit > 0 && lastdigit < 50) { price = price - lastdigit; }
+                        if (lastdigit > 50) { price = price + 50 - lastdigit; }
+                    }
+
+                }
+            
+            }
+
+
+            return price;
+        }
+
         private void drawsettings()
         {
             GUI.depth = 15;
@@ -3432,9 +3645,43 @@ namespace Auction.mod
             GUI.skin = this.cardListPopupSkin;
             GUI.Box(this.settingRect, string.Empty);
             GUI.skin = this.cardListPopupLeftButtonSkin;
+            if (GUI.Button(setreset, "Reset"))
+            {
+                spampreventtime = "";
+                spamprevint = 0;
+                shownumberscrolls = false;
+                showsugrange = false;
+                rowscalestring = "10";
+                rowscale = 1f;
+                this.setupPositions();
+                roundwts = false;
+                wtsroundup = true;
+                wtsroundmode = 0;
+                roundwtb = false;
+                wtbroundup = false;
+                wtbroundmode = 0;
+
+            }
+            if (GUI.Button(setload, "Load"))
+            {
+                this.loadsettings();
+                this.setupPositions();
+            }
             if (GUI.Button(setsave, "Save"))
             {
                //save stuff
+                string text = "";
+                text = text + "spam " + spampreventtime + ";";
+                text = text + "numbers " + shownumberscrolls.ToString() + ";";
+                text = text + "range " + showsugrange.ToString() + ";";
+                text = text + "rowscale " + rowscalestring + ";";
+                text = text + "sround " + roundwts.ToString() + ";";
+                text = text + "sroundu " + wtsroundup.ToString() + ";";
+                text = text + "sroundm " + wtsroundmode.ToString() + ";";
+                text = text + "bround " + roundwtb.ToString() + ";";
+                text = text + "broundu " + wtbroundup.ToString() + ";";
+                text = text + "broundm " + wtbroundmode.ToString() + ";";
+                System.IO.File.WriteAllText(this.ownaucpath + "settingsauc.txt", text);
 
             }
 
@@ -3492,6 +3739,68 @@ namespace Auction.mod
             if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
             if (rowscale < 0.5f) { rowscale = .5f; }
             if (!rowcopy.Equals(rowscalestring)) { this.setupPositions(); }
+
+            //round wts
+
+
+            bool ooowp = GUI.Button(setwtsbox, "");
+            if (ooowp) this.roundwts = !this.roundwts;
+            if (this.roundwts)
+            {
+                GUI.DrawTexture(setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+            }
+            else
+            {
+                GUI.DrawTexture(setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+            }
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            GUI.Label(setwtslabel1, "round ScrollsPost prices in WTS-generator ");
+            if (GUI.Button(setwtsbutton1, ""))
+            {
+                this.wtsroundup = !this.wtsroundup;
+            }
+            GUI.Label(setwtslabel2, " to next ");
+            if (GUI.Button(setwtsbutton2, ""))
+            {
+                this.wtsroundmode = (this.wtsroundmode+1)%3;
+            }
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            if (this.wtsroundup) { GUI.Label(setwtsbutton1, "up"); } else { GUI.Label(setwtsbutton1, "down"); }
+            if (this.wtsroundmode==0) { GUI.Label(setwtsbutton2, "5"); }
+            if (this.wtsroundmode == 1) { GUI.Label(setwtsbutton2, "10"); }
+            if (this.wtsroundmode == 2) { GUI.Label(setwtsbutton2, "50"); }
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+            //round wtb
+
+
+            bool ooowwp = GUI.Button(setwtbbox, "");
+            if (ooowwp) this.roundwtb = !this.roundwtb;
+            if (this.roundwtb)
+            {
+                GUI.DrawTexture(setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+            }
+            else
+            {
+                GUI.DrawTexture(setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+            }
+            GUI.skin = this.cardListPopupLeftButtonSkin;
+            GUI.Label(setwtblabel1, "round ScrollsPost prices in WTB-generator ");
+            if (GUI.Button(setwtbbutton1, ""))
+            {
+                this.wtbroundup = !this.wtbroundup;
+            }
+            GUI.Label(setwtblabel2, " to next ");
+            if (GUI.Button(setwtbbutton2, ""))
+            {
+                this.wtbroundmode = (this.wtbroundmode + 1) % 3;
+            }
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            if (this.wtbroundup) { GUI.Label(setwtbbutton1, "up"); } else { GUI.Label(setwtbbutton1, "down"); }
+            if (this.wtbroundmode == 0) { GUI.Label(setwtbbutton2, "5"); }
+            if (this.wtbroundmode == 1) { GUI.Label(setwtbbutton2, "10"); }
+            if (this.wtbroundmode == 2) { GUI.Label(setwtbbutton2, "50"); }
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
             GUI.skin = this.cardListPopupLeftButtonSkin;
         }
@@ -4183,7 +4492,9 @@ namespace Auction.mod
             float buttonleng = this.settingRect.width * 0.10f;
             float chatheight = this.chatLogStyle.CalcHeight(new GUIContent("JSllg"), 1000);
             float texthight = chatheight + 2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
-            this.setsave = new Rect(settingRect.xMax - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
+            this.setreset = new Rect(settingRect.xMax - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
+            this.setload = new Rect(setreset.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
+            this.setsave = new Rect(setload.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
             GUI.skin = this.cardListPopupLeftButtonSkin;
             Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent("dont update Messages which are younger than:"));
             this.setpreventspammlabel = new Rect(settingRect.x + 4, settingRect.y + 4, vector2.x, texthight);
@@ -4207,6 +4518,26 @@ namespace Auction.mod
             vector2 = GUI.skin.label.CalcSize(new GUIContent("/10"));
             this.setrowhightlabel2 = new Rect(setrowhightbox.xMax + 4, setsugrangebox.yMax + 4, vector2.x, texthight);
 
+            // rounding
+            this.setwtsbox = new Rect(setowncardsanzbox.x, setrowhightlabel.yMax + 4, texthight, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTS-generator "));
+            this.setwtslabel1 = new Rect(setwtsbox.xMax+4, setrowhightlabel.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
+            this.setwtsbutton1 = new Rect(setwtslabel1.xMax+4, setrowhightlabel.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" to next "));
+            this.setwtslabel2 = new Rect(setwtsbutton1.xMax + 4, setrowhightlabel.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
+            this.setwtsbutton2 = new Rect(setwtslabel2.xMax + 4, setrowhightlabel.yMax + 4, vector2.x, texthight);
+            // rounding
+            this.setwtbbox = new Rect(setowncardsanzbox.x, setwtsbox.yMax + 4, texthight, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTB-generator "));
+            this.setwtblabel1 = new Rect(setwtbbox.xMax + 4, setwtsbox.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
+            this.setwtbbutton1 = new Rect(setwtblabel1.xMax + 4, setwtsbox.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" to next "));
+            this.setwtblabel2 = new Rect(setwtbbutton1.xMax + 4, setwtsbox.yMax + 4, vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
+            this.setwtbbutton2 = new Rect(setwtblabel2.xMax + 4, setwtsbox.yMax + 4, vector2.x, texthight);
 
 
         }
