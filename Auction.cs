@@ -3787,7 +3787,7 @@ namespace Auction.mod
 
             // show range
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setsugrangelabel, "show sug. price as range");
+            GUI.Label(setsugrangelabel, "show ScrollsPost price as range");
             bool oowp = GUI.Button(setsugrangebox, "");
             if (oowp) this.showsugrange = !this.showsugrange;
             if (this.showsugrange)
@@ -4696,7 +4696,7 @@ namespace Auction.mod
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost prices"));
             this.setwtbahlabel4 = new Rect(setwtbahbutton2.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
 
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show sug. price as range"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show ScrollsPost price as range"));
             this.setsugrangebox = new Rect(setowncardsanzbox.x, setwtbahlabel.yMax + 4, texthight, texthight);
             this.setsugrangelabel = new Rect(setsugrangebox.xMax + 4, setsugrangebox.y, vector2.x, texthight);
 
