@@ -10,7 +10,6 @@ using ScrollsModLoader.Interfaces;
 using UnityEngine;
 using Mono.Cecil;
 using Irrelevant.Assets;
-using ScrollsModLoader;
 using System.Net;
 using System.IO;
 
@@ -20,6 +19,17 @@ namespace Auction.mod
 
     using System;
     using UnityEngine;
+
+	public struct aucitem
+	{
+		public Card card;
+		public string seller;
+		public string price;
+		public int priceinint;
+		public string time;
+		public DateTime dtime;
+		public string whole;
+	}
 
 
     public class Auction : BaseMod, ICommListener, iEffect, iCardRule, ICardListCallback
@@ -184,17 +194,6 @@ namespace Auction.mod
             public GUIStyle style;
             public Rect rect;
             public Color color;
-        }
-
-        struct aucitem
-        {
-            public Card card;
-            public string seller;
-            public string price;
-            public int priceinint;
-            public string time;
-            public DateTime dtime;
-            public string whole;
         }
 
         class settingcopy
@@ -787,70 +786,22 @@ namespace Auction.mod
 
         private void searchlessthan3(List<aucitem> list)
         {
-            
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            // add the t1 cards first ( the t3 cards at least)
-            foreach (aucitem card in temp)
-            {
-                if (available.ContainsKey(card.card.getName()))
-                {
-                    if (available[card.card.getName()] < 3)
-                    {
-                        list.Add(card);
-                    };
-                }
-                else { list.Add(card); } // if you dont have the card, you have less than 3 :D
-
-            }
-
-
+			AucItemFilter.filterList (list, (aucitem a) => (!available.ContainsKey (a.card.getName ()) || available [a.card.getName ()] < 3));
         }
 
         private void searchmorethan3(List<aucitem> list)
         {
-            
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            // add the t1 cards first ( the t3 cards at least)
-            foreach (aucitem card in temp)
-            {
-                if ( available[card.card.getName()] > 3)
-                {
-                    list.Add(card);
-                };
-
-            }
-            
-
+			AucItemFilter.filterList (list, (aucitem a) => (available.ContainsKey (a.card.getName ()) && available [a.card.getName ()] > 3));
         }
 
         private void searchmorethan0(List<aucitem> list)
         {
-
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            // add the t1 cards first ( the t3 cards at least)
-            foreach (aucitem card in temp)
-            {
-                if (available[card.card.getName()] >=1)
-                {
-                    list.Add(card);
-                };
-
-            }
-
-
+			AucItemFilter.filterList (list, (aucitem a) => (available.ContainsKey (a.card.getName ()) && available [a.card.getName ()] > 0));
         }
 
         private void musthaveprice(List<aucitem> list)
         {
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            foreach (aucitem card in temp)//this.orgicardsPlayer1)
-            {
-                if (card.priceinint >= 1) { list.Add(card); };
-            }
+			AucItemFilter.filterList (list, (aucitem a) => (a.priceinint >= 1));
         }
 
         private void priceishigher(string price, List<aucitem> list)
@@ -923,55 +874,29 @@ namespace Auction.mod
 
         }
 
-        private void containsseller(string name, List<aucitem> list)
+        private void containsseller(string ignoredNames, List<aucitem> list)
         {
-            // "contains seller not" should its name be :D
-            string[] sellers = new string[]{name};
-            if (name.Contains(" ")) sellers = name.ToLower().Split(' ');
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            foreach (aucitem card in temp)//this.orgicardsPlayer1)
-            {
-                //if (card.seller.ToLower().Contains(name.ToLower())) { list.Add(card); };
-                if (!sellers.Any(card.seller.ToLower().Equals)) { list.Add(card); };
-            }
 
+            // "contains seller not" should its name be :D
+			string[] ignoredSellers = new string[]{ignoredNames};
+			if (ignoredNames.Contains(" ")) ignoredSellers = ignoredNames.ToLower().Split(' ');
+
+			AucItemFilter.filterList (list, (aucitem a) => !ignoredSellers.Any (a.seller.ToLower ().Equals));
         }
 
         private void containsname(string name, List<aucitem> list)
         {
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            foreach (aucitem card in temp)//this.orgicardsPlayer1)
-            {
-                if (card.card.getName().ToLower().Contains(name.ToLower())) { list.Add(card); };
-
-            }
-
+			AucItemFilter.filterList (list, (aucitem a) => (a.card.getName ().ToLower ().Contains (name.ToLower ())));
         }
 
-        private void searchforownenergy(string[] rare, List<aucitem> list)
+        private void searchforownenergy(string[] resources, List<aucitem> list)
         {
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            foreach (aucitem card in temp)
-            {
-                if (rare.Contains(card.card.getResourceString().ToLower())) { list.Add(card); };
-
-            }
-
+			AucItemFilter.filterList (list, (aucitem a) => (resources.Contains (a.card.getResourceString ().ToLower ())));
         }
 
         private void searchforownrarity(int[] rare, List<aucitem> list)
         {
-            List<aucitem> temp = new List<aucitem>(list);
-            list.Clear();
-            foreach (aucitem card in temp)
-            {
-                if (rare.Contains(card.card.getRarity())) { list.Add(card); };
-
-            }
-
+			AucItemFilter.filterList (list, (aucitem a) => (rare.Contains(a.card.getRarity())));
         }
 
         private void loadsettings()
