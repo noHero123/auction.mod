@@ -227,7 +227,6 @@ namespace Auction.mod
                 return (x.card.getName()).CompareTo(y.card.getName());
             }
         }
-
         class aucitemgoldcomparer : IComparer<aucitem>
         {
             public int Compare(aucitem x, aucitem y)
@@ -252,16 +251,7 @@ namespace Auction.mod
         private List<nickelement> loadedscrollsnicks = new List<nickelement>();
         private List<nickelement> searchscrollsnicks = new List<nickelement>(); // = realcardnames + loadedscrollsnicks
 
-        private Dictionary<string, string> aucusers=new Dictionary<string,string>();
-        int idtesting = 0;
-
-        bool realycontonetwork = false;
-        bool contonetwork = false;
-        List<string> roooms= new List<string>();
-        DateTime joindate = DateTime.Now;
-        Dictionary<string, string> usertoaucroom=new Dictionary<string,string>();
-        int ownroomnumber = 0;
-        bool rooomsearched = false;
+        
 
         private bool wtsinah = true;
         private bool wtsingen = true;
@@ -271,7 +261,6 @@ namespace Auction.mod
         private bool wtbmsgload = false;
         private string[] aucfiles;
 
-        private bool inbattle = false;
         private bool newwtsmsgs = false;
         private bool newwtbmsgs = false;
         private string shortgeneratedwtsmessage = "";
@@ -305,8 +294,6 @@ namespace Auction.mod
         private List<aucitem> wtblist = new List<aucitem>();
         private int sortmode = 0;
         private bool reverse = false;
-        //private List<Card> genlist=new List<Card>();
-        //private List<Card> genlistfull = new List<Card>();
         private List<aucitem> wtsPlayer = new List<aucitem>();
         private List<aucitem> orgicardsPlayerwountrade = new List<aucitem>(); // cards player owns minus the untradable cards
         private List<Card> orgicardsPlayer = new List<Card>(); // all cards the player owns
@@ -486,6 +473,8 @@ namespace Auction.mod
 
         string[] auccontroler = new string[] { };
 
+        Network ntwrk;
+
         public void handleMessage(Message msg)
         {
 
@@ -545,96 +534,20 @@ namespace Auction.mod
                 }
             }
 
-            if (msg is GameInfoMessage && this.contonetwork)
+            if (msg is GameInfoMessage && ntwrk.contonetwork)
             {
                 GameInfoMessage gim =(GameInfoMessage) msg;
-                if (this.inbattle == false) { this.inbattle = true; this.disconfromaucnet(); Console.WriteLine("discon"); }
+                if (ntwrk.inbattle == false) { ntwrk.inbattle = true; ntwrk.disconfromaucnet(); Console.WriteLine("discon"); }
             }
 
-            if (msg is RoomInfoMessage && this.contonetwork)
+            if (msg is RoomInfoMessage && ntwrk.contonetwork)
             {
+                
                 RoomInfoMessage roominfo = (RoomInfoMessage)msg;
+                
                 if (roominfo.roomName.StartsWith("auc-"))
                 {
-                    // if the update list contains more than 1 user, then ,
-                    RoomInfoProfile[] rip =roominfo.updated;
-                    if (rip.Length >= 1) // he joins the room, add him
-                    {
-                        
-                        foreach (RoomInfoProfile roinpro in rip) // add the new user to the aucusers and globalusers
-                        {
-                            if (!this.globalusers.ContainsKey(roinpro.name))
-                            {
-                                ChatUser newuser = new ChatUser();
-                                newuser.acceptChallenges = false;
-                                newuser.acceptTrades = true;
-                                newuser.adminRole = AdminRole.None;
-                                newuser.name = roinpro.name;
-                                newuser.id = roinpro.id;
-                                this.globalusers.Add(roinpro.name, newuser);
-                            }
-                            if (!this.aucusers.ContainsKey(roinpro.name) && roinpro.name != this.ownname) {  this.aucusers.Add(roinpro.name, roinpro.id); }
-                            if (!this.usertoaucroom.ContainsKey(roinpro.name)) this.usertoaucroom.Add(roinpro.name, roominfo.roomName.Split('-')[1]);
-                        }
-                        if (roominfo.roomName == "auc-1" && rip.Length == 1)
-                        {//noone is there... you are connected! 
-                            this.realycontonetwork = true;
-                        }
-
-                        if (rip.Length > 50 && ownroomnumber == 0) //goto next room
-                        {
-                            int roomnumber = Convert.ToInt32(roominfo.roomName.Split('-')[1]) + 1;
-                            App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
-                            App.Communicator.sendRequest(new RoomEnterMessage("auc-" + roomnumber));
-                        }
-                        else
-                        {
-                            if (ownroomnumber == 0)
-                            {
-                                // stay here, write others, that you stay here.
-                                ownroomnumber = Convert.ToInt32(roominfo.roomName.Remove(0, 4));
-                                int sendasks=0;
-                                foreach (KeyValuePair<string, string> pair in this.aucusers)
-                                {
-                                    if (sendasks < 5) // only send the room-asking message to the first 10 users (it would be to spammy)
-                                    {
-                                        dowhisper("aucstay? " + ownroomnumber, pair.Key);
-                                        sendasks++;
-                                    }
-                                    else { dowhisper("aucstay! " + ownroomnumber, pair.Key); }
-
-                                }
-
-                            }
-                            else 
-                            { // stayed in ownroom, but have to visit others :D
-                                // so just leave this room (and join the next if multijoin doesnt work)
-
-                                foreach (RoomInfoProfile roinpro in rip)//whisper to the users in this channel, what your channel is
-                                {
-                                    if (this.ownname == roinpro.name) continue;
-                                    dowhisper("aucstay! " + ownroomnumber, roinpro.name);
-                                }
-                                if (ownroomnumber != Convert.ToInt32( roominfo.roomName.Split('-')[1])) // leave room, only when its not the own room
-                                {
-                                    App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
-                                }
-                                if (this.roooms.Count >= 1) { App.Communicator.sendRequest(new RoomEnterMessage(this.roooms[0])); this.roooms.RemoveAt(0); }
-                                else { this.realycontonetwork = true; }
-
-                            }
-
-
-
-                        }
-
-
-                    }
-
-                   
-
-
-
+                    ntwrk.enteraucroom(roominfo);
                 }
             
             }
@@ -642,22 +555,21 @@ namespace Auction.mod
             if ( msg is FailMessage)
             {   // delete user if he cant be whispered ( so he doesnt check out... blame on him!)
                 FailMessage fm = (FailMessage)msg;
-                if (this.idtesting > 0)
+                if (ntwrk.idtesting > 0)
                 {
-                    
-                    if (fm.op == "ProfilePageInfo") { this.idtesting--; };
+
+                    if (fm.op == "ProfilePageInfo") { ntwrk.idtesting--; };
                 }
                 if (fm.op == "Whisper" && fm.info.StartsWith("Could not find the user "))
                 {
                     string name = "";
                     name = (fm.info).Split('\'')[1];
                     //Console.WriteLine("could not find: " + name);
-                    if (this.usertoaucroom.ContainsKey(name)) { this.usertoaucroom.Remove(name); }
-                    if (this.aucusers.ContainsKey(name)) { this.aucusers.Remove(name);  this.deleteuserfromnet(); }
+
                 }
             }
 
-            if (this.idtesting>0 && msg is ProfilePageInfoMessage)//doesnt needed anymore
+            if (ntwrk.idtesting > 0 && msg is ProfilePageInfoMessage)//doesnt needed anymore
             {
                 ProfilePageInfoMessage ppim = (ProfilePageInfoMessage)msg;
                 ChatUser newuser = new ChatUser();
@@ -666,9 +578,9 @@ namespace Auction.mod
                 newuser.adminRole = AdminRole.None;
                 newuser.name = ppim.name;
                 newuser.id = ppim.id;
-                if (!this.globalusers.ContainsKey(newuser.name)) {this.globalusers.Add(newuser.name,newuser); }
-                if (!this.aucusers.ContainsKey(newuser.name) && newuser.name!=this.ownname) { this.aucusers.Add(newuser.name, newuser.id); }
-                this.idtesting--;
+                if (!this.globalusers.ContainsKey(newuser.name)) { this.globalusers.Add(newuser.name, newuser); ntwrk.addglobalusers(newuser); }
+                ntwrk.adduser(newuser);
+
             }
 
             if (msg is ProfileInfoMessage) // this could be done simplier, with app.myprofile...
@@ -987,6 +899,7 @@ namespace Auction.mod
 
         public Auction()
         {
+            ntwrk = new Network();
             // match until first instance of ':' (finds the username)
             userRegex = new Regex(@"[^:]*"
                 /*, RegexOptions.Compiled*/); // the version of Mono used by Scrolls version of Unity does not support compiled regexes
@@ -1109,7 +1022,8 @@ namespace Auction.mod
                      scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
                      scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
-
+                     scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
+                     
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
                 };
@@ -1135,16 +1049,6 @@ namespace Auction.mod
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
                     if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                   /*
-                    if (this.contonetwork)
-                    {
-
-                        if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                    }
-                    else
-                    {
-                        if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
-                    }*/
                 }
             }
             
@@ -1160,7 +1064,7 @@ namespace Auction.mod
                     }
                     else
                     {// show some whispers if not connected (testmode)
-                        if (this.contonetwork)
+                        if (ntwrk.contonetwork)
                         {
 
                             if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
@@ -1174,19 +1078,19 @@ namespace Auction.mod
                 if (msg is RoomChatMessageMessage)
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
-                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
                 if (msg is RoomEnterMessage)
                 {   
                     RoomEnterMessage rem = (RoomEnterMessage) msg;
-                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
                 if (msg is RoomInfoMessage)
                 {
                     RoomInfoMessage rem = (RoomInfoMessage)msg;
-                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
 
@@ -1215,9 +1119,10 @@ namespace Auction.mod
 
         public override void ReplaceMethod(InvocationInfo info, out object returnValue)
         {
-
+            returnValue = null;
             if (info.target is ArenaChat && info.targetMethod.Equals("handleMessage"))
             {
+                
                 Message msg = (Message)info.arguments[0];
                 if (msg is WhisperMessage)
                 {
@@ -1245,98 +1150,6 @@ namespace Auction.mod
 
                     }
 
-                    if (text.StartsWith("aucto1please")&& this.contonetwork)
-                    {
-                        App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
-                        this.ownroomnumber = 0;
-                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
-                        Console.WriteLine("aucto1please");
-                    
-                    }
-
-                    if (text.StartsWith("aucstay? ") && this.contonetwork)
-                    {   // user founded a room, but dont know if this is all
-                        string stayroom=text.Split(' ')[1];
-                        if(!this.usertoaucroom.ContainsKey(wmsg.from)) this.usertoaucroom.Add(wmsg.from, stayroom);//save his aucroom
-
-                        string respondstring = "";
-                        // whispering user already visited all room till his room
-                        List<string> allreadyadded = new List<string>();
-                        for (int i = 0; i < Convert.ToInt32(stayroom); i++)
-                        {
-                            allreadyadded.Add(i.ToString());
-                        }
-
-                        foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
-                        {
-                            if (!allreadyadded.Contains(pair.Value))
-                            {
-                                respondstring = respondstring + " " + pair.Value;
-                                allreadyadded.Add(pair.Value);
-                            }
-                        
-                        
-                        }
-                        if (respondstring == "") respondstring = " ";
-                        respondstring = "aucrooms" + respondstring; 
-                        WhisperMessage sendrooms = new WhisperMessage(wmsg.from, respondstring); 
-                        App.Communicator.sendRequest(sendrooms); 
-                        //send your offers
-                        if (shortgeneratedwtsmessage != "")
-                        {
-                            dowhisper(shortgeneratedwtsmessage, wmsg.from);
-                        }
-
-                        if (shortgeneratedwtbmessage != "")
-                        {
-                            dowhisper(shortgeneratedwtbmessage, wmsg.from);
-                        }
-
-                    
-                    }
-
-                    if (text.StartsWith("aucstay! "))
-                    {   // user founded a room, and he dont want to get the room-list
-                        if (!this.usertoaucroom.ContainsKey(wmsg.from)) { this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }//save his aucroom
-                        else { this.usertoaucroom.Remove(wmsg.from); this.usertoaucroom.Add(wmsg.from, text.Split(' ')[1]); }
-                        //send your offers
-                        if (this.shortgeneratedwtsmessage != "")
-                        {
-                            dowhisper(this.shortgeneratedwtsmessage, wmsg.from);
-                        }
-
-                        if (this.shortgeneratedwtbmessage != "")
-                        {
-                            dowhisper(this.shortgeneratedwtbmessage, wmsg.from);
-                        }
-                    }
-
-                    if (text.StartsWith("aucrooms ") && !rooomsearched && this.contonetwork)
-                    {
-                        if (text.EndsWith("aucrooms ")) { this.realycontonetwork = true; }
-                        else
-                        {
-                            string[] rms = (text.Remove(0, 9)).Split(' ');
-
-                            this.roooms.Clear();
-                            foreach (string str in rms)
-                            { 
-                                roooms.Add("auc-" + str); 
-                                //Console.WriteLine("auc-" + str);
-                            }
-                            //App.Communicator.sendRequest(new RoomEnterMultiMessage(roooms));//doesnt seems to work prooperly, scrolls (not me) is producing an error when i receive an chatmassage form this rooms
-                            App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
-                            roooms.RemoveAt(0);
-                            this.rooomsearched = true;
-                        }
-                    }
-
-                    if (text.StartsWith("aucstop"))
-                    {
-                        if (this.usertoaucroom.ContainsKey(wmsg.from)) { this.usertoaucroom.Remove(wmsg.from); }
-                        if (this.aucusers.ContainsKey(wmsg.from)) { this.aucusers.Remove(wmsg.from);  this.deleteuserfromnet(); }
-                    }
-
                     if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
                     {
                         getaucitemsformmsg(text, wmsg.from, wmsg.GetChatroomName());
@@ -1344,21 +1157,50 @@ namespace Auction.mod
                         if (!this.globalusers.ContainsKey(wmsg.from)) { WhisperMessage needid = new WhisperMessage(wmsg.from, "needaucid"); App.Communicator.sendRequest(needid); }
                     }
 
+                    if(wmsg.from==App.MyProfile.ProfileInfo.name)  return;
+
+                    if (text.StartsWith("aucto1please") && ntwrk.contonetwork)
+                    {
+                        App.Communicator.sendRequest(new RoomExitMessage("auc-" + ntwrk.ownroomnumber));
+                        ntwrk.ownroomnumber = 0;
+                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+                        Console.WriteLine("aucto1please");
+                    
+                    }
+
+                    if (text.StartsWith("aucstay? ") && ntwrk.contonetwork)
+                    {   // user founded a room, but dont know if this is all
+
+                        ntwrk.aucstayquestion(text, wmsg.from, shortgeneratedwtsmessage, shortgeneratedwtbmessage);
+
+                    
+                    }
+
+                    if (text.StartsWith("aucstay! "))
+                    {   // user founded a room, and he dont want to get the room-list
+                        ntwrk.aucstay(text, wmsg.from, shortgeneratedwtsmessage, shortgeneratedwtbmessage);
+                    }
+
+                    if (text.StartsWith("aucrooms ") && !ntwrk.rooomsearched && ntwrk.contonetwork)
+                    {
+                        if (text.EndsWith("aucrooms ")) { ntwrk.realycontonetwork = true; }
+                        else
+                        {
+                            ntwrk.visitrooms(text);
+                            
+                        }
+                    }
+
+                    if (text.StartsWith("aucstop"))
+                    {
+                        ntwrk.deleteuser(wmsg.from);
+                    }
+
+                    
+
                     if (text.StartsWith("aucupdate"))  
                     {
-                        foreach(KeyValuePair<string,string> pair in this.aucusers)
-                        {
-                            string from=pair.Key;
-                            if (this.shortgeneratedwtsmessage != "")
-                            {
-                                dowhisper(this.shortgeneratedwtsmessage, from); 
-                            }
-
-                            if (this.shortgeneratedwtbmessage != "")
-                            {
-                                dowhisper(this.shortgeneratedwtbmessage, from); 
-                            }
-                        }
+                        ntwrk.sendownauctionstosingleuser(shortgeneratedwtsmessage, shortgeneratedwtbmessage);
                     }
                     
 
@@ -1366,28 +1208,13 @@ namespace Auction.mod
                     //dont needed anymore left in only to be shure :D
                     if (text.StartsWith("needaucid"))
                     {
-                        WhisperMessage sendid = new WhisperMessage(wmsg.from, "aucid " +this.ownid); App.Communicator.sendRequest(sendid); 
+                        ntwrk.needid(wmsg.from);
                     }
                      //dont needed anymore
                     if (text.StartsWith("aucid "))
                     {
-                        if (!this.globalusers.ContainsKey(wmsg.from))
-                        {
-                            string id = text.Split(new string[] { "aucid " }, StringSplitOptions.None)[1];
-                            //test aucid:
-                            this.idtesting++;
-                            ProfilePageInfoMessage ppim = new ProfilePageInfoMessage(id);
-                            App.Communicator.sendRequest(ppim);
-
-                        }
-                        else
-                        {
-                            if (contonetwork)
-                            {
-                                if (!this.aucusers.ContainsKey(wmsg.from) && wmsg.from!=this.ownname)
-                                { this.aucusers.Add(wmsg.from, this.globalusers[wmsg.from].id); }
-                            }
-                        }
+                        ntwrk.saveaucid(text,wmsg.from);
+                        
                         
                     }
 
@@ -1395,7 +1222,7 @@ namespace Auction.mod
                 }
             }
 
-            returnValue = null;
+            
             
 
         }
@@ -1652,33 +1479,8 @@ namespace Auction.mod
         
         }
 
-        private void dowhisper(string msg, string to)
-        {
-            WhisperMessage wmsg=new WhisperMessage(to, msg);
-            if (this.inbattle) App.Communicator.sendBattleRequest(wmsg);
-            else
-                App.Communicator.sendRequest(wmsg);
-        }
 
-        private void respondtocommand(string msg, string from)
-        {
-            if (from == this.ownname) return;
-
-            string commando = msg.Split(' ')[1];
-            if (commando != "" && this.contonetwork)
-            {
-                if (commando == "sendwts" && this.genwtssettings.strings2 != "") { dowhisper(this.genwtssettings.strings2, from); }
-                if (commando == "sendwtb" && this.genwtbsettings.strings2 != "") { dowhisper(this.genwtbsettings.strings2, from); }
-                if (commando == "aucstart") 
-                {
-                    if (!this.aucusers.ContainsKey(from)&& from!=this.ownname) { this.aucusers.Add(from, this.globalusers[from].id); }
-                        WhisperMessage sendid = new WhisperMessage(from, "aucid " + this.ownid); App.Communicator.sendRequest(sendid);
-                }
-
-            
-            }
         
-        }
 
         private void getaucitemsformshortmsg(string msg, string from, string room)
         {
@@ -2094,62 +1896,9 @@ namespace Auction.mod
         }
 
 
-        private void deleteuserfromnet()
-        {
-            // user is deleted, check if there are too few in room 1.
-            if (ownroomnumber == 1) return;
-
-            int usersin1 = 0;
-            foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
-            {
-                if (pair.Value == "1") usersin1++;
-            }
-            if (usersin1 < 10) 
-            {
-                App.Communicator.sendRequest(new RoomExitMessage("auc-" + ownroomnumber));
-                this.ownroomnumber = 0;
-                App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
-            }
+        
 
         
-        }
-
-        private void disconfromaucnet()
-        {
-            this.rooomsearched = false;
-            this.contonetwork = false;
-
-            foreach (KeyValuePair<string, string> pair in this.aucusers)
-            {
-
-                dowhisper("aucstop", pair.Key);
-
-            }
-            if (this.ownroomnumber == 1)
-            {// say user with biggest roomnumber he should come to 1.
-                int biggestroomnumber = 0;
-                string name = "";
-                foreach (KeyValuePair<string, string> pair in this.usertoaucroom)
-                {
-                    if (biggestroomnumber < Convert.ToInt32(pair.Value))
-                    {
-                        biggestroomnumber = Convert.ToInt32(pair.Value);
-                        name = pair.Key;
-                    }
-
-                }
-
-                if (biggestroomnumber > 1) { dowhisper("aucto1please",name);};
-
-            };
-            this.aucusers.Clear();
-            this.usertoaucroom.Clear();
-            this.ownroomnumber = 0;
-            this.rooomsearched = false;
-            this.contonetwork = false;
-            this.realycontonetwork = false;
-
-        }
 
         private void drawAH()
         {
@@ -2291,9 +2040,9 @@ namespace Auction.mod
 
                 GUI.skin = this.cardListPopupSkin;
 
-                if (this.contonetwork)
+                if (ntwrk.contonetwork)
                 {
-                    GUI.Label(sbnetworklabel, "User online: " + this.aucusers.Count() );
+                    GUI.Label(sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
                 }
 
                 GUI.contentColor = Color.red;
@@ -2838,20 +2587,18 @@ namespace Auction.mod
                 
                 GUI.color = Color.white;
 
-                if (this.realycontonetwork)
+                if (ntwrk.realycontonetwork)
                 {
                     if (GUI.Button(this.updatebuttonrect, "discon"))
                     {
-                        disconfromaucnet();
+                       ntwrk.disconfromaucnet();
                     }
                 }
                 else
                 {
                     if (GUI.Button(this.updatebuttonrect, "connect"))
                     {
-                        this.contonetwork = true;
-                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
-                        this.joindate = DateTime.Now;
+                        ntwrk.connect();
                         //App.Communicator.sendRequest(new RoomChatMessageMessage(chatRooms.GetCurrentRoomName(), "aucc aucstart"));
                         // short explanation of my network:
 
@@ -3018,23 +2765,10 @@ namespace Auction.mod
                         this.generatedwtbmessage = "";
                         this.shortgeneratedwtbmessage = "";
                     }
-                    if (this.realycontonetwork)
+                    if (ntwrk.realycontonetwork)
                     {
-                        if (this.wtsmenue)
-                        {
-
-                            foreach(KeyValuePair<string,string> pair in this.aucusers)
-                            {
-                                App.Communicator.sendRequest(new WhisperMessage(pair.Key, "aucdeletes"));
-                            }
-                        }
-                        else
-                        {
-                            foreach (KeyValuePair<string, string> pair in this.aucusers)
-                            {
-                                App.Communicator.sendRequest(new WhisperMessage(pair.Key, "aucdeleteb"));
-                            }
-                        }
+                        ntwrk.deleteownmessage(this.wtsmenue);
+                        
                     }
                 }
                 if (this.wtsmenue) { savesettings(this.genwtssettings); } else { savesettings(this.genwtbsettings); }
@@ -3101,32 +2835,11 @@ namespace Auction.mod
                 
                 if (GUI.Button(this.sbclrearpricesbutton, "Post to Network"))
                 {
-                    if (this.contonetwork)
+                   
+                    if (ntwrk.contonetwork)
                     {
-                        string wtsdings = this.genwtssettings.strings2;
-                        string wtbdings = this.genwtbsettings.strings2;
-                        if (this.wtsmenue)
-                        {
-                            foreach (KeyValuePair<string, string> pair in this.aucusers)
-                            {
-                                if (wtsdings != "")
-                                {
-
-                                    dowhisper(wtsdings, pair.Key);
-                                }
-                            }
-                        }
-                        else 
-                        {
-
-                            foreach (KeyValuePair<string, string> pair in this.aucusers)
-                            {
-                                if (wtbdings != "")
-                                {
-                                    dowhisper(wtbdings, pair.Key);
-                                }
-                            }
-                        }
+                        ntwrk.sendownauctiontoall(this.wtsmenue,this.genwtssettings.strings2, this.genwtbsettings.strings2);
+                        
                     }
                     
                 }
@@ -3890,6 +3603,7 @@ namespace Auction.mod
 
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
+            if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; }
             if(info.target is ChatUI && info.targetMethod.Equals("Show"))
             {
                 this.chatisshown = (bool)info.arguments[0];
@@ -3936,7 +3650,7 @@ namespace Auction.mod
                 {
                     RoomInfoProfile p = profiles[i];
                     ChatUser user = ChatUser.FromRoomInfoProfile(p) ;
-                    if (!globalusers.ContainsKey(user.name)) { globalusers.Add(user.name, user); };
+                    if (!globalusers.ContainsKey(user.name)) { globalusers.Add(user.name, user); ntwrk.addglobalusers(user); };
                 } 
             }
 
