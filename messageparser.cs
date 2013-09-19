@@ -8,47 +8,39 @@ namespace Auction.mod
 {
     class messageparser
     {
-        public List<aucitem> wtslistfull = new List<aucitem>();
-        public List<aucitem> wtblistfull = new List<aucitem>();
-        public List<aucitem> wtslistfulltimed = new List<aucitem>();
-        public List<aucitem> wtblistfulltimed = new List<aucitem>();
-        public List<aucitem> wtslist = new List<aucitem>();
-        public List<aucitem> wtblist = new List<aucitem>();
+        
 
         private List<aucitem> addingwtscards = new List<aucitem>();
         private List<aucitem> addingwtbcards = new List<aucitem>();
         public bool newwtsmsgs = false;
         public bool newwtbmsgs = false;
 
-        public string spampreventtime = "";
-        public int spamprevint;
-        private int[] cardids;
-        private string[] cardnames;
 
-        listfilters auclsts;
+
+
+        Helpfunktions helpf;
+        listfilters lstfltrs;
+        auclists alist;
+        Settings sttngs;
         private Regex priceregex=new Regex(@".*[^x0-9]+[0-9]{2,9}[g]?[^x0-9]+.*");
         private Regex priceregexpriceonname = new Regex(@"[^x0-9]{2,}[0-9]{2,9}[g]?[^x0-9]+.*");
         Regex numberregx = new Regex(@"[0-9]{2,9}");
 
         public List<nickelement> searchscrollsnicks = new List<nickelement>();
 
-        private int cardnametoid(string name) { return cardids[Array.FindIndex(cardnames, element => element.Equals(name))]; }
+        private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
         
 
         
 
-        public messageparser(listfilters lstfltr,int[] cardids, string[] cardnames)
+        public messageparser(auclists a,listfilters lstfltr,Settings s,Helpfunktions h)
         {
-            this.cardids = cardids;
-            this.cardnames = cardnames;
-            this.auclsts = lstfltr;
+            this.helpf = h;
+            this.alist = a;
+            this.lstfltrs = lstfltr;
+            this.sttngs=s;
         }
 
-        public void setarrays(int[] cardids, string[] cardnames)
-        {
-            this.cardids = cardids;
-            this.cardnames = cardnames;
-        }
 
         private string pricetestfirst(string price)
         {
@@ -96,9 +88,9 @@ namespace Auction.mod
             {
                 addingwtscards.Reverse();
                 string seller = addingwtscards[0].seller;
-                this.wtslistfulltimed.RemoveAll(element => element.seller == seller);
-                this.wtslistfull.RemoveAll(element => element.seller == seller);
-                this.wtslist.RemoveAll(element => element.seller == seller);
+                alist.wtslistfulltimed.RemoveAll(element => element.seller == seller);
+                alist.wtslistfull.RemoveAll(element => element.seller == seller);
+                alist.wtslist.RemoveAll(element => element.seller == seller);
 
             }
 
@@ -106,17 +98,17 @@ namespace Auction.mod
             {
                 addingwtbcards.Reverse();
                 string seller = addingwtbcards[0].seller;
-                this.wtblistfulltimed.RemoveAll(element => element.seller == seller);
-                this.wtblistfull.RemoveAll(element => element.seller == seller);
-                this.wtblist.RemoveAll(element => element.seller == seller);
+                alist.wtblistfulltimed.RemoveAll(element => element.seller == seller);
+                alist.wtblistfull.RemoveAll(element => element.seller == seller);
+                alist.wtblist.RemoveAll(element => element.seller == seller);
             }
             foreach (aucitem ai in this.addingwtscards)
             {
-                this.wtslistfulltimed.Insert(0, ai);
+                alist.wtslistfulltimed.Insert(0, ai);
             }
             foreach (aucitem ai in this.addingwtbcards)
             {
-                this.wtblistfulltimed.Insert(0, ai);
+                alist.wtblistfulltimed.Insert(0, ai);
             }
 
             if (wtsmenue)
@@ -127,17 +119,17 @@ namespace Auction.mod
 
                 foreach (aucitem ai in this.addingwtscards)
                 {
-                    auclsts.sortauciteminlist(ai, this.wtslistfull);
+                    lstfltrs.sortauciteminlist(ai, alist.wtslistfull);
                 }
 
                 // add cards to wtslist but filter these first
                 List<aucitem> tempfull = new List<aucitem>();
                 tempfull.AddRange(this.addingwtscards);
-                auclsts.fullupdatelist(this.addingwtscards, tempfull, inauchouse, wtsmenue, generator);
+                lstfltrs.fullupdatelist(this.addingwtscards, tempfull, inauchouse, wtsmenue, generator);
                 // add them to wtslist
                 foreach (aucitem ai in this.addingwtscards)
                 {
-                    auclsts.sortauciteminlist(ai, this.wtslist);
+                    lstfltrs.sortauciteminlist(ai, alist.wtslist);
                 }
 
             }
@@ -149,17 +141,17 @@ namespace Auction.mod
 
                 foreach (aucitem ai in this.addingwtbcards)
                 {
-                    auclsts.sortauciteminlist(ai, this.wtblistfull);
+                    lstfltrs.sortauciteminlist(ai, alist.wtblistfull);
                 }
 
                 // add cards to wtslist but filter these first
                 List<aucitem> tempfull = new List<aucitem>();
                 tempfull.AddRange(this.addingwtbcards);
-                auclsts.fullupdatelist(this.addingwtbcards, tempfull, inauchouse, wtsmenue, generator);
+                lstfltrs.fullupdatelist(this.addingwtbcards, tempfull, inauchouse, wtsmenue, generator);
                 // add them to wtslist
                 foreach (aucitem ai in this.addingwtbcards)
                 {
-                    auclsts.sortauciteminlist(ai, this.wtblist);
+                    lstfltrs.sortauciteminlist(ai, alist.wtblist);
                 }
 
             }
@@ -169,18 +161,18 @@ namespace Auction.mod
         {
             if (wts)
             {
-                if (wtslistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts") || (element.whole.ToLower().Contains("sell")))) >= 0)
+                if (alist.wtslistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts") || (element.whole.ToLower().Contains("sell")))) >= 0)
                 {
-                    aucitem aii = (wtslistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts") || (element.whole.ToLower().Contains("sell")))));
-                    if (aii.whole.Equals(wholemsg) && this.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * this.spamprevint)) > 0) { return; }
+                    aucitem aii = (alist.wtslistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wts") || (element.whole.ToLower().Contains("sell")))));
+                    if (aii.whole.Equals(wholemsg) && sttngs.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * sttngs.spamprevint)) > 0) { return; }
                 }
             }
             else
             {
-                if (wtblistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))) >= 0)
+                if (alist.wtblistfulltimed.FindIndex(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))) >= 0)
                 {
-                    aucitem aii = (wtblistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))));
-                    if (aii.whole.Equals(wholemsg) && this.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * this.spamprevint)) > 0) { return; }
+                    aucitem aii = (alist.wtblistfulltimed.Find(element => element.seller.Equals(from) && (element.whole.ToLower().Contains("wtb") || (element.whole.ToLower().Contains("buy")))));
+                    if (aii.whole.Equals(wholemsg) && sttngs.spampreventtime != "" && (aii.dtime).CompareTo(DateTime.Now.AddMinutes(-1 * sttngs.spamprevint)) > 0) { return; }
                 }
             }
 
@@ -379,8 +371,8 @@ namespace Auction.mod
                     if (findcard)
                     {
                         CardType type = CardTypeManager.getInstance().get(cardnametoid(foundedcard.ToLower()));
-                        int realarrindex = Array.FindIndex(this.cardnames, element => foundedcard.Equals(element));
-                        c = new Card(cardids[realarrindex], type, true);
+                        int realarrindex = Array.FindIndex(helpf.cardnames, element => foundedcard.Equals(element));
+                        c = new Card(helpf.cardids[realarrindex], type, true);
                         //Console.WriteLine("found " + foundedcard + " in " + textplace);
                         string tmpgold = pricetestfirst((textplace.Split(' '))[(textplace.Split(' ')).Length - 1]);
                         if (!(tmpgold == "")) // && iadder >1

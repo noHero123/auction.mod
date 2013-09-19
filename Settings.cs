@@ -7,195 +7,152 @@ namespace Auction.mod
 {
     class Settings
     {
-        class settingcopy
+        public bool shownumberscrolls;
+        public string rowscalestring = "10";
+        public float rowscale = 1.0f;
+        public bool showsugrange;
+        public bool wtsroundup = true;
+        public int wtsroundmode = 0;
+        public bool roundwts = false;
+        public bool wtbroundup = false;
+        public int wtbroundmode = 0;
+        public bool roundwtb = false;
+        public int takewtsgenint = 2, takewtbgenint = 0;
+        public int takewtsahint = 1, takewtbahint = 1, takewtsahint2 = 1, takewtbahint2 = 1;
+
+        public string spampreventtime = "";
+        public int spamprevint=0;
+
+        public void loadsettings(string ownaucpath)
         {
-            public bool boolean0;
-            public bool boolean1;
-            public bool boolean2;
-            public bool boolean3;
-            public bool boolean4;
-            public bool boolean5;
-            public bool boolean6;
-            public bool boolean7;
-            public bool boolean8;
-            public bool boolean9;
-            public bool boolean10;
-            public string strings0;
-            public string strings1;
-            public string strings2;
-            public string strings3;
-            public string strings4;
-            public int sorting;
-            public bool sortreverse;
-        }
 
-        private settingcopy ahwtssettings = new settingcopy();
-        private settingcopy ahwtbsettings = new settingcopy();
-        private settingcopy genwtssettings = new settingcopy();
-        private settingcopy genwtbsettings = new settingcopy();
-
-        public bool growthbool;
-        public bool orderbool;
-        public bool energybool;
-        public bool decaybool;
-        public bool commonbool;
-        public bool uncommonbool;
-        public bool rarebool;
-        public bool threebool;
-        public bool onebool;
-        public bool ignore0;
-        public bool takepriceformgenarator;
-        public string timesearchstring = "";
-        public string wtssearchstring = "";
-        public string sellersearchstring = "";
-        public string pricesearchstring = "";
-        public string pricesearchstring2 = "";
-        public int sortmode = 0;
-        public bool reverse = false;
-        public string shortgeneratedwtsmessage = "";
-        public string shortgeneratedwtbmessage = "";
-        public string generatedwtsmessage = "";
-        public string generatedwtbmessage = "";
-
-        public Settings()
-        {
-            this.growthbool = true;
-            this.orderbool = true;
-            this.energybool = true;
-            this.decaybool = true;
-            this.commonbool = true;
-            this.uncommonbool = true;
-            this.rarebool = true;
-            this.threebool = false;
-            this.onebool = false;
-            this.ignore0 = false;
-            this.wtssearchstring = "";
-            this.sellersearchstring = "";
-            this.pricesearchstring = "";
-            this.timesearchstring = "";
-            this.pricesearchstring2 = "";
-            this.sortmode = 0;
-            this.reverse = false;
-            this.takepriceformgenarator = false;
-        }
-
-        public void resetsearchsettings()
-        {
-            this.growthbool = true;
-            this.orderbool = true;
-            this.energybool = true;
-            this.decaybool = true;
-            this.commonbool = true;
-            this.uncommonbool = true;
-            this.rarebool = true;
-            this.threebool = false;
-            this.onebool = false;
-            this.ignore0 = false;
-            this.wtssearchstring = "";
-            this.sellersearchstring = "";
-            this.pricesearchstring = "";
-            this.timesearchstring = "";
-            this.pricesearchstring2 = "";
-            this.takepriceformgenarator = false;
-        }
-
-        public void resetgensearchsettings(bool wts)
-        {
-            this.wtssearchstring = "";
-            this.pricesearchstring = "";
-            this.sellersearchstring = "";
-            this.growthbool = true;
-            this.orderbool = true;
-            this.energybool = true;
-            this.decaybool = true;
-            this.commonbool = true;
-            this.uncommonbool = true;
-            this.rarebool = true;
-            this.threebool = false;
-            this.onebool = false;
-            if (wts)
+            string text = System.IO.File.ReadAllText(ownaucpath + "settingsauc.txt");
+            string[] txt = text.Split(';');
+            foreach (string t in txt)
             {
-                this.generatedwtsmessage = "";
-                this.shortgeneratedwtsmessage = "";
+                string setting = t.Split(' ')[0];
+                string value = "";
+                if (t.Split(' ').Length == 2)
+                {
+                    value = t.Split(' ')[1];
+                }
+                if (setting.Equals("spam"))
+                {
+                    spampreventtime = value;
+                    if (spampreventtime != "") spamprevint = Convert.ToInt32(spampreventtime);
+                    if (spamprevint > 30) { spampreventtime = "30"; spamprevint = 30; }
+                }
+                if (setting.Equals("numbers"))
+                {
+                    shownumberscrolls = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("range"))
+                {
+                    showsugrange = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("rowscale"))
+                {
+                    rowscalestring = value;
+                    if (rowscalestring != "") { rowscale = (float)Convert.ToDouble(rowscalestring) / 10f; } else { rowscale = 1.0f; }
+                    if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
+                    if (rowscale < 0.5f) { rowscale = .5f; }
+                }
+                if (setting.Equals("sround"))
+                {
+                    roundwts = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("sroundu"))
+                {
+                    wtsroundup = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("sroundm"))
+                {
+                    wtsroundmode = Convert.ToInt32(value);
+                }
+                if (setting.Equals("bround"))
+                {
+                    roundwtb = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("broundu"))
+                {
+                    wtbroundup = Convert.ToBoolean(value);
+                }
+                if (setting.Equals("broundm"))
+                {
+                    wtbroundmode = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takegens"))
+                {
+                    takewtsgenint = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takegenb"))
+                {
+                    takewtbgenint = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takeahs1"))
+                {
+                    takewtsahint = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takeahs2"))
+                {
+                    takewtsahint2 = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takeahb1"))
+                {
+                    takewtbahint = Convert.ToInt32(value);
+                }
+                if (setting.Equals("takeahb2"))
+                {
+                    takewtbahint2 = Convert.ToInt32(value);
+                }
             }
-            else
-            {
-                this.generatedwtbmessage = "";
-                this.shortgeneratedwtbmessage = "";
-            }
+
         }
 
-        public void saveall()
+        public void resetsettings() 
         {
-            this.savesettings(true, true);
-            this.savesettings(true, false);
-            this.savesettings(false, true);
-            this.savesettings(false, false);
+            spampreventtime = "";
+            spamprevint = 0;
+            shownumberscrolls = false;
+            showsugrange = false;
+            rowscalestring = "10";
+            rowscale = 1f;
+            roundwts = false;
+            wtsroundup = true;
+            wtsroundmode = 0;
+            roundwtb = false;
+            wtbroundup = false;
+            wtbroundmode = 0;
+            takewtsgenint = 2;
+            takewtbgenint = 0;
+            takewtsahint = 1;
+            takewtsahint = 1;
+            takewtsahint2 = 1;
+            takewtbahint2 = 1;
         }
 
-        public void savesettings(bool ah, bool wts)
+        public void savesettings(string ownaucpath)
         {
-            settingcopy copy=new settingcopy() ;
-            if (ah && wts) copy= this.ahwtssettings;
-            if (ah && !wts) copy = this.ahwtbsettings;
-            if (!ah && wts) copy = this.genwtssettings;
-            if (!ah && !wts) copy = this.genwtbsettings;
-            copy.boolean0 = growthbool;
-            copy.boolean1 = orderbool;
-            copy.boolean2 = energybool;
-            copy.boolean3 = decaybool;
-            copy.boolean4 = commonbool;
-            copy.boolean5 = uncommonbool;
-            copy.boolean6 = rarebool;
-            copy.boolean7 = threebool;
-            copy.boolean8 = onebool;
-            copy.boolean9 = ignore0;
-            copy.boolean10 = takepriceformgenarator;
-            copy.strings0 = wtssearchstring;
-            copy.strings1 = sellersearchstring;
-            copy.strings2 = pricesearchstring;//shortwts/wtbstring
-            copy.strings3 = timesearchstring;
-            copy.strings4 = pricesearchstring2;
-            copy.sorting = sortmode;
-            copy.sortreverse = reverse;
+            string text = "";
+            text = text + "spam " + spampreventtime + ";";
+            text = text + "numbers " + shownumberscrolls.ToString() + ";";
+            text = text + "range " + showsugrange.ToString() + ";";
+            text = text + "rowscale " + rowscalestring + ";";
+            text = text + "sround " + roundwts.ToString() + ";";
+            text = text + "sroundu " + wtsroundup.ToString() + ";";
+            text = text + "sroundm " + wtsroundmode.ToString() + ";";
+            text = text + "bround " + roundwtb.ToString() + ";";
+            text = text + "broundu " + wtbroundup.ToString() + ";";
+            text = text + "broundm " + wtbroundmode.ToString() + ";";
+            text = text + "takegens " + takewtsgenint.ToString() + ";";
+            text = text + "takegenb " + takewtbgenint.ToString() + ";";
+            text = text + "takeahs1 " + takewtsahint.ToString() + ";";
+            text = text + "takeahs2 " + takewtsahint2.ToString() + ";";
+            text = text + "takeahb1 " + takewtbahint.ToString() + ";";
+            text = text + "takeahb2 " + takewtbahint2.ToString() + ";";
+            System.IO.File.WriteAllText(ownaucpath + "settingsauc.txt", text);
         }
 
-        public void setsettings(bool ah, bool wts)
-        {
-            settingcopy copy = new settingcopy();
-            if (ah && wts) copy = this.ahwtssettings;
-            if (ah && !wts) copy = this.ahwtbsettings;
-            if (!ah && wts) copy = this.genwtssettings;
-            if (!ah && !wts) copy = this.genwtbsettings;
-            growthbool = copy.boolean0;
-            orderbool = copy.boolean1;
-            energybool = copy.boolean2;
-            decaybool = copy.boolean3;
-            commonbool = copy.boolean4;
-            uncommonbool = copy.boolean5;
-            rarebool = copy.boolean6;
-            threebool = copy.boolean7;
-            onebool = copy.boolean8;
-            ignore0 = copy.boolean9;
-            takepriceformgenarator = copy.boolean10;
-            wtssearchstring = copy.strings0;
-            sellersearchstring = copy.strings1;
-            pricesearchstring = copy.strings2;
-            timesearchstring = copy.strings3;
-            pricesearchstring2 = copy.strings4;
-            sortmode = copy.sorting;
-            reverse = copy.sortreverse;
-
-        }
-
-        public string getshortgenmsg(bool wts)
-        {
-            settingcopy copy=new settingcopy();
-            if ( wts) copy = this.genwtssettings;
-            if (!wts) copy = this.genwtbsettings;
-            return copy.strings2;
-        
-        }
 
     }
 }

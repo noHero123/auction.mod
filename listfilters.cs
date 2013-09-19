@@ -8,7 +8,7 @@ namespace Auction.mod
     class listfilters
     {
         public int sortmode = 0;
-        Settings sttngs;
+        Searchsettings sttngs;
         Prices prcs;
         public List<aucitem> allcardsavailable = new List<aucitem>();
         public Dictionary<string, int> available = new Dictionary<string, int>();
@@ -36,7 +36,7 @@ namespace Auction.mod
             }
         }
 
-        public listfilters(Settings sets, Prices prs)
+        public listfilters(Searchsettings sets, Prices prs)
         {
             this.sttngs = sets;
             this.prcs = prs;

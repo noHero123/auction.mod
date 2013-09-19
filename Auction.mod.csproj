@@ -55,6 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AucItemFilter.cs" />
+    <Compile Include="auclists.cs" />
+    <Compile Include="AuctionHouseUI.cs" />
+    <Compile Include="GeneratorUI.cs" />
+    <Compile Include="Helpfunktions.cs" />
     <Compile Include="listfilters.cs" />
     <Compile Include="cardviewer.cs" />
     <Compile Include="messageparser.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auction.cs" />
     <Compile Include="Rectomat.cs" />
+    <Compile Include="Searchsettings.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
