@@ -31,7 +31,6 @@ namespace Auction.mod
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
         Texture2D decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
-        Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
 
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
@@ -585,7 +584,8 @@ namespace Auction.mod
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
                         // draw suggested price
-                        int index = Array.FindIndex(helpf.cardids, element => element == current.card.getType());
+                        //int index = Array.FindIndex(helpf.cardids, element => element == current.card.getType());
+                        int index = helpf.cardidToArrayIndex(current.card.getType());
                         string suggeprice = "";
                         if (index >= 0)
                         {
@@ -706,7 +706,8 @@ namespace Auction.mod
                 {
                     //this.callback.ItemButtonClicked(this, card);
                     string clink = card.getName().ToLower();
-                    int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                    //int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                    int arrindex= helpf.cardnameToArrayIndex(clink);
                     if (arrindex >= 0)
                     {
 

@@ -23,6 +23,12 @@ namespace Auction.mod
         public int takewtbgenint = 0;
         public Dictionary<string, string> wtspricelist1 = new Dictionary<string, string>();
         public Dictionary<string, string> wtbpricelist1 = new Dictionary<string, string>();
+        Helpfunktions helpf;
+
+        public Prices(Helpfunktions h)
+        {
+            helpf = h;
+        }
 
         public int pricerounder(int index, bool wts)
         {
@@ -167,7 +173,7 @@ namespace Auction.mod
             
         }
 
-        public void totalpricecheck(int[] cardids)
+        public void totalpricecheck()//int[] cardids
         {
 
             //WebClient wc = new WebClient(); // webclient has no timeout
@@ -212,7 +218,8 @@ namespace Auction.mod
                 }
 
 
-                int index = Array.FindIndex(cardids, element => element == id);
+                //int index = Array.FindIndex(cardids, element => element == id);
+                int index = helpf.cardidToArrayIndex(id);
                 if (index >= 0)
                 {
                     lowerprice[index] = lower;
@@ -224,6 +231,12 @@ namespace Auction.mod
 
         }
 
+        public void resetarrays(int len)
+        {
+            this.lowerprice = new int[len];
+            this.upperprice = new int[len];
+            this.sugprice = new int[len];
+        }
 
         /*
         public void PriceCheck( String search)

@@ -44,42 +44,16 @@ namespace Auction.mod
         private bool hidewispers = true; //  false = testmodus
 
 
-        // some nicknames variables
-        private bool nicks = false;
-        private List<nickelement> loadedscrollsnicks = new List<nickelement>();
          // = realcardnames + loadedscrollsnicks
-
-        
         private string[] aucfiles;
-        
-
         int screenh = 0;
         int screenw = 0;
-        
         private const bool debug = false;
-
-        
         bool deckchanged = false;
-        
-
-
-        private FieldInfo chatRoomsinfo;
         private FieldInfo chatLogStyleinfo;
-       
         private MethodInfo drawsubmenu;
 
-
-        private ChatRooms chatRooms;
-        
-        
-        private Regex cardlinkfinder;
-
-        Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
-        
-        
-        
-
-        string[] auccontroler = new string[] { };
+        //Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
 
         Settings sttngs;
         Network ntwrk;
@@ -102,6 +76,7 @@ namespace Auction.mod
 
             if (msg is BuyStoreItemResponseMessage)
             {
+                // if we buy a card in the store, we have to reload the own cards , nexttime we open ah/generator
                 List<Card> boughtCards = null;
                 BuyStoreItemResponseMessage buyStoreItemResponseMessage = (BuyStoreItemResponseMessage)msg;
                 if (buyStoreItemResponseMessage.cards.Length > 0)
@@ -130,6 +105,7 @@ namespace Auction.mod
 
             if (msg is TradeResponseMessage)
             {
+                //if he doesnt accept the trade, reset the variables
                 TradeResponseMessage trm = (TradeResponseMessage)msg;
                 if (trm.status != "ACCEPT")
                 {
@@ -141,7 +117,7 @@ namespace Auction.mod
 
 
             if (msg is RoomEnterMessage && helpf.postmsggetnextroomenter)
-            {
+            {// he accept your trade, post the auction message to yourself
                 RoomEnterMessage rmem = (RoomEnterMessage)msg;
                 if (rmem.roomName.StartsWith("trade-"))
                 {
@@ -157,16 +133,15 @@ namespace Auction.mod
             }
 
             if (msg is GameInfoMessage && ntwrk.contonetwork)
-            {
+            {// you are connected to network and start a battle -> disconnect
                 GameInfoMessage gim =(GameInfoMessage) msg;
                 if (ntwrk.inbattle == false) { ntwrk.inbattle = true; ntwrk.disconfromaucnet(); Console.WriteLine("discon"); }
             }
 
             if (msg is RoomInfoMessage && ntwrk.contonetwork)
             {
-                
+                // you enter a auc-x room , while connected to network... so do communication stuff, like adding the users etc
                 RoomInfoMessage roominfo = (RoomInfoMessage)msg;
-                
                 if (roominfo.roomName.StartsWith("auc-"))
                 {
                     ntwrk.enteraucroom(roominfo);
@@ -175,7 +150,7 @@ namespace Auction.mod
             }
 
             if ( msg is FailMessage)
-            {   // delete user if he cant be whispered ( so he doesnt check out... blame on him!)
+            {   // delete user if he cant be whispered ( so he doesnt check out propperly... blame on him!)
                 FailMessage fm = (FailMessage)msg;
                 if (ntwrk.idtesting > 0)
                 {
@@ -208,12 +183,10 @@ namespace Auction.mod
             if (msg is CardTypesMessage)
             {
 
-                
+                // get all available cards, save them!
                 helpf.setarrays(msg);
-                prcs.lowerprice = new int[helpf.cardids.Length];
-                prcs.upperprice = new int[helpf.cardids.Length];
-                prcs.sugprice = new int[helpf.cardids.Length];
-                if (this.nicks) readnicksfromfile();
+                prcs.resetarrays(helpf.cardids.Length);
+                if (helpf.nicks) helpf.readnicksfromfile();
                 mssgprsr.searchscrollsnicks.Clear();
                 prcs.wtbpricelist1.Clear();
                 lstfltrs.allcardsavailable.Clear();
@@ -233,14 +206,10 @@ namespace Auction.mod
                     nele.cardname = helpf.cardnames[j];
                     mssgprsr.searchscrollsnicks.Add(nele);
                 };
-                mssgprsr.searchscrollsnicks.AddRange(this.loadedscrollsnicks);
+                mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
 
                 lstfltrs.allcardsavailable.Sort(delegate(aucitem p1, aucitem p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
-                //test
-                //foreach (aucitem ai in allcardsavailable)
-                //{ Console.WriteLine(ai.card.getName()); }
-                //App.Communicator.removeListener(this);//dont need the listener anymore
-                prcs.totalpricecheck(helpf.cardids);
+                prcs.totalpricecheck();//helpf.cardids
             }
 
             return;
@@ -262,7 +231,7 @@ namespace Auction.mod
             srchsvr.saveall();
             Console.WriteLine("savealldone");
             crdvwr = new cardviewer();
-            prcs = new Prices();
+            prcs = new Prices(helpf);
             lstfltrs = new listfilters(srchsvr, prcs);
             recto = new Rectomat();
             alists = new auclists(lstfltrs, prcs, srchsvr);
@@ -271,20 +240,14 @@ namespace Auction.mod
             genui = new GeneratorUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
             setui = new settingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
 
-            
-            cardlinkfinder = new Regex(@"\[[a-zA-Z]+[a-zA-Z_\t]*[a-zA-z]+\]");//search for "[blub_blub_blub]"
-
-            
             helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
 
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            chatRoomsinfo = typeof(ChatUI).GetField("chatRooms", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
             
-
             helpf.buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -302,7 +265,7 @@ namespace Auction.mod
             }
             if (aucfiles.Contains(helpf.ownaucpath + "nicauc.txt"))//File.Exists() was slower
             {
-                this.nicks = true;
+                helpf.nicks = true;
             }
 
             if (aucfiles.Contains(helpf.ownaucpath + "settingsauc.txt"))//File.Exists() was slower
@@ -557,41 +520,6 @@ namespace Auction.mod
             return;
         }
 
-
-
-        private void readnicksfromfile()
-        {
-            if (this.nicks)
-            {
-                string[] lines = System.IO.File.ReadAllLines(helpf.ownaucpath + "nicauc.txt");
-                foreach (string s in lines)
-                {
-                    if (s == "" || s == " ") continue;
-                    string cardname = s.Split(':')[0];
-                    if (helpf.cardnames.Contains(cardname.ToLower()))
-                    {
-                        string[] nickes = (s.Split(':')[1]).Split(',');
-                        foreach (string n in nickes)
-                        {
-                            nickelement nele;
-                            nele.nick = n.ToLower();
-                            nele.cardname = cardname.ToLower();
-                            this.loadedscrollsnicks.Add(nele);
-
-                        }
-                    }
-
-                }
-
-
-            }
-        }
-
-        
-       
-       
-      
-
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
             if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
@@ -602,7 +530,7 @@ namespace Auction.mod
             {
                 helpf.target = (ChatUI)info.target;
                 helpf.setchatlogstyle((GUIStyle)this.chatLogStyleinfo.GetValue(info.target));
-                chatRooms = (ChatRooms)chatRoomsinfo.GetValue(info.target); }
+            }
 
             if (info.target is TradeSystem && info.targetMethod.Equals("StartTrade"))// user start a trade, show the buy-message
             {

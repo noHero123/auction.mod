@@ -28,7 +28,7 @@ namespace Auction.mod
 
         public List<nickelement> searchscrollsnicks = new List<nickelement>();
 
-        private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
+       // private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
         
 
         
@@ -370,8 +370,10 @@ namespace Auction.mod
 
                     if (findcard)
                     {
-                        CardType type = CardTypeManager.getInstance().get(cardnametoid(foundedcard.ToLower()));
-                        int realarrindex = Array.FindIndex(helpf.cardnames, element => foundedcard.Equals(element));
+                        //CardType type = CardTypeManager.getInstance().get(cardnametoid(foundedcard.ToLower()));
+                        CardType type = CardTypeManager.getInstance().get(helpf.cardnamesToID[foundedcard.ToLower()]);
+                        //int realarrindex = Array.FindIndex(helpf.cardnames, element => foundedcard.Equals(element));
+                        int realarrindex = helpf.cardnameToArrayIndex(foundedcard);
                         c = new Card(helpf.cardids[realarrindex], type, true);
                         //Console.WriteLine("found " + foundedcard + " in " + textplace);
                         string tmpgold = pricetestfirst((textplace.Split(' '))[(textplace.Split(' ')).Length - 1]);

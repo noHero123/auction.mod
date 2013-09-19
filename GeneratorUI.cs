@@ -315,7 +315,8 @@ namespace Auction.mod
                         foreach (string w in words)
                         {
                             if (w == "" || w == " ") continue;
-                            string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                            //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                            string cardname = helpf.cardidsToCardnames[Convert.ToInt32(w.Split(' ')[0])];
                             prcs.wtspricelist1[cardname] = w.Split(' ')[1];
                         }
                         generatewtxmsg(alists.ahlistfull);
@@ -341,7 +342,8 @@ namespace Auction.mod
                         foreach (string w in words)
                         {
                             if (w == "" || w == " ") continue;
-                            string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                            //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                            string cardname = helpf.cardidsToCardnames[Convert.ToInt32(w.Split(' ')[0])];
                             prcs.wtbpricelist1[cardname] = w.Split(' ')[1];
                         }
                         generatewtxmsg(alists.ahlistfull);
@@ -523,7 +525,8 @@ namespace Auction.mod
                         {
                             if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
                             {
-                                int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
+                                //int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
+                                int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
                                 if (index >= 0)
                                 {
                                     prcs.PriceChecker(index, true, current.card.getName());
@@ -534,7 +537,8 @@ namespace Auction.mod
                         {
                             if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
                             {
-                                int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
+                                //int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
+                                int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
                                 if (index >= 0)
                                 {
                                     prcs.PriceChecker(index, false, current.card.getName());
@@ -555,7 +559,8 @@ namespace Auction.mod
                 {
                     //this.callback.ItemButtonClicked(this, card);
                     string clink = card.getName().ToLower();
-                    int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                    //int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                    int arrindex = helpf.cardnameToArrayIndex(clink);
                     if (arrindex >= 0)
                     {
                         crdvwr.createcard(arrindex, helpf.cardids[arrindex]);
@@ -603,7 +608,8 @@ namespace Auction.mod
                         {
                             //int price=this.upperprice[Array.FindIndex(cardids, element => element == c.card.getType())];
                             int price = 0;
-                            price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
+                            //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
+                            price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
                             prcs.wtspricelist1[c.card.getName().ToLower()] = price.ToString();
 
                         }
@@ -615,7 +621,8 @@ namespace Auction.mod
 
                             //int price = this.lowerprice[Array.FindIndex(cardids, element => element == c.card.getType())];
                             int price = 0;
-                            price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
+                            //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
+                            price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
                             prcs.wtbpricelist1[c.card.getName().ToLower()] = price.ToString();
 
                         }
