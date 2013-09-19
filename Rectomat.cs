@@ -8,6 +8,10 @@ namespace Auction.mod
 {
     class Rectomat
     {
+        public Rect ahbutton;
+        public Rect genbutton;
+        public Rect settingsbutton;
+
         private float BOTTOM_MARGIN_EXTRA = (float)Screen.height * 0.047f;
         private Vector4 margins;
        public Rect screenRect;
@@ -41,7 +45,10 @@ namespace Auction.mod
        public Rect position, position2, position3;
 
        public void setupPositions(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
-        {// set rects for menus
+        {
+           
+           
+           // set rects for menus
             this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.57f);
             if (!chatisshown) { this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.80f); }
             this.filtermenurect = new Rect(screenRect.xMax + (float)Screen.width * 0.01f, screenRect.y, (float)Screen.width * 0.37f, (float)Screen.height * 0.57f);
@@ -152,6 +159,14 @@ namespace Auction.mod
 
        public void setupsettingpositions(GUIStyle chatLogStyle, GUISkin cardListPopupLeftButtonSkin)
         {
+           // buttons in store:
+            GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
+            ahbutton = new Rect(subMenuPositioner.getButtonRect(2f));
+            genbutton = new Rect(subMenuPositioner.getButtonRect(3f));
+            Rect setrecto = subMenuPositioner.getButtonRect(4f);
+            setrecto.x = Screen.width - setrecto.width;// -subMenuPositioner.getButtonRect(0f).x;
+            settingsbutton = new Rect(setrecto);
+           // stuff in settingsmenue
             float num = 0.005f * (float)Screen.width;
 
             this.settingRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.98f, (float)Screen.height * 0.57f);

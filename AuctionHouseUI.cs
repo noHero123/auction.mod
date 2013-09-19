@@ -32,14 +32,8 @@ namespace Auction.mod
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
         Texture2D decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
         Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
-        
-        private GUISkin cardListPopupSkin ;
-        private GUISkin cardListPopupGradientSkin ;
-        private GUISkin cardListPopupBigLabelSkin ;
-        private GUISkin cardListPopupLeftButtonSkin;
 
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
-        GUIStyle chatLogStyle;
 
 
         public AuctionHouseUI(messageparser mssgprsr,auclists alists,Rectomat recto,listfilters lstfltrs,Prices prcs,cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h)
@@ -56,26 +50,59 @@ namespace Auction.mod
             this.sttngs = sttngs;
         }
 
-        public void setskins(GUISkin cllps,GUISkin clpgs,GUISkin clpbls,GUISkin clplbs)
+        public void ahbuttonpressed()
         {
-                this.cardListPopupSkin =cllps;
-                this.cardListPopupGradientSkin=clpgs ;
-                this.cardListPopupBigLabelSkin =clpbls;
-                this.cardListPopupLeftButtonSkin=clplbs;
+            helpf.inauchouse = true;
+            helpf.settings = false;
+            helpf.generator = false;
+            //this.hideInformation();
+            helpf.hideInformationinfo.Invoke(helpf.storeinfo, null);
+
+
+            iTween.MoveTo((GameObject)(helpf.buymen).GetValue(helpf.storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+            helpf.showBuyinfo.SetValue(helpf.storeinfo, false);
+
+            ((GameObject)helpf.sellmen.GetValue(helpf.storeinfo)).SetActive(false);
+            iTween.MoveTo((GameObject)helpf.sellmen.GetValue(helpf.storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
+            ((GameObject)helpf.sellmen.GetValue(helpf.storeinfo)).SetActive(true);
+            helpf.showSellinfo.SetValue(helpf.storeinfo, false);
+
+            Store.ENABLE_SHARD_PURCHASES = false;
+
+
+
+            if (this.wtsinah)
+            {
+                alists.wtslistfull.Clear();
+                alists.wtslistfull.AddRange(alists.wtslistfulltimed);
+                //lstfltrs.sortlist(mssgprsr.wtslistfull);
+
+                alists.setAhlistsToAHWtsLists(true);
+
+                helpf.wtsmenue = true;
+
+            }
+            else
+            {
+                alists.wtblistfull.Clear();
+                alists.wtblistfull.AddRange(alists.wtblistfulltimed);
+
+                //lstfltrs.sortlist(mssgprsr.wtblistfull);
+
+                alists.setAhlistsToAHWtbLists(true);
+                helpf.wtsmenue = false;
+
+            }
+            //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, this.inauchouse, this.wtsmenue, this.generator);
+            helpf.targetchathightinfo.SetValue(helpf.target, (float)Screen.height * 0.25f);
+            if (helpf.wtsmenue) { mssgprsr.newwtsmsgs = false; } else { mssgprsr.newwtbmsgs = false; }
         
         }
 
-        public void setchatlogstyle(GUIStyle cls)
-        {
-            this.chatLogStyle = cls;
-        }
-
-        public bool drawAH(bool wts, bool gen, bool showtradedialog)
+        public void drawAH()
         {
 
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
-            helpf.wtsmenue = wts;
-            helpf.generator = gen;
             if (helpf.inauchouse)
             {
                 
@@ -83,15 +110,15 @@ namespace Auction.mod
                 GUI.color = Color.white;
 
                 // draw filter menue
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.filtermenurect, string.Empty);
                 // wts filter menue
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 GUI.Label(recto.sbarlabelrect, "Scroll:");
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbrect, string.Empty);
                 string selfcopy = srchsvr.wtssearchstring;
-                srchsvr.wtssearchstring = GUI.TextField(recto.sbrect, srchsvr.wtssearchstring, chatLogStyle);
+                srchsvr.wtssearchstring = GUI.TextField(recto.sbrect, srchsvr.wtssearchstring, helpf.chatLogStyle);
 
 
                 GUI.contentColor = Color.white;
@@ -138,45 +165,45 @@ namespace Auction.mod
                 GUI.contentColor = Color.white;
 
                 // draw seller filter
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 if (helpf.wtsmenue)
                 {
                     GUI.Label(recto.sbsellerlabelrect, "ignore Seller:");
                 }
                 else { GUI.Label(recto.sbsellerlabelrect, "ignore Buyer:"); }
 
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbsellerrect, string.Empty);
                 string sellercopy = srchsvr.sellersearchstring;
                 GUI.SetNextControlName("sellerframe");
-                srchsvr.sellersearchstring = GUI.TextField(recto.sbsellerrect, srchsvr.sellersearchstring, chatLogStyle);
+                srchsvr.sellersearchstring = GUI.TextField(recto.sbsellerrect, srchsvr.sellersearchstring, helpf.chatLogStyle);
 
                 // draw price filter
 
 
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                 GUI.Label(recto.sbpricelabelrect, "<= Price <=");
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
 
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbpricerect, string.Empty);
                 GUI.Box(recto.sbpricerect2, string.Empty);
                 string pricecopy = srchsvr.pricesearchstring;
                 string pricecopy2 = srchsvr.pricesearchstring2;
-                srchsvr.pricesearchstring = Regex.Replace(GUI.TextField(recto.sbpricerect, srchsvr.pricesearchstring, chatLogStyle), @"[^0-9]", "");
-                srchsvr.pricesearchstring2 = Regex.Replace(GUI.TextField(recto.sbpricerect2, srchsvr.pricesearchstring2, chatLogStyle), @"[^0-9]", "");
+                srchsvr.pricesearchstring = Regex.Replace(GUI.TextField(recto.sbpricerect, srchsvr.pricesearchstring, helpf.chatLogStyle), @"[^0-9]", "");
+                srchsvr.pricesearchstring2 = Regex.Replace(GUI.TextField(recto.sbpricerect2, srchsvr.pricesearchstring2, helpf.chatLogStyle), @"[^0-9]", "");
                 GUI.color = Color.white;
 
                 // draw time filter
 
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 GUI.Label(recto.sbtimelabel, "not older than");
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbtimerect, string.Empty);
                 string timecopy = srchsvr.timesearchstring;
-                srchsvr.timesearchstring = Regex.Replace(GUI.TextField(recto.sbtimerect, srchsvr.timesearchstring, 2, chatLogStyle), @"[^0-9]", "");
+                srchsvr.timesearchstring = Regex.Replace(GUI.TextField(recto.sbtimerect, srchsvr.timesearchstring, 2, helpf.chatLogStyle), @"[^0-9]", "");
                 if (srchsvr.timesearchstring != "" && Convert.ToInt32(srchsvr.timesearchstring) > 30) { srchsvr.timesearchstring = "30"; }
                 GUI.color = Color.white;
 
@@ -190,7 +217,7 @@ namespace Auction.mod
                 {
                     GUI.DrawTexture(recto.sbtpfgen, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
                 }
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 if (helpf.wtsmenue)
                 {
                     GUI.Label(recto.sbtpfgenlabel, "Price <= wtb-generator");
@@ -208,10 +235,10 @@ namespace Auction.mod
                 {
                     GUI.DrawTexture(recto.sbonlywithpricebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
                 }
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 GUI.Label(recto.sbonlywithpricelabelbox, "only Scrolls with Price");
 
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
 
                 if (ntwrk.contonetwork)
                 {
@@ -335,7 +362,7 @@ namespace Auction.mod
                 //Console.WriteLine(GUI.GetNameOfFocusedControl());
                 GUI.depth = 15;
                 this.opacity = 1f;
-                GUI.skin = this.cardListPopupSkin;
+                GUI.skin = helpf.cardListPopupSkin;
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
 
                 GUI.Box(recto.position, string.Empty);
@@ -450,7 +477,7 @@ namespace Auction.mod
 
                 this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 if (srchsvr.reverse) { alists.ahlist.Reverse(); }
-                GUI.skin = this.cardListPopupBigLabelSkin;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
                 foreach (aucitem current in alists.ahlist)
                 {
                     if (usetimefilter && (current.dtime).CompareTo(currenttime) < 0) { continue; }
@@ -458,7 +485,7 @@ namespace Auction.mod
                     {
                         GUI.color = new Color(1f, 1f, 1f, 0.5f);
                     }
-                    GUI.skin = this.cardListPopupGradientSkin;
+                    GUI.skin = helpf.cardListPopupGradientSkin;
                     //draw boxes
                     Rect position7 = recto.position7(num);
                     if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + recto.position3.height)
@@ -484,13 +511,13 @@ namespace Auction.mod
                         string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
                         if (sttngs.shownumberscrolls) name = name + " (" + lstfltrs.available[current.card.getName()] + ")";
-                        GUI.skin = this.cardListPopupBigLabelSkin;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
                         // draw text
                         Rect position8 = recto.position8(num);
                         GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
-                        GUI.skin = this.cardListPopupSkin;
+                        GUI.skin = helpf.cardListPopupSkin;
                         string text = current.card.getPieceKind().ToString();
                         string str = text.Substring(0, 1) + text.Substring(1).ToLower();
                         string text2 = string.Empty;
@@ -512,7 +539,7 @@ namespace Auction.mod
                         //draw seller name
 
                         string sellername = current.seller;
-                        GUI.skin = this.cardListPopupBigLabelSkin;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
 
                         vector = GUI.skin.label.CalcSize(new GUIContent(sellername));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
@@ -522,7 +549,7 @@ namespace Auction.mod
                         GUI.Label(position11, (vector.x >= position11.width) ? (sellername.Substring(0, Mathf.Min(sellername.Length, recto.maxCharsName)) + "...") : sellername);
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         //draw timestamp
-                        GUI.skin = this.cardListPopupSkin;
+                        GUI.skin = helpf.cardListPopupSkin;
                         DateTime temptime = DateTime.Now;
                         TimeSpan ts = temptime.Subtract(current.dtime);
 
@@ -549,7 +576,7 @@ namespace Auction.mod
                         //draw gold cost
                         float nextx = position11.xMax + recto.costIconWidth;
                         string gold = current.price + " G";
-                        GUI.skin = this.cardListPopupBigLabelSkin;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
                         vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
                         Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth / 2f, recto.cardHeight);
@@ -593,7 +620,7 @@ namespace Auction.mod
                             }
                             if (sttngs.showsugrange && p1 != p2) suggeprice = "SP: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                         }
-                        GUI.skin = this.cardListPopupSkin;
+                        GUI.skin = helpf.cardListPopupSkin;
                         Rect position14 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
                         GUI.skin.label.alignment = TextAnchor.UpperCenter;
                         GUI.Label(position14, suggeprice);
@@ -601,7 +628,7 @@ namespace Auction.mod
 
 
 
-                        GUI.skin = this.cardListPopupLeftButtonSkin;
+                        GUI.skin = helpf.cardListPopupLeftButtonSkin;
                         if (!this.selectable)
                         {
                             GUI.enabled = false;
@@ -621,10 +648,10 @@ namespace Auction.mod
                             GUI.DrawTexture(new Rect(4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
                         }
                         // draw buy/sell button
-                        GUI.skin = this.cardListPopupGradientSkin;
+                        GUI.skin = helpf.cardListPopupGradientSkin;
                         if (helpf.wtsmenue)
                         {
-                            if (!showtradedialog)
+                            if (!helpf.showtradedialog)
                             {
                                 if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
@@ -632,13 +659,13 @@ namespace Auction.mod
                                     // start trading with seller
                                     if (current.seller != App.MyProfile.ProfileInfo.name)
                                     {
-                                        showtradedialog = true;
+                                        helpf.showtradedialog = true;
                                         tradeitem = current;
                                     }
                                 }
                             }
                             else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
-                            GUI.skin = this.cardListPopupBigLabelSkin;
+                            GUI.skin = helpf.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                             GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
 
@@ -646,7 +673,7 @@ namespace Auction.mod
                         }
                         else
                         {
-                            if (!showtradedialog)
+                            if (!helpf.showtradedialog)
                             {
                                 if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
@@ -654,13 +681,13 @@ namespace Auction.mod
                                     // start trading with seller
                                     if (current.seller != App.MyProfile.ProfileInfo.name)
                                     {
-                                        showtradedialog = true;
+                                        helpf.showtradedialog = true;
                                         tradeitem = current;
                                     }
                                 }
                             }
                             else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
-                            GUI.skin = this.cardListPopupBigLabelSkin;
+                            GUI.skin = helpf.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                             GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Sell");
                         }
@@ -704,7 +731,7 @@ namespace Auction.mod
                 }
 
 
-                if (GUI.Button(recto.wtsbuttonrect, "WTS") && !showtradedialog)
+                if (GUI.Button(recto.wtsbuttonrect, "WTS") && !helpf.showtradedialog)
                 {
 
                     alists.wtslistfull.Clear(); alists.wtslistfull.AddRange(alists.wtslistfulltimed);
@@ -736,7 +763,7 @@ namespace Auction.mod
                     GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
-                if (GUI.Button(recto.wtbbuttonrect, "WTB") && !showtradedialog)
+                if (GUI.Button(recto.wtbbuttonrect, "WTB") && !helpf.showtradedialog)
                 {
                     alists.wtblistfull.Clear(); alists.wtblistfull.AddRange(alists.wtblistfulltimed);
                     //sortlist(wtblistfull);
@@ -793,7 +820,7 @@ namespace Auction.mod
 
                 }
 
-                if (showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.priceinint, helpf.wtsmenue, tradeitem.whole); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.priceinint, helpf.wtsmenue, tradeitem.whole); }
 
 
 
@@ -801,15 +828,16 @@ namespace Auction.mod
 
 
             }
-            return helpf.wtsmenue;
+            GUI.color = Color.white;
+            GUI.contentColor = Color.white;
         }
 
         private void starttrading(string name, string cname, int price, bool wts, string orgmsg)
         {
             // asks the user if he wants to trade
-            GUI.skin = this.cardListPopupSkin;
+            GUI.skin = helpf.cardListPopupSkin;
             GUI.Box(recto.tradingbox, "");
-            GUI.skin = this.cardListPopupBigLabelSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 
             string text = "sell";
@@ -819,9 +847,9 @@ namespace Auction.mod
             GUI.Label(recto.tbmessage, message);
             GUI.skin.label.wordWrap = true;
             float msghigh = GUI.skin.label.CalcHeight(new GUIContent(orgmsg), recto.tbmessage.width - 30f);
-            GUI.skin = this.cardListPopupSkin;
+            GUI.skin = helpf.cardListPopupSkin;
             scrolll = GUI.BeginScrollView(recto.tbmessagescroll, scrolll, new Rect(0f, 0f, recto.tbmessagescroll.width - 20f, msghigh));
-            GUI.skin = this.cardListPopupBigLabelSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
 
             GUI.Label(new Rect(5f, 5f, recto.tbmessagescroll.width - 30f, msghigh), orgmsg);
 
@@ -830,7 +858,7 @@ namespace Auction.mod
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             GUI.EndScrollView();
             GUI.skin.label.wordWrap = false;
-            GUI.skin = this.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupLeftButtonSkin;
 
             if (GUI.Button(recto.tbok, "OK"))
             {

@@ -43,9 +43,6 @@ namespace Auction.mod
 
         private bool hidewispers = true; //  false = testmodus
 
-        
-       
-
 
         // some nicknames variables
         private bool nicks = false;
@@ -53,60 +50,34 @@ namespace Auction.mod
          // = realcardnames + loadedscrollsnicks
 
         
-
-        
-        
-       
-        
         private string[] aucfiles;
-        Color dblack = new Color(1f, 1f, 1f, 0.5f);
-        private Store storeinfo;
-
         
-
-        private GUISkin lobbySkin;
-
-        
-        private GUISkin cardListPopupSkin ;
-        private GUISkin cardListPopupGradientSkin ;
-        private GUISkin cardListPopupBigLabelSkin ;
-        private GUISkin cardListPopupLeftButtonSkin;
 
         int screenh = 0;
         int screenw = 0;
         
         private const bool debug = false;
 
-        private MethodInfo hideInformationinfo;
-        private FieldInfo showBuyinfo;
-        private FieldInfo showSellinfo;
+        
+        bool deckchanged = false;
+        
+
+
         private FieldInfo chatRoomsinfo;
         private FieldInfo chatLogStyleinfo;
-        private FieldInfo targetchathightinfo;
+       
         private MethodInfo drawsubmenu;
 
-        private ChatUI target = null;
+
         private ChatRooms chatRooms;
-        private GUIStyle chatLogStyle;
         
         
         private Regex cardlinkfinder;
 
-        
-        
-        
-
-        
-
-
         Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
-        FieldInfo buymen; FieldInfo sellmen;
-
         
         
-
-        bool chatisshown = false;
-        bool deckchanged = false;
+        
 
         string[] auccontroler = new string[] { };
 
@@ -122,6 +93,7 @@ namespace Auction.mod
         Helpfunktions helpf;
         AuctionHouseUI ahui;
         GeneratorUI genui;
+        settingsUI setui;
         
         
 
@@ -281,6 +253,8 @@ namespace Auction.mod
         public Auction()
         {
             helpf = new Helpfunktions();
+            helpf.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
+
             sttngs = new Settings();
             ntwrk = new Network();
             srchsvr = new Searchsettings();
@@ -294,29 +268,25 @@ namespace Auction.mod
             alists = new auclists(lstfltrs, prcs, srchsvr);
             mssgprsr = new messageparser(alists, lstfltrs, this.sttngs, this.helpf);
             ahui = new AuctionHouseUI(mssgprsr,alists,recto,lstfltrs,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf);
-            ahui.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
             genui = new GeneratorUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
-            genui.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
+            setui = new settingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
 
+            
             cardlinkfinder = new Regex(@"\[[a-zA-Z]+[a-zA-Z_\t]*[a-zA-z]+\]");//search for "[blub_blub_blub]"
 
             
-            hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
-            showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
-            showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
 
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             chatRoomsinfo = typeof(ChatUI).GetField("chatRooms", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
-            targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
             
-            this.cardListPopupSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopup");
-            this.cardListPopupGradientSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient");
-            this.cardListPopupBigLabelSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel");
-            this.cardListPopupLeftButtonSkin = (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton");
 
-            buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
-            sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
+            helpf.sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
 
             
             
@@ -626,13 +596,12 @@ namespace Auction.mod
         {
             if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
 
-            if (info.target is ChatUI && info.targetMethod.Equals("Show")) { this.chatisshown = (bool)info.arguments[0]; this.screenh = 0; }// so position will be calculatet new on next ongui
+            if (info.target is ChatUI && info.targetMethod.Equals("Show")) { helpf.chatisshown = (bool)info.arguments[0]; this.screenh = 0; }// so position will be calculatet new on next ongui
 
-            if (info.target is ChatUI && info.targetMethod.Equals("Initiate")) 
-            {  target = (ChatUI)info.target;
-                this.chatLogStyle =(GUIStyle)this.chatLogStyleinfo.GetValue(info.target);
-                ahui.setchatlogstyle(this.chatLogStyle);
-                genui.setchatlogstyle(this.chatLogStyle);
+            if (info.target is ChatUI && info.targetMethod.Equals("Initiate"))
+            {
+                helpf.target = (ChatUI)info.target;
+                helpf.setchatlogstyle((GUIStyle)this.chatLogStyleinfo.GetValue(info.target));
                 chatRooms = (ChatRooms)chatRoomsinfo.GetValue(info.target); }
 
             if (info.target is TradeSystem && info.targetMethod.Equals("StartTrade"))// user start a trade, show the buy-message
@@ -646,8 +615,8 @@ namespace Auction.mod
 
             if (info.target is Store && info.targetMethod.Equals("Start"))//user opened store
             {
-                this.lobbySkin = (GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target);
-                this.storeinfo=(Store)info.target;
+                helpf.setlobbyskin((GUISkin)typeof(Store).GetField("lobbySkin", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(info.target));
+                helpf.storeinfo=(Store)info.target;
                 helpf.showtradedialog = false;
                 helpf.inauchouse = false;
                 helpf.generator = false;
@@ -690,142 +659,48 @@ namespace Auction.mod
                     Vector2 screenMousePos = GUIUtil.getScreenMousePos();
                    
 
-                    if (!(Screen.height == screenh) || !(Screen.width == screenw)|| chatLogStyle==null) // if resolution was changed, recalc positions
+                    if (!(Screen.height == screenh) || !(Screen.width == screenw)|| helpf.chatLogStyle==null) // if resolution was changed, recalc positions
                     {
                         screenh = Screen.height;
                         screenw = Screen.width;
-                        chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(target);
-                        recto.setupPositions(this.chatisshown,sttngs.rowscale,this.chatLogStyle,this.cardListPopupSkin);
-                        recto.setupsettingpositions(this.chatLogStyle, this.cardListPopupLeftButtonSkin);
+                        helpf.chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(helpf.target);
+                        recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle,helpf.cardListPopupSkin);
+                        recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupLeftButtonSkin);
 
                     }
                    
                     
                     // delete picture on click!
                     if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && crdvwr.clicked >= 3) { crdvwr.clearallpics(); }
-
-                    //auction house...
-                    GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
+                    
                     //klick button AH
-                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(2f), "AH", this.lobbySkin) && !helpf.showtradedialog)
+                    if (LobbyMenu.drawButton(recto.ahbutton, "AH", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        helpf.inauchouse = true;
-                        helpf.settings = false;
-                        helpf.generator = false;
-                        //this.hideInformation();
-                        hideInformationinfo.Invoke(storeinfo, null);
-
+                        ahui.ahbuttonpressed();
                         
-                        iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        showBuyinfo.SetValue(storeinfo, false);
-
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
-                        iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
-                        showSellinfo.SetValue(storeinfo, false);
-                        
-                        Store.ENABLE_SHARD_PURCHASES = false;
-                        
-                        
-                        
-                        if (ahui.wtsinah)
-                        {
-                            alists.wtslistfull.Clear();
-                            alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                            //lstfltrs.sortlist(mssgprsr.wtslistfull);
-
-                            alists.setAhlistsToAHWtsLists(true);
-
-                            helpf.wtsmenue = true;
-                            
-                        }
-                        else 
-                        {
-                            alists.wtblistfull.Clear();
-                            alists.wtblistfull.AddRange(alists.wtblistfulltimed);
-
-                            //lstfltrs.sortlist(mssgprsr.wtblistfull);
-
-                            alists.setAhlistsToAHWtbLists(true);
-                            helpf.wtsmenue = false;
-                            
-                        }
-                        //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, this.inauchouse, this.wtsmenue, this.generator);
-                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
-                        if (helpf.wtsmenue) { mssgprsr.newwtsmsgs = false; } else { mssgprsr.newwtbmsgs = false; }
                     }
-                // klick button Gen
-
-                    if (LobbyMenu.drawButton(subMenuPositioner.getButtonRect(3f), "Gen", this.lobbySkin) && !helpf.showtradedialog)
+                    // klick button Gen
+                    if (LobbyMenu.drawButton(recto.genbutton, "Gen", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        //this.hideInformation();
-                        hideInformationinfo.Invoke(storeinfo, null);
-                        iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        showBuyinfo.SetValue(storeinfo, false);
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
-                        iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
-                        showSellinfo.SetValue(storeinfo, false);
-                        Store.ENABLE_SHARD_PURCHASES = false;
-                        helpf.inauchouse = false;
-                        helpf.generator = true;
-                        helpf.settings = false;
-
-
-                        if (genui.wtsingen)
-                        {
-                            helpf.wtsmenue = true;
-                            alists.setAhlistsToGenWtsLists();
-                            
-                            
-                        }
-                        else
-                        {
-                            helpf.wtsmenue = false;
-                            alists.setAhlistsToGenWtbLists();
-                             
-                            
-                        }
-
-                        //this.genlist.AddRange(this.genlistfull);
-
-
-                        
-                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
+                        genui.genbuttonpressed();
                     }
-                    Rect setrecto = subMenuPositioner.getButtonRect(4f);
-                    setrecto.x = Screen.width - setrecto.width;// -subMenuPositioner.getButtonRect(0f).x;
-                    if (LobbyMenu.drawButton(setrecto, "settings", this.lobbySkin) && !helpf.showtradedialog)
+
+                    if (LobbyMenu.drawButton(recto.settingsbutton, "settings", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
-                        //this.hideInformation();
-                        hideInformationinfo.Invoke(storeinfo, null);
-                        iTween.MoveTo((GameObject)buymen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        showBuyinfo.SetValue(storeinfo, false);
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(false);
-                        iTween.MoveTo((GameObject)sellmen.GetValue(storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
-                        ((GameObject)sellmen.GetValue(storeinfo)).SetActive(true);
-                        showSellinfo.SetValue(storeinfo, false);
-                        Store.ENABLE_SHARD_PURCHASES = false;
-                        helpf.inauchouse = false;
-                        helpf.generator = false;
-                        helpf.settings = true;
-                        this.targetchathightinfo.SetValue(this.target, (float)Screen.height * 0.25f);
+                        setui.setbuttonpressed();
+                        
                     }    
 
 
                     // draw ah oder gen-menu
 
-                    if (helpf.inauchouse) helpf.wtsmenue = ahui.drawAH(helpf.wtsmenue, helpf.generator, helpf.showtradedialog);
-                    GUI.color = Color.white;
-                    GUI.contentColor = Color.white;
+                    if (helpf.inauchouse) ahui.drawAH();
                     if (helpf.generator) genui.drawgenerator();
-                    GUI.color = Color.white;
-                    GUI.contentColor = Color.white;
-                    if (helpf.settings) drawsettings();
+                    if (helpf.settings) setui.drawsettings();
                     GUI.color = Color.white;
                     GUI.contentColor = Color.white;
 
@@ -858,244 +733,9 @@ namespace Auction.mod
             return;
         }
 
-        //draw stuff
 
         
        
-        private void drawsettings()
-        {
-            GUI.depth = 15;
-            GUI.color = Color.white;
-            GUI.skin = this.cardListPopupSkin;
-            GUI.Box(recto.settingRect, string.Empty);
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            if (GUI.Button(recto.setreset, "Reset"))
-            {
-                sttngs.resetsettings();
-                
-                recto.setupPositions(this.chatisshown,sttngs.rowscale,this.chatLogStyle,this.cardListPopupSkin);
-                
-
-            }
-            if (GUI.Button(recto.setload, "Load"))
-            {
-                sttngs.loadsettings(helpf.ownaucpath);
-                recto.setupPositions(this.chatisshown, sttngs.rowscale, this.chatLogStyle, this.cardListPopupSkin);
-            }
-            if (GUI.Button(recto.setsave, "Save"))
-            {
-                //save stuff
-                sttngs.savesettings(helpf.ownaucpath);
-                
-
-            }
-
-            // spam preventor
-            GUI.Label(recto.setpreventspammlabel, "dont update messages which are younger than:");
-            GUI.Label(recto.setpreventspammlabel2, "minutes");
-
-            GUI.Box(recto.setpreventspammrect, "");
-            GUI.skin = this.cardListPopupSkin;
-            GUI.Box(recto.setpreventspammrect, string.Empty);
-            chatLogStyle.alignment = TextAnchor.MiddleCenter;
-            sttngs.spampreventtime = Regex.Replace(GUI.TextField(recto.setpreventspammrect, sttngs.spampreventtime, chatLogStyle), @"[^0-9]", "");
-            chatLogStyle.alignment = TextAnchor.MiddleLeft;
-            if (sttngs.spampreventtime != "") sttngs.spamprevint = Convert.ToInt32(sttngs.spampreventtime);
-            if (sttngs.spamprevint > 30) { sttngs.spampreventtime = "30"; sttngs.spamprevint = 30; }
-
-            //anz cards
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(recto.setowncardsanzlabel, "show owned number of scrolls beside scrollname");
-            bool owp = GUI.Button(recto.setowncardsanzbox, "");
-            if (owp) sttngs.shownumberscrolls = !sttngs.shownumberscrolls;
-            if (sttngs.shownumberscrolls)
-            {
-                GUI.DrawTexture(recto.setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
-            }
-            else
-            {
-                GUI.DrawTexture(recto.setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
-            }
-
-            // show range
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(recto.setsugrangelabel, "show ScrollsPost price as range");
-            bool oowp = GUI.Button(recto.setsugrangebox, "");
-            if (oowp) sttngs.showsugrange = !sttngs.showsugrange;
-            if (sttngs.showsugrange)
-            {
-                GUI.DrawTexture(recto.setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
-            }
-            else
-            {
-                GUI.DrawTexture(recto.setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
-            }
-
-            GUI.Label(recto.setrowhightlabel, "scale row hight by factor");
-            GUI.Label(recto.setrowhightlabel2, "/10");
-            GUI.Box(recto.setrowhightbox, "");
-            GUI.skin = this.cardListPopupSkin;
-            GUI.Box(recto.setrowhightbox, string.Empty);
-            chatLogStyle.alignment = TextAnchor.MiddleCenter;
-            string rowcopy = sttngs.rowscalestring;
-            sttngs.rowscalestring = Regex.Replace(GUI.TextField(recto.setrowhightbox, sttngs.rowscalestring, chatLogStyle), @"[^0-9]", "");
-            chatLogStyle.alignment = TextAnchor.MiddleLeft;
-            if (sttngs.rowscalestring != "") { sttngs.rowscale = (float)Convert.ToDouble(sttngs.rowscalestring) / 10f; } else { sttngs.rowscale = 1.0f; }
-            if (sttngs.rowscale > 2f) { sttngs.rowscale = 2f; sttngs.rowscalestring = "20"; }
-            if (sttngs.rowscale < 0.5f) { sttngs.rowscale = .5f; }
-            if (!rowcopy.Equals(sttngs.rowscalestring)) { recto.setupPositions(this.chatisshown, sttngs.rowscale, this.chatLogStyle, this.cardListPopupSkin); }
-
-            //round wts
-
-
-            bool ooowp = GUI.Button(recto.setwtsbox, "");
-            if (ooowp) sttngs.roundwts = !sttngs.roundwts;
-            if (sttngs.roundwts)
-            {
-                GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
-            }
-            else
-            {
-                GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
-            }
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(recto.setwtslabel1, "round ScrollsPost prices in WTS-generator ");
-            if (GUI.Button(recto.setwtsbutton1, ""))
-            {
-                sttngs.wtsroundup = !sttngs.wtsroundup;
-            }
-            GUI.Label(recto.setwtslabel2, " to next ");
-            if (GUI.Button(recto.setwtsbutton2, ""))
-            {
-                sttngs.wtsroundmode = (sttngs.wtsroundmode + 1) % 3;
-            }
-            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (sttngs.wtsroundup) { GUI.Label(recto.setwtsbutton1, "up"); } else { GUI.Label(recto.setwtsbutton1, "down"); }
-            if (sttngs.wtsroundmode == 0) { GUI.Label(recto.setwtsbutton2, "5"); }
-            if (sttngs.wtsroundmode == 1) { GUI.Label(recto.setwtsbutton2, "10"); }
-            if (sttngs.wtsroundmode == 2) { GUI.Label(recto.setwtsbutton2, "50"); }
-            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-
-            //round wtb
-
-
-            bool ooowwp = GUI.Button(recto.setwtbbox, "");
-            if (ooowwp) sttngs.roundwtb = !sttngs.roundwtb;
-            if (sttngs.roundwtb)
-            {
-                GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
-            }
-            else
-            {
-                GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
-            }
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(recto.setwtblabel1, "round ScrollsPost prices in WTB-generator ");
-            if (GUI.Button(recto.setwtbbutton1, ""))
-            {
-                sttngs.wtbroundup = !sttngs.wtbroundup;
-            }
-            GUI.Label(recto.setwtblabel2, " to next ");
-            if (GUI.Button(recto.setwtbbutton2, ""))
-            {
-                sttngs.wtbroundmode = (sttngs.wtbroundmode + 1) % 3;
-            }
-            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (sttngs.wtbroundup) { GUI.Label(recto.setwtbbutton1, "up"); } else { GUI.Label(recto.setwtbbutton1, "down"); }
-            if (sttngs.wtbroundmode == 0) { GUI.Label(recto.setwtbbutton2, "5"); }
-            if (sttngs.wtbroundmode == 1) { GUI.Label(recto.setwtbbutton2, "10"); }
-            if (sttngs.wtbroundmode == 2) { GUI.Label(recto.setwtbbutton2, "50"); }
-            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-
-            //take price generator
-            GUI.Label(recto.settakewtsgenlabel, "WTS-Generator takes ");
-            if (GUI.Button(recto.settakewtsgenbutton, ""))
-            {
-                sttngs.takewtsgenint = (sttngs.takewtsgenint + 1) % 3;
-            }
-            GUI.Label(recto.settakewtsgenlabel2, "ScrollsPost price");
-            GUI.Label(recto.settakewtbgenlabel, "WTB-Generator takes ");
-            if (GUI.Button(recto.settakewtbgenbutton, ""))
-            {
-                sttngs.takewtbgenint = (sttngs.takewtbgenint + 1) % 3;
-            }
-            GUI.Label(recto.settakewtbgenlabel2, "ScrollsPost price");
-            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (sttngs.takewtsgenint == 0) { GUI.Label(recto.settakewtsgenbutton, "lower"); }
-            if (sttngs.takewtsgenint == 1) { GUI.Label(recto.settakewtsgenbutton, "sugg."); }
-            if (sttngs.takewtsgenint == 2) { GUI.Label(recto.settakewtsgenbutton, "upper"); }
-            if (sttngs.takewtbgenint == 0) { GUI.Label(recto.settakewtbgenbutton, "lower"); }
-            if (sttngs.takewtbgenint == 1) { GUI.Label(recto.settakewtbgenbutton, "sugg."); }
-            if (sttngs.takewtbgenint == 2) { GUI.Label(recto.settakewtbgenbutton, "upper"); }
-            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-            //show price ah
-            if (sttngs.showsugrange)
-            {
-                GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
-                if (GUI.Button(recto.setwtsahbutton, ""))
-                {
-                    sttngs.takewtsahint = (sttngs.takewtsahint + 1) % 3;
-                }
-                if (GUI.Button(recto.setwtsahbutton2, ""))
-                {
-                    sttngs.takewtsahint2 = (sttngs.takewtsahint2 + 1) % 3;
-                }
-                GUI.Label(recto.setwtsahlabel3, "and");
-                GUI.Label(recto.setwtsahlabel4, "ScrollsPost prices");
-                GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
-                if (GUI.Button(recto.setwtbahbutton, ""))
-                {
-                    sttngs.takewtbahint = (sttngs.takewtbahint + 1) % 3;
-                }
-                if (GUI.Button(recto.setwtbahbutton2, ""))
-                {
-                    sttngs.takewtbahint2 = (sttngs.takewtbahint2 + 1) % 3;
-                }
-                GUI.Label(recto.setwtbahlabel3, "and");
-                GUI.Label(recto.setwtbahlabel4, "ScrollsPost prices");
-                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (sttngs.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
-                if (sttngs.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
-                if (sttngs.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
-                if (sttngs.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
-                if (sttngs.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
-                if (sttngs.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
-                if (sttngs.takewtsahint2 == 0) { GUI.Label(recto.setwtsahbutton2, "lower"); }
-                if (sttngs.takewtsahint2 == 1) { GUI.Label(recto.setwtsahbutton2, "sugg."); }
-                if (sttngs.takewtsahint2 == 2) { GUI.Label(recto.setwtsahbutton2, "upper"); }
-                if (sttngs.takewtbahint2 == 0) { GUI.Label(recto.setwtbahbutton2, "lower"); }
-                if (sttngs.takewtbahint2 == 1) { GUI.Label(recto.setwtbahbutton2, "sugg."); }
-                if (sttngs.takewtbahint2 == 2) { GUI.Label(recto.setwtbahbutton2, "upper"); }
-                GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-            }
-            else
-            {
-                GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
-                if (GUI.Button(recto.setwtsahbutton, ""))
-                {
-                    sttngs.takewtsahint = (sttngs.takewtsahint + 1) % 3;
-                }
-                GUI.Label(recto.setwtsahlabel2, "ScrollsPost price");
-                GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
-                if (GUI.Button(recto.setwtbahbutton, ""))
-                {
-                    sttngs.takewtbahint = (sttngs.takewtbahint + 1) % 3;
-                }
-                GUI.Label(recto.setwtbahlabel2, "ScrollsPost price");
-                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (sttngs.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
-                if (sttngs.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
-                if (sttngs.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
-                if (sttngs.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
-                if (sttngs.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
-                if (sttngs.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
-                GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-            }
-
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-        }
-
-        
         
         
      

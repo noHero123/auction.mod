@@ -69,6 +69,7 @@
     <Compile Include="Rectomat.cs" />
     <Compile Include="Searchsettings.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="settingsUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
