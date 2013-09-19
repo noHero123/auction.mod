@@ -56,15 +56,10 @@ namespace Auction.mod
 
         private bool wtsinah = true;
         private bool wtsingen = true;
-
         private string ownaucpath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar;
         private bool wtsmsgload = false;
         private bool wtbmsgload = false;
         private string[] aucfiles;
-
-
-
-
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
         private bool wtsmenue=false;
         private bool selectable;
@@ -82,84 +77,40 @@ namespace Auction.mod
         private GUISkin lobbySkin;
         private List<aucitem> ahlist = new List<aucitem>();
         private List<aucitem> ahlistfull = new List<aucitem>();
-
-
         private List<aucitem> wtsPlayer = new List<aucitem>();
         private List<aucitem> orgicardsPlayerwountrade = new List<aucitem>(); // cards player owns minus the untradable cards
         private List<Card> orgicardsPlayer = new List<Card>(); // all cards the player owns
         private List<aucitem> wtbPlayer = new List<aucitem>();
-        
-
-        
-
         //settings
-        private Rect settingRect; private Rect setsave, setreset, setload;
-        private Rect setpreventspammlabel; private Rect setpreventspammrect; private Rect setpreventspammlabel2;
-        private Rect setowncardsanzbox; private Rect setowncardsanzlabel;
         private bool shownumberscrolls;
-        private Rect setsugrangebox; private Rect setsugrangelabel;
-        private Rect setrowhightbox; private Rect setrowhightlabel, setrowhightlabel2;
-        private string rowscalestring="10";
-        private float rowscale=1.0f;
+        private string rowscalestring = "10";
+        private float rowscale = 1.0f;
         private bool showsugrange;
-        private Rect setwtslabel1, setwtslabel2, setwtsbutton1, setwtsbutton2, setwtsbox;
         private bool wtsroundup = true; private int wtsroundmode = 0; private bool roundwts = false;
-
-        private Rect setwtblabel1, setwtblabel2, setwtbbutton1, setwtbbutton2, setwtbbox;
         private bool wtbroundup = false; private int wtbroundmode = 0; private bool roundwtb = false;
-        private Rect settakewtsgenlabel, settakewtsgenbutton, settakewtsgenlabel2, settakewtbgenlabel, settakewtbgenbutton, settakewtbgenlabel2;
-        private int takewtsgenint=2, takewtbgenint=0;
-        private Rect setwtsahlabel, setwtsahbutton, setwtsahlabel2, setwtsahlabel3, setwtsahlabel4, setwtbahlabel, setwtbahbutton, setwtbahlabel2,setwtbahlabel3,setwtbahlabel4, setwtsahbutton2, setwtbahbutton2;
-        private int takewtsahint=1, takewtbahint=1, takewtsahint2=1, takewtbahint2=1;
+        private int takewtsgenint = 2, takewtbgenint = 0;
+        private int takewtsahint = 1, takewtbahint = 1, takewtsahint2 = 1, takewtbahint2 = 1;
+
+        
 
 
         //filter
         
-        private Rect filtermenurect;
-        private Rect sbarlabelrect;
-        private Rect sbrect;
-        private Rect sbgrect; private Rect sborect; private Rect sberect; private Rect sbdrect;
-        private Rect sbcommonrect; private Rect sbuncommonrect; private Rect sbrarerect; private Rect sbthreerect; private Rect sbonerect;
-        private Rect sbsellerlabelrect;private Rect sbsellerrect;
-        private Rect sbpricelabelrect; private Rect sbpricerect; private Rect sbclearrect; private Rect sbgeneratebutton; private Rect sbloadbutton; private Rect sbsavebutton;
-        private Rect sbpricerect2;
-        private Rect sbonlywithpricebox; private Rect sbonlywithpricelabelbox;
-        private Rect tradingbox; private Rect tbok; private Rect tbcancel; private Rect tbwhisper; private Rect tbmessage; private Rect tbmessagescroll;
-        private Rect sbtpfgen; private Rect sbtpfgenlabel;
-        private Rect sbclrearpricesbutton; Rect sbnetworklabel;
-        private Rect sbtimelabel; Rect sbtimerect;
+
 
         private bool showtradedialog = false; private aucitem tradeitem;
 
         //cardlistpopup#######################
         private float opacity;
         public Vector2 scrollPos;
-        private Texture itemButtonTexture;
-        private List<Card> selectedCards = new List<Card>();
-        private float costIconSize;
-	    private float costIconWidth;
-	    private float costIconHeight;
-	    private float cardHeight;
-    	private float cardWidth;
-    	private float labelX;
-    	private float labelsWidth;
-    	private int maxCharsName;
-	    private int maxCharsRK;
-        private float scrollBarSize = 20f;
-        private Vector4 margins;
-        private float BOTTOM_MARGIN_EXTRA = (float)Screen.height * 0.047f;
-        Rect screenRect;
-        Rect outerRect;
-        Rect innerBGRect;
-        Rect innerRect;
-        Rect buttonLeftRect;
-        Rect buttonRightRect;
-        Rect wtsbuttonrect;
-        Rect wtbbuttonrect;
-        Rect updatebuttonrect;
-        Rect fillbuttonrect;
+        
 
-        private float fieldHeight;
+        
+        
+        
+        
+
+        
         private GUISkin cardListPopupSkin ;
         private GUISkin cardListPopupGradientSkin ;
         private GUISkin cardListPopupBigLabelSkin ;
@@ -217,6 +168,7 @@ namespace Auction.mod
         Prices prcs;
         listfilters auclsts;
         messageparser mssgprsr;
+        Rectomat recto;
 
         private int cardnametoimageid(string name) { return cardImageid[Array.FindIndex(cardnames, element => element.Equals(name))]; }
 
@@ -403,6 +355,7 @@ namespace Auction.mod
             crdvwr = new cardviewer();
             prcs = new Prices();
             auclsts = new listfilters(sttngs, prcs);
+            recto = new Rectomat();
             mssgprsr = new messageparser(auclsts, this.cardids, this.cardnames);
 
             cardlinkfinder = new Regex(@"\[[a-zA-Z]+[a-zA-Z_\t]*[a-zA-z]+\]");//search for "[blub_blub_blub]"
@@ -1017,7 +970,8 @@ namespace Auction.mod
                         screenh = Screen.height;
                         screenw = Screen.width;
                         chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(target);
-                        setupPositions();
+                        recto.setupPositions(this.chatisshown,this.rowscale,this.chatLogStyle,this.cardListPopupSkin);
+                        recto.setupsettingpositions(this.chatLogStyle, this.cardListPopupLeftButtonSkin);
 
                     }
                    
@@ -1189,43 +1143,43 @@ namespace Auction.mod
 
                 // draw filter menue
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(filtermenurect, string.Empty);
+                GUI.Box(recto.filtermenurect, string.Empty);
                 // wts filter menue
                 GUI.skin = this.cardListPopupBigLabelSkin;
-                GUI.Label(sbarlabelrect, "Scroll:");
+                GUI.Label(recto.sbarlabelrect, "Scroll:");
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbrect, string.Empty);
+                GUI.Box(recto.sbrect, string.Empty);
                 string selfcopy = sttngs.wtssearchstring;
-                sttngs.wtssearchstring = GUI.TextField(this.sbrect, sttngs.wtssearchstring, chatLogStyle);
+                sttngs.wtssearchstring = GUI.TextField(recto.sbrect, sttngs.wtssearchstring, chatLogStyle);
 
 
                 GUI.contentColor = Color.white;
                 GUI.color = Color.white;
                 if (!sttngs.growthbool) { GUI.color = dblack; }
-                bool growthclick = GUI.Button(sbgrect, growthres);
+                bool growthclick = GUI.Button(recto.sbgrect, growthres);
                 GUI.color = Color.white;
                 if (!sttngs.orderbool) { GUI.color = dblack; }
-                bool orderclick = GUI.Button(sborect, orderres);
+                bool orderclick = GUI.Button(recto.sborect, orderres);
                 GUI.color = Color.white;
                 if (!sttngs.energybool) { GUI.color = dblack; }
-                bool energyclick = GUI.Button(sberect, energyres);
+                bool energyclick = GUI.Button(recto.sberect, energyres);
                 GUI.color = Color.white;
                 if (!sttngs.decaybool) { GUI.color = dblack; }
-                bool decayclick = GUI.Button(sbdrect, decayres);
+                bool decayclick = GUI.Button(recto.sbdrect, decayres);
 
 
                 GUI.contentColor = Color.gray;
                 GUI.color = Color.white;
                 if (!sttngs.commonbool) { GUI.color = dblack; }
-                bool commonclick = GUI.Button(sbcommonrect, "C");
+                bool commonclick = GUI.Button(recto.sbcommonrect, "C");
                 GUI.color = Color.white;
                 if (!sttngs.uncommonbool) { GUI.color = dblack; }
                 GUI.contentColor = Color.white;
-                bool uncommonclick = GUI.Button(sbuncommonrect, "U");
+                bool uncommonclick = GUI.Button(recto.sbuncommonrect, "U");
                 GUI.color = Color.white;
                 if (!sttngs.rarebool) { GUI.color = dblack; }
                 GUI.contentColor = Color.yellow;
-                bool rareclick = GUI.Button(sbrarerect, "R");
+                bool rareclick = GUI.Button(recto.sbrarerect, "R");
                 GUI.color = Color.white;
                 if (!sttngs.threebool) { GUI.color = dblack; }
                 //if (!p1mt3bool) { GUI.color = dblack; }
@@ -1233,12 +1187,12 @@ namespace Auction.mod
                 bool mt0click = false;
                 if (this.wtsmenue)
                 {
-                    mt3click = GUI.Button(sbthreerect, "<3"); // >3 bei wtsmenue=false
+                    mt3click = GUI.Button(recto.sbthreerect, "<3"); // >3 bei wtsmenue=false
                 }
-                else { mt3click = GUI.Button(sbthreerect, ">3"); }
+                else { mt3click = GUI.Button(recto.sbthreerect, ">3"); }
                 GUI.color = Color.white;
                 if (!sttngs.onebool) { GUI.color = dblack; }
-                if (!this.wtsmenue) { mt0click = GUI.Button(sbonerect, ">0"); };
+                if (!this.wtsmenue) { mt0click = GUI.Button(recto.sbonerect, ">0"); };
                 GUI.color = Color.white;
                 GUI.contentColor = Color.white;
 
@@ -1246,85 +1200,85 @@ namespace Auction.mod
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 if (this.wtsmenue)
                 {
-                    GUI.Label(sbsellerlabelrect, "ignore Seller:");
+                    GUI.Label(recto.sbsellerlabelrect, "ignore Seller:");
                 }
-                else { GUI.Label(sbsellerlabelrect, "ignore Buyer:"); }
+                else { GUI.Label(recto.sbsellerlabelrect, "ignore Buyer:"); }
 
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbsellerrect, string.Empty);
+                GUI.Box(recto.sbsellerrect, string.Empty);
                 string sellercopy = sttngs.sellersearchstring;
                 GUI.SetNextControlName("sellerframe");
-                sttngs.sellersearchstring = GUI.TextField(this.sbsellerrect, sttngs.sellersearchstring, chatLogStyle);
+                sttngs.sellersearchstring = GUI.TextField(recto.sbsellerrect, sttngs.sellersearchstring, chatLogStyle);
 
                 // draw price filter
 
 
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                GUI.Label(sbpricelabelrect, "<= Price <=");
+                GUI.Label(recto.sbpricelabelrect, "<= Price <=");
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
 
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbpricerect, string.Empty);
-                GUI.Box(this.sbpricerect2, string.Empty);
+                GUI.Box(recto.sbpricerect, string.Empty);
+                GUI.Box(recto.sbpricerect2, string.Empty);
                 string pricecopy = sttngs.pricesearchstring;
                 string pricecopy2 = sttngs.pricesearchstring2;
-                sttngs.pricesearchstring = Regex.Replace(GUI.TextField(this.sbpricerect, sttngs.pricesearchstring, chatLogStyle), @"[^0-9]", "");
-                sttngs.pricesearchstring2 = Regex.Replace(GUI.TextField(this.sbpricerect2, sttngs.pricesearchstring2, chatLogStyle), @"[^0-9]", "");
+                sttngs.pricesearchstring = Regex.Replace(GUI.TextField(recto.sbpricerect, sttngs.pricesearchstring, chatLogStyle), @"[^0-9]", "");
+                sttngs.pricesearchstring2 = Regex.Replace(GUI.TextField(recto.sbpricerect2, sttngs.pricesearchstring2, chatLogStyle), @"[^0-9]", "");
                 GUI.color = Color.white;
 
                 // draw time filter
 
                 GUI.skin = this.cardListPopupBigLabelSkin;
-                GUI.Label(sbtimelabel, "not older than");
+                GUI.Label(recto.sbtimelabel, "not older than");
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbtimerect, string.Empty);
+                GUI.Box(recto.sbtimerect, string.Empty);
                 string timecopy = sttngs.timesearchstring;
-                sttngs.timesearchstring = Regex.Replace(GUI.TextField(this.sbtimerect, sttngs.timesearchstring, 2, chatLogStyle), @"[^0-9]", "");
+                sttngs.timesearchstring = Regex.Replace(GUI.TextField(recto.sbtimerect, sttngs.timesearchstring, 2, chatLogStyle), @"[^0-9]", "");
                 if (sttngs.timesearchstring != "" && Convert.ToInt32(sttngs.timesearchstring) > 30) { sttngs.timesearchstring = "30"; }
                 GUI.color = Color.white;
 
 
-                bool tpfgen = GUI.Button(sbtpfgen, "");
+                bool tpfgen = GUI.Button(recto.sbtpfgen, "");
                 if (sttngs.takepriceformgenarator)
                 {
-                    GUI.DrawTexture(sbtpfgen, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                    GUI.DrawTexture(recto.sbtpfgen, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
                 }
                 else
                 {
-                    GUI.DrawTexture(sbtpfgen, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                    GUI.DrawTexture(recto.sbtpfgen, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
                 }
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 if (this.wtsmenue)
                 {
-                    GUI.Label(sbtpfgenlabel, "Price <= wtb-generator");
+                    GUI.Label(recto.sbtpfgenlabel, "Price <= wtb-generator");
                 }
-                else { GUI.Label(sbtpfgenlabel, "Price >= wts-generator"); }
+                else { GUI.Label(recto.sbtpfgenlabel, "Price >= wts-generator"); }
 
 
                 // only scrolls with price
-                bool owp = GUI.Button(sbonlywithpricebox, "");
+                bool owp = GUI.Button(recto.sbonlywithpricebox, "");
                 if (sttngs.ignore0)
                 {
-                    GUI.DrawTexture(sbonlywithpricebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                    GUI.DrawTexture(recto.sbonlywithpricebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
                 }
                 else
                 {
-                    GUI.DrawTexture(sbonlywithpricebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                    GUI.DrawTexture(recto.sbonlywithpricebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
                 }
                 GUI.skin = this.cardListPopupBigLabelSkin;
-                GUI.Label(sbonlywithpricelabelbox, "only Scrolls with Price");
+                GUI.Label(recto.sbonlywithpricelabelbox, "only Scrolls with Price");
 
                 GUI.skin = this.cardListPopupSkin;
 
                 if (ntwrk.contonetwork)
                 {
-                    GUI.Label(sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
+                    GUI.Label(recto.sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
                 }
 
                 GUI.contentColor = Color.red;
-                bool closeclick = GUI.Button(sbclearrect, "X");
+                bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
 
                 if (growthclick) { sttngs.growthbool = !sttngs.growthbool; };
@@ -1443,19 +1397,18 @@ namespace Auction.mod
                 this.opacity = 1f;
                 GUI.skin = this.cardListPopupSkin;
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
-                Rect position = new Rect(this.outerRect.x + offX, this.outerRect.y, this.outerRect.width, this.outerRect.height);
-                Rect position2 = new Rect(this.innerBGRect.x + offX, this.innerBGRect.y, this.innerBGRect.width, this.innerBGRect.height);
-                GUI.Box(position, string.Empty);
+                
+                GUI.Box(recto.position, string.Empty);
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity * 0.3f);
-                GUI.Box(position2, string.Empty);
+                GUI.Box(recto.position2, string.Empty);
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
 
-                Rect position3 = new Rect(this.innerRect.x + offX, this.innerRect.y, this.innerRect.width, this.innerRect.height);
+                
 
                 // draw sort buttons:###############################################
                 Vector2 vec11 = GUI.skin.button.CalcSize(new GUIContent("Scroll"));
 
-                if (GUI.Button(new Rect(this.innerRect.xMin + this.labelX, this.screenRect.yMin - 4, vec11.x, 20), "Scroll"))
+                if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX, recto.screenRect.yMin - 4, vec11.x, 20), "Scroll"))
                 {
                     if (sttngs.reverse == true) { sttngs.sortmode = -1; }// this will toggle the reverse mode
                     if (sttngs.sortmode == 1) { sttngs.reverse = true; } else { sttngs.reverse = false; };
@@ -1470,7 +1423,7 @@ namespace Auction.mod
                 {
                     vec11 = GUI.skin.button.CalcSize(new GUIContent("Seller"));
 
-                    if (GUI.Button(new Rect(this.innerRect.xMin + this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f + this.costIconWidth + (labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, this.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
+                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
                     {
                         if (sttngs.reverse == true) { sttngs.sortmode = -1; }
                         if (sttngs.sortmode == 3) { sttngs.reverse = true; } else { sttngs.reverse = false; };
@@ -1482,7 +1435,7 @@ namespace Auction.mod
                 else
                 {
                     vec11 = GUI.skin.button.CalcSize(new GUIContent("Buyer"));
-                    if (GUI.Button(new Rect(this.innerRect.xMin + this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f + this.costIconWidth + (labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, this.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
+                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
                     {
                         if (sttngs.reverse == true) { sttngs.sortmode = -1; }
                         if (sttngs.sortmode == 3) { sttngs.reverse = true; } else { sttngs.reverse = false; };
@@ -1491,9 +1444,9 @@ namespace Auction.mod
                         auclsts.sortlist(ahlist); auclsts.sortlist(ahlistfull);
                     }
                 }
-                datebeginn = this.innerRect.xMin + this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f + this.costIconWidth + (labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
+                datebeginn = recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
                 vec11 = GUI.skin.button.CalcSize(new GUIContent("Price"));
-                if (GUI.Button(new Rect(this.innerRect.xMin + this.labelX + 2f * this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f + 2 * this.costIconWidth + labelsWidth / 4f - vec11.x / 2, this.screenRect.yMin - 4, vec11.x, 20), "Price"))
+                if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + 2f * recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + 2 * recto.costIconWidth + recto.labelsWidth / 4f - vec11.x / 2, recto.screenRect.yMin - 4, vec11.x, 20), "Price"))
                 {
                     if (sttngs.reverse == true) { sttngs.sortmode = -1; }
                     if (sttngs.sortmode == 2) { sttngs.reverse = true; } else { sttngs.reverse = false; };
@@ -1503,7 +1456,7 @@ namespace Auction.mod
                 }
                 vec11 = GUI.skin.button.CalcSize(new GUIContent("Date"));
                 //if (GUI.Button(new Rect(this.innerRect.x + offX , this.screenRect.yMin - 4, vec11.x * 2, 20), "Date"))
-                if (GUI.Button(new Rect(datebeginn + 4, this.screenRect.yMin - 4, vec11.x, 20), "Date"))
+                if (GUI.Button(new Rect(datebeginn + 4, recto.screenRect.yMin - 4, vec11.x, 20), "Date"))
                 {
                     if (sttngs.reverse == true) { sttngs.sortmode = -1; }
                     if (sttngs.sortmode == 0) { sttngs.reverse = true; } else { sttngs.reverse = false; };
@@ -1553,7 +1506,7 @@ namespace Auction.mod
                     anzcards = (float)this.ahlist.Count(delegate(aucitem p1) { return (p1.dtime).CompareTo(currenttime) >= 0; });
                 }
 
-                this.scrollPos = GUI.BeginScrollView(position3, this.scrollPos, new Rect(0f, 0f, this.innerRect.width - 20f, this.fieldHeight * anzcards));
+                this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 if (sttngs.reverse) { this.ahlist.Reverse(); }
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 foreach (aucitem current in this.ahlist)
@@ -1565,8 +1518,8 @@ namespace Auction.mod
                     }
                     GUI.skin = this.cardListPopupGradientSkin;
                     //draw boxes
-                    Rect position7 = new Rect(this.cardWidth + 10f, (float)num * this.fieldHeight, this.innerRect.width - this.scrollBarSize - this.cardWidth - this.costIconWidth - 12f, this.fieldHeight);
-                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + position3.height)
+                    Rect position7 = recto.position7(num);
+                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + recto.position3.height)
                     {
                         num++;
                         GUI.color = Color.white;
@@ -1593,13 +1546,13 @@ namespace Auction.mod
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
                         // draw text
-                        Rect position8 = new Rect(this.labelX, (float)num * this.fieldHeight - 3f + this.fieldHeight * 0.01f, this.labelsWidth, this.cardHeight);
-                        GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, this.maxCharsName)) + "...") : name);
+                        Rect position8 = recto.position8(num);
+                        GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
                         GUI.skin = this.cardListPopupSkin;
                         string text = current.card.getPieceKind().ToString();
                         string str = text.Substring(0, 1) + text.Substring(1).ToLower();
                         string text2 = string.Empty;
-                        int num2 = this.maxCharsRK;
+                        int num2 = recto.maxCharsRK;
                         if (current.card.level > 0)
                         {
                             string text3 = text2;
@@ -1609,9 +1562,9 @@ namespace Auction.mod
                         text2 = text2 + current.card.getRarityString() + ", " + str;
                         Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
 
-                        Rect position9 = new Rect(this.labelX, (float)num * this.fieldHeight - 3f + this.fieldHeight * 0.57f, this.labelsWidth, this.cardHeight);
+                        Rect position9 = recto.position9(num);
                         GUI.Label(position9, (vector2.x >= position9.width) ? (text2.Substring(0, Mathf.Min(text2.Length, num2)) + "...") : text2);
-                        Rect restyperect = new Rect(this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f, (float)num * this.fieldHeight + (this.fieldHeight - this.costIconHeight) / 2f, this.costIconWidth, this.costIconHeight);
+                        Rect restyperect = recto.restyperect(num);
                         //draw resource type
                         this.RenderCost(restyperect, current.card);
                         //draw seller name
@@ -1622,9 +1575,9 @@ namespace Auction.mod
                         vector = GUI.skin.label.CalcSize(new GUIContent(sellername));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
                         //Rect position11 = new Rect(restyperect.xMax + 2f, (float)num * this.fieldHeight, this.labelsWidth, this.fieldHeight);
-                        Rect position11 = new Rect(restyperect.xMax + 2f, position8.yMin, this.labelsWidth, this.cardHeight);
+                        Rect position11 = new Rect(restyperect.xMax + 2f, position8.yMin, recto.labelsWidth, recto.cardHeight);
                         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                        GUI.Label(position11, (vector.x >= position11.width) ? (sellername.Substring(0, Mathf.Min(sellername.Length, this.maxCharsName)) + "...") : sellername);
+                        GUI.Label(position11, (vector.x >= position11.width) ? (sellername.Substring(0, Mathf.Min(sellername.Length, recto.maxCharsName)) + "...") : sellername);
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         //draw timestamp
                         GUI.skin = this.cardListPopupSkin;
@@ -1642,7 +1595,7 @@ namespace Auction.mod
                             else sellername = "seconds ago";
                         }
 
-                        Rect position13 = new Rect(restyperect.xMax + 2f, position9.y, this.labelsWidth, this.fieldHeight);
+                        Rect position13 = new Rect(restyperect.xMax + 2f, position9.y, recto.labelsWidth, recto.fieldHeight);
                         GUI.skin.label.alignment = TextAnchor.UpperCenter;
                         GUI.Label(position13, sellername);
                         GUI.skin.label.alignment = TextAnchor.UpperLeft;
@@ -1652,12 +1605,12 @@ namespace Auction.mod
                         //     this.RenderCost(restyperect, current);
 
                         //draw gold cost
-                        float nextx = position11.xMax + this.costIconWidth;
+                        float nextx = position11.xMax + recto.costIconWidth;
                         string gold = current.price + " G";
                         GUI.skin = this.cardListPopupBigLabelSkin;
                         vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
-                        Rect position12 = new Rect(nextx + 2f, position8.yMin, this.labelsWidth / 2f, this.cardHeight);
+                        Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth / 2f, recto.cardHeight);
                         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                         GUI.Label(position12, gold);
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
@@ -1699,7 +1652,7 @@ namespace Auction.mod
                             if (this.showsugrange && p1 != p2) suggeprice = "SP: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                         }
                         GUI.skin = this.cardListPopupSkin;
-                        Rect position14 = new Rect(nextx + 2f, position9.y, this.labelsWidth / 2f, this.fieldHeight);
+                        Rect position14 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
                         GUI.skin.label.alignment = TextAnchor.UpperCenter;
                         GUI.Label(position14, suggeprice);
                         GUI.skin.label.alignment = TextAnchor.UpperLeft;
@@ -1707,24 +1660,23 @@ namespace Auction.mod
 
 
                         GUI.skin = this.cardListPopupLeftButtonSkin;
-                        Rect position10 = new Rect(0f, (float)num * this.fieldHeight, this.cardWidth + 8f, this.fieldHeight);
-                        if (this.itemButtonTexture == null && !this.selectable)
+                        if ( !this.selectable)
                         {
                             GUI.enabled = false;
                         }
-                        if (GUI.Button(position10, string.Empty) && current.card.tradable)
+                        if (GUI.Button(recto.position10(num), string.Empty) && current.card.tradable)
                         {
                             card = current.card;
                             App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_button_click");
                         }
-                        if (this.itemButtonTexture == null && !this.selectable)
+                        if ( !this.selectable)
                         {
                             GUI.enabled = true;
                         }
                         //draw picture
                         if (texture != null)
                         {
-                            GUI.DrawTexture(new Rect(4f, (float)num * this.fieldHeight + (this.fieldHeight - this.cardHeight) * 0.43f, this.cardWidth, this.cardHeight), texture);
+                            GUI.DrawTexture(new Rect(4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
                         }
                         // draw buy/sell button
                         GUI.skin = this.cardListPopupGradientSkin;
@@ -1732,7 +1684,7 @@ namespace Auction.mod
                         {
                             if (!showtradedialog)
                             {
-                                if (GUI.Button(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), ""))
+                                if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
 
                                     // start trading with seller
@@ -1743,10 +1695,10 @@ namespace Auction.mod
                                     }
                                 }
                             }
-                            else { GUI.Box(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), ""); }
+                            else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
                             GUI.skin = this.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                            GUI.Label(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), "Buy");
+                            GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
 
 
                         }
@@ -1754,7 +1706,7 @@ namespace Auction.mod
                         {
                             if (!showtradedialog)
                             {
-                                if (GUI.Button(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), ""))
+                                if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
 
                                     // start trading with seller
@@ -1765,10 +1717,10 @@ namespace Auction.mod
                                     }
                                 }
                             }
-                            else { GUI.Box(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), ""); }
+                            else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
                             GUI.skin = this.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                            GUI.Label(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), "Sell");
+                            GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Sell");
                         }
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         if (!current.card.tradable)
@@ -1810,7 +1762,7 @@ namespace Auction.mod
                 }
 
 
-                if (GUI.Button(wtsbuttonrect, "WTS") && !this.showtradedialog)
+                if (GUI.Button(recto.wtsbuttonrect, "WTS") && !this.showtradedialog)
                 {
 
                     mssgprsr.wtslistfull.Clear(); mssgprsr.wtslistfull.AddRange(mssgprsr.wtslistfulltimed);
@@ -1841,7 +1793,7 @@ namespace Auction.mod
                     GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
-                if (GUI.Button(wtbbuttonrect, "WTB") && !this.showtradedialog)
+                if (GUI.Button(recto.wtbbuttonrect, "WTB") && !this.showtradedialog)
                 {
                     mssgprsr.wtblistfull.Clear(); mssgprsr.wtblistfull.AddRange(mssgprsr.wtblistfulltimed);
                     //sortmode==0 = sort by date so dont sort wtsfulltimed
@@ -1860,14 +1812,14 @@ namespace Auction.mod
 
                 if (ntwrk.realycontonetwork)
                 {
-                    if (GUI.Button(this.updatebuttonrect, "discon"))
+                    if (GUI.Button(recto.updatebuttonrect, "discon"))
                     {
                         ntwrk.disconfromaucnet();
                     }
                 }
                 else
                 {
-                    if (GUI.Button(this.updatebuttonrect, "connect"))
+                    if (GUI.Button(recto.updatebuttonrect, "connect"))
                     {
                         ntwrk.connect();
                         //App.Communicator.sendRequest(new RoomChatMessageMessage(chatRooms.GetCurrentRoomName(), "aucc aucstart"));
@@ -1918,43 +1870,43 @@ namespace Auction.mod
 
                 // draw filter menue
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(filtermenurect, string.Empty);
+                GUI.Box(recto.filtermenurect, string.Empty);
                 // wts filter menue
                 GUI.skin = this.cardListPopupBigLabelSkin;
-                GUI.Label(sbarlabelrect, "Scroll:");
+                GUI.Label(recto.sbarlabelrect, "Scroll:");
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbrect, string.Empty);
+                GUI.Box(recto.sbrect, string.Empty);
                 string selfcopy = sttngs.wtssearchstring;
-                sttngs.wtssearchstring = GUI.TextField(this.sbrect, sttngs.wtssearchstring, chatLogStyle);
+                sttngs.wtssearchstring = GUI.TextField(recto.sbrect, sttngs.wtssearchstring, chatLogStyle);
 
 
                 GUI.contentColor = Color.white;
                 GUI.color = Color.white;
                 if (!sttngs.growthbool) { GUI.color = dblack; }
-                bool growthclick = GUI.Button(sbgrect, growthres);
+                bool growthclick = GUI.Button(recto.sbgrect, growthres);
                 GUI.color = Color.white;
                 if (!sttngs.orderbool) { GUI.color = dblack; }
-                bool orderclick = GUI.Button(sborect, orderres);
+                bool orderclick = GUI.Button(recto.sborect, orderres);
                 GUI.color = Color.white;
                 if (!sttngs.energybool) { GUI.color = dblack; }
-                bool energyclick = GUI.Button(sberect, energyres);
+                bool energyclick = GUI.Button(recto.sberect, energyres);
                 GUI.color = Color.white;
                 if (!sttngs.decaybool) { GUI.color = dblack; }
-                bool decayclick = GUI.Button(sbdrect, decayres);
+                bool decayclick = GUI.Button(recto.sbdrect, decayres);
 
 
                 GUI.contentColor = Color.gray;
                 GUI.color = Color.white;
                 if (!sttngs.commonbool) { GUI.color = dblack; }
-                bool commonclick = GUI.Button(sbcommonrect, "C");
+                bool commonclick = GUI.Button(recto.sbcommonrect, "C");
                 GUI.color = Color.white;
                 if (!sttngs.uncommonbool) { GUI.color = dblack; }
                 GUI.contentColor = Color.white;
-                bool uncommonclick = GUI.Button(sbuncommonrect, "U");
+                bool uncommonclick = GUI.Button(recto.sbuncommonrect, "U");
                 GUI.color = Color.white;
                 if (!sttngs.rarebool) { GUI.color = dblack; }
                 GUI.contentColor = Color.yellow;
-                bool rareclick = GUI.Button(sbrarerect, "R");
+                bool rareclick = GUI.Button(recto.sbrarerect, "R");
                 GUI.color = Color.white;
                 if (!sttngs.threebool) { GUI.color = dblack; }
                 //if (!p1mt3bool) { GUI.color = dblack; }
@@ -1962,9 +1914,9 @@ namespace Auction.mod
                 bool mt0click = false;
                 if (this.wtsmenue)
                 {
-                    mt3click = GUI.Button(sbthreerect, ">3"); // >3 bei wtsmenue=false
+                    mt3click = GUI.Button(recto.sbthreerect, ">3"); // >3 bei wtsmenue=false
                 }
-                else { mt3click = GUI.Button(sbthreerect, "<3"); }
+                else { mt3click = GUI.Button(recto.sbthreerect, "<3"); }
                 GUI.color = Color.white;
                 if (!sttngs.onebool) { GUI.color = dblack; }
                 //if (this.wtsmenue) { mt0click = GUI.Button(sbonerect, ">0"); };
@@ -1974,15 +1926,15 @@ namespace Auction.mod
                 GUI.skin = this.cardListPopupBigLabelSkin;
                 if (this.wtsmenue)
                 {
-                    GUI.Label(sbsellerlabelrect, "wts msg:");
+                    GUI.Label(recto.sbsellerlabelrect, "wts msg:");
                 }
-                else { GUI.Label(sbsellerlabelrect, "wtb msg:"); }
+                else { GUI.Label(recto.sbsellerlabelrect, "wtb msg:"); }
 
                 GUI.skin = this.cardListPopupSkin;
-                GUI.Box(this.sbsellerrect, string.Empty);
+                GUI.Box(recto.sbsellerrect, string.Empty);
                 string sellercopy = sttngs.sellersearchstring;
                 GUI.SetNextControlName("sellerframe");
-                GUI.TextField(this.sbsellerrect, sttngs.sellersearchstring, chatLogStyle);
+                GUI.TextField(recto.sbsellerrect, sttngs.sellersearchstring, chatLogStyle);
 
                 /*
                 GUI.skin = this.cardListPopupBigLabelSkin;
@@ -2000,7 +1952,7 @@ namespace Auction.mod
                 */
                 GUI.color = Color.white;
                 GUI.contentColor = Color.red;
-                bool closeclick = GUI.Button(sbclearrect, "X");
+                bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
 
                 if (growthclick) { sttngs.growthbool = !sttngs.growthbool; };
@@ -2083,7 +2035,7 @@ namespace Auction.mod
                     { GUI.color = dblack; }
                 }
 
-                if (GUI.Button(this.sbclrearpricesbutton, "Post to Network"))
+                if (GUI.Button(recto.sbclrearpricesbutton, "Post to Network"))
                 {
 
                     if (ntwrk.contonetwork)
@@ -2100,7 +2052,7 @@ namespace Auction.mod
                 if (this.wtsmenue)
                 {
 
-                    if (GUI.Button(sbgeneratebutton, "Gen WTS msg"))
+                    if (GUI.Button(recto.sbgeneratebutton, "Gen WTS msg"))
                     {
                         // start trading with seller
                         generatewtxmsg(this.ahlistfull);
@@ -2109,7 +2061,7 @@ namespace Auction.mod
                 }
                 else
                 {
-                    if (GUI.Button(sbgeneratebutton, "Gen WTB msg"))
+                    if (GUI.Button(recto.sbgeneratebutton, "Gen WTB msg"))
                     {
                         // start trading bith buyer
                         generatewtxmsg(this.ahlistfull);
@@ -2121,7 +2073,7 @@ namespace Auction.mod
                 if (this.wtsmenue)
                 {
                     if (!this.wtsmsgload) GUI.color = dblack;
-                    if (GUI.Button(sbloadbutton, "load WTS msg") && this.wtsmsgload)
+                    if (GUI.Button(recto.sbloadbutton, "load WTS msg") && this.wtsmsgload)
                     {
 
                         for (int i = 0; i < prcs.wtspricelist1.Count; i++)
@@ -2151,7 +2103,7 @@ namespace Auction.mod
                 else
                 {
                     if (!this.wtbmsgload) GUI.color = dblack;
-                    if (GUI.Button(sbloadbutton, "load WTB msg") && this.wtbmsgload)
+                    if (GUI.Button(recto.sbloadbutton, "load WTB msg") && this.wtbmsgload)
                     {
                         for (int i = 0; i < prcs.wtbpricelist1.Count; i++)
                         {
@@ -2177,7 +2129,7 @@ namespace Auction.mod
                 if (this.wtsmenue)
                 {
                     if (sttngs.generatedwtsmessage == "") GUI.color = dblack;
-                    if (GUI.Button(sbsavebutton, "save WTS msg"))
+                    if (GUI.Button(recto.sbsavebutton, "save WTS msg"))
                     {
                         showtradedialog = true;
 
@@ -2188,7 +2140,7 @@ namespace Auction.mod
                 else
                 {
                     if (sttngs.generatedwtbmessage == "") GUI.color = dblack;
-                    if (GUI.Button(sbsavebutton, "save WTB msg"))
+                    if (GUI.Button(recto.sbsavebutton, "save WTB msg"))
                     {
                         showtradedialog = true;
 
@@ -2206,16 +2158,12 @@ namespace Auction.mod
                 this.opacity = 1f;
                 GUI.skin = this.cardListPopupSkin;
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
-                Rect position = new Rect(this.outerRect.x + offX, this.outerRect.y, this.outerRect.width, this.outerRect.height);
-                Rect position2 = new Rect(this.innerBGRect.x + offX, this.innerBGRect.y, this.innerBGRect.width, this.innerBGRect.height);
-                GUI.Box(position, string.Empty);
+                GUI.Box(recto.position, string.Empty);
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity * 0.3f);
-                GUI.Box(position2, string.Empty);
+                GUI.Box(recto.position2, string.Empty);
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
 
-                Rect position3 = new Rect(this.innerRect.x + offX, this.innerRect.y, this.innerRect.width, this.innerRect.height);
-
-                this.scrollPos = GUI.BeginScrollView(position3, this.scrollPos, new Rect(0f, 0f, this.innerRect.width - 20f, this.fieldHeight * (float)this.ahlist.Count));
+                this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * (float)this.ahlist.Count));
                 int num = 0;
                 Card card = null;
                 GUI.skin = this.cardListPopupBigLabelSkin;
@@ -2228,8 +2176,8 @@ namespace Auction.mod
                     }
                     GUI.skin = this.cardListPopupGradientSkin;
                     //draw boxes
-                    Rect position7 = new Rect(this.cardWidth + 10f, (float)num * this.fieldHeight, this.innerRect.width - this.scrollBarSize - this.cardWidth - this.costIconWidth - 12f, this.fieldHeight);
-                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + position3.height)
+                    Rect position7 = recto.position7(num);
+                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + recto.position3.height)
                     {
                         num++;
                         GUI.color = Color.white;
@@ -2256,13 +2204,13 @@ namespace Auction.mod
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
                         // draw text
-                        Rect position8 = new Rect(this.labelX, (float)num * this.fieldHeight - 3f + this.fieldHeight * 0.01f, this.labelsWidth, this.cardHeight);
-                        GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, this.maxCharsName)) + "...") : name);
+                        Rect position8 = recto.position8(num);
+                        GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
                         GUI.skin = this.cardListPopupSkin;
                         string text = current.card.getPieceKind().ToString();
                         string str = text.Substring(0, 1) + text.Substring(1).ToLower();
                         string text2 = string.Empty;
-                        int num2 = this.maxCharsRK;
+                        int num2 = recto.maxCharsRK;
                         /* if (current.card.level > 0)
                          {
                              string text3 = text2;
@@ -2271,24 +2219,24 @@ namespace Auction.mod
                          }*/
                         text2 = text2 + current.card.getRarityString() + ", " + str;
                         Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
-                        Rect position9 = new Rect(this.labelX, (float)num * this.fieldHeight - 3f + this.fieldHeight * 0.57f, this.labelsWidth, this.cardHeight);
+                        Rect position9 = recto.position9(num);
                         GUI.Label(position9, (vector2.x >= position9.width) ? (text2.Substring(0, Mathf.Min(text2.Length, num2)) + "...") : text2);
-                        Rect restyperect = new Rect(this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f, (float)num * this.fieldHeight + (this.fieldHeight - this.costIconHeight) / 2f, this.costIconWidth, this.costIconHeight);
+                        Rect restyperect = recto.restyperect(num);
                         //draw resource type
                         this.RenderCost(restyperect, current.card);
                         // write PRICE
                         //GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-                        float nextx = restyperect.xMax + this.costIconWidth / 2;
+                        float nextx = restyperect.xMax + recto.costIconWidth / 2;
                         string gold = "Price";
                         GUI.skin = this.cardListPopupBigLabelSkin;
                         vector = GUI.skin.label.CalcSize(new GUIContent(gold));
-                        Rect position12 = new Rect(nextx + 2f, (float)num * this.fieldHeight, this.labelsWidth / 2f, this.fieldHeight);
+                        Rect position12 = new Rect(nextx + 2f, (float)num * recto.fieldHeight, recto.labelsWidth / 2f, recto.fieldHeight);
                         GUI.Label(position12, gold);
 
 
                         //draw pricebox
                         //
-                        Rect position11 = new Rect(position12.xMax + 2f, (float)(num + 1) * this.fieldHeight - (this.fieldHeight + vector2.y) / 2 - 2, this.labelsWidth, vector2.y + 4);
+                        Rect position11 = new Rect(position12.xMax + 2f, (float)(num + 1) * recto.fieldHeight - (recto.fieldHeight + vector2.y) / 2 - 2, recto.labelsWidth, vector2.y + 4);
                         GUI.skin = this.cardListPopupSkin;
                         GUI.Box(position11, string.Empty);
                         // priceinint wurde bei der genliste missbraucht
@@ -2328,29 +2276,28 @@ namespace Auction.mod
 
 
                         GUI.skin = this.cardListPopupLeftButtonSkin;
-                        Rect position10 = new Rect(0f, (float)num * this.fieldHeight, this.cardWidth + 8f, this.fieldHeight);
-                        if (this.itemButtonTexture == null && !this.selectable)
+                        if ( !this.selectable)
                         {
                             GUI.enabled = false;
                         }
-                        if (GUI.Button(position10, string.Empty) && current.card.tradable)
+                        if (GUI.Button(recto.position10(num), string.Empty) && current.card.tradable)
                         {
                             card = current.card;
                             App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_button_click");
                         }
-                        if (this.itemButtonTexture == null && !this.selectable)
+                        if (!this.selectable)
                         {
                             GUI.enabled = true;
                         }
                         //draw picture
                         if (texture != null)
                         {
-                            GUI.DrawTexture(new Rect(4f, (float)num * this.fieldHeight + (this.fieldHeight - this.cardHeight) * 0.43f, this.cardWidth, this.cardHeight), texture);
+                            GUI.DrawTexture(new Rect(4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
                         }
                         // draw buy/sell button
                         if (this.wtsmenue)
                         {
-                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), "SP"))
+                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
                             {
                                 int index = Array.FindIndex(cardnames, element => element.Equals(current.card.getName().ToLower()));
                                 if (index >= 0)
@@ -2361,7 +2308,7 @@ namespace Auction.mod
                         }
                         else
                         {
-                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * this.fieldHeight, this.costIconWidth, this.fieldHeight), "SP"))
+                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
                             {
                                 int index = Array.FindIndex(cardnames, element => element.Equals(current.card.getName().ToLower()));
                                 if (index >= 0)
@@ -2401,7 +2348,7 @@ namespace Auction.mod
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
 
-                if (GUI.Button(wtsbuttonrect, "WTS") && !this.showtradedialog)
+                if (GUI.Button(recto.wtsbuttonrect, "WTS") && !this.showtradedialog)
                 {
                     this.ahlist = this.wtsPlayer; this.ahlistfull = this.orgicardsPlayerwountrade; this.wtsmenue = true; this.wtsingen = true;
                     sttngs.setsettings(false, true);
@@ -2416,7 +2363,7 @@ namespace Auction.mod
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
-                if (GUI.Button(wtbbuttonrect, "WTB") && !this.showtradedialog)
+                if (GUI.Button(recto.wtbbuttonrect, "WTB") && !this.showtradedialog)
                 {
                     this.ahlist = this.wtbPlayer; this.ahlistfull = auclsts.allcardsavailable; this.wtsmenue = false;
                     this.wtsingen = false;
@@ -2424,7 +2371,7 @@ namespace Auction.mod
                     auclsts.fullupdatelist(ahlist, ahlistfull, this.inauchouse, this.wtsmenue, this.generator);
                 }
                 GUI.color = Color.white;
-                if (GUI.Button(fillbuttonrect, "Fill"))
+                if (GUI.Button(recto.fillbuttonrect, "Fill"))
                 {
                     if (this.wtsmenue)
                     {
@@ -2452,7 +2399,7 @@ namespace Auction.mod
 
                 }
 
-                if (GUI.Button(updatebuttonrect, "Clear"))
+                if (GUI.Button(recto.updatebuttonrect, "Clear"))
                 {
                     if (this.wtsmenue)
                     {
@@ -2485,9 +2432,9 @@ namespace Auction.mod
             GUI.depth = 15;
             GUI.color = Color.white;
             GUI.skin = this.cardListPopupSkin;
-            GUI.Box(this.settingRect, string.Empty);
+            GUI.Box(recto.settingRect, string.Empty);
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            if (GUI.Button(setreset, "Reset"))
+            if (GUI.Button(recto.setreset, "Reset"))
             {
                 mssgprsr.spampreventtime = "";
                 mssgprsr.spamprevint = 0;
@@ -2495,7 +2442,7 @@ namespace Auction.mod
                 showsugrange = false;
                 rowscalestring = "10";
                 rowscale = 1f;
-                this.setupPositions();
+                recto.setupPositions(this.chatisshown,this.rowscale,this.chatLogStyle,this.cardListPopupSkin);
                 roundwts = false;
                 wtsroundup = true;
                 wtsroundmode = 0;
@@ -2510,12 +2457,12 @@ namespace Auction.mod
                 takewtbahint2 = 1;
 
             }
-            if (GUI.Button(setload, "Load"))
+            if (GUI.Button(recto.setload, "Load"))
             {
                 this.loadsettings();
-                this.setupPositions();
+                recto.setupPositions(this.chatisshown,this.rowscale,this.chatLogStyle,this.cardListPopupSkin);
             }
-            if (GUI.Button(setsave, "Save"))
+            if (GUI.Button(recto.setsave, "Save"))
             {
                 //save stuff
                 string text = "";
@@ -2540,204 +2487,204 @@ namespace Auction.mod
             }
 
             // spam preventor
-            GUI.Label(setpreventspammlabel, "dont update messages which are younger than:");
-            GUI.Label(setpreventspammlabel2, "minutes");
+            GUI.Label(recto.setpreventspammlabel, "dont update messages which are younger than:");
+            GUI.Label(recto.setpreventspammlabel2, "minutes");
 
-            GUI.Box(setpreventspammrect, "");
+            GUI.Box(recto.setpreventspammrect, "");
             GUI.skin = this.cardListPopupSkin;
-            GUI.Box(this.setpreventspammrect, string.Empty);
+            GUI.Box(recto.setpreventspammrect, string.Empty);
             chatLogStyle.alignment = TextAnchor.MiddleCenter;
-            mssgprsr.spampreventtime = Regex.Replace(GUI.TextField(setpreventspammrect, mssgprsr.spampreventtime, chatLogStyle), @"[^0-9]", "");
+            mssgprsr.spampreventtime = Regex.Replace(GUI.TextField(recto.setpreventspammrect, mssgprsr.spampreventtime, chatLogStyle), @"[^0-9]", "");
             chatLogStyle.alignment = TextAnchor.MiddleLeft;
             if (mssgprsr.spampreventtime != "") mssgprsr.spamprevint = Convert.ToInt32(mssgprsr.spampreventtime);
             if (mssgprsr.spamprevint > 30) { mssgprsr.spampreventtime = "30"; mssgprsr.spamprevint = 30; }
 
             //anz cards
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setowncardsanzlabel, "show owned number of scrolls beside scrollname");
-            bool owp = GUI.Button(setowncardsanzbox, "");
+            GUI.Label(recto.setowncardsanzlabel, "show owned number of scrolls beside scrollname");
+            bool owp = GUI.Button(recto.setowncardsanzbox, "");
             if (owp) this.shownumberscrolls = !this.shownumberscrolls;
             if (this.shownumberscrolls)
             {
-                GUI.DrawTexture(setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                GUI.DrawTexture(recto.setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
             }
             else
             {
-                GUI.DrawTexture(setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                GUI.DrawTexture(recto.setowncardsanzbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
 
             // show range
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setsugrangelabel, "show ScrollsPost price as range");
-            bool oowp = GUI.Button(setsugrangebox, "");
+            GUI.Label(recto.setsugrangelabel, "show ScrollsPost price as range");
+            bool oowp = GUI.Button(recto.setsugrangebox, "");
             if (oowp) this.showsugrange = !this.showsugrange;
             if (this.showsugrange)
             {
-                GUI.DrawTexture(setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                GUI.DrawTexture(recto.setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
             }
             else
             {
-                GUI.DrawTexture(setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                GUI.DrawTexture(recto.setsugrangebox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
 
-            GUI.Label(setrowhightlabel, "scale row hight by factor");
-            GUI.Label(setrowhightlabel2, "/10");
-            GUI.Box(setrowhightbox, "");
+            GUI.Label(recto.setrowhightlabel, "scale row hight by factor");
+            GUI.Label(recto.setrowhightlabel2, "/10");
+            GUI.Box(recto.setrowhightbox, "");
             GUI.skin = this.cardListPopupSkin;
-            GUI.Box(this.setrowhightbox, string.Empty);
+            GUI.Box(recto.setrowhightbox, string.Empty);
             chatLogStyle.alignment = TextAnchor.MiddleCenter;
             string rowcopy = rowscalestring;
-            rowscalestring = Regex.Replace(GUI.TextField(setrowhightbox, rowscalestring, chatLogStyle), @"[^0-9]", "");
+            rowscalestring = Regex.Replace(GUI.TextField(recto.setrowhightbox, rowscalestring, chatLogStyle), @"[^0-9]", "");
             chatLogStyle.alignment = TextAnchor.MiddleLeft;
             if (rowscalestring != "") { rowscale = (float)Convert.ToDouble(rowscalestring) / 10f; } else { rowscale = 1.0f; }
             if (rowscale > 2f) { rowscale = 2f; rowscalestring = "20"; }
             if (rowscale < 0.5f) { rowscale = .5f; }
-            if (!rowcopy.Equals(rowscalestring)) { this.setupPositions(); }
+            if (!rowcopy.Equals(rowscalestring)) { recto.setupPositions(this.chatisshown,this.rowscale,this.chatLogStyle,this.cardListPopupSkin); }
 
             //round wts
 
 
-            bool ooowp = GUI.Button(setwtsbox, "");
+            bool ooowp = GUI.Button(recto.setwtsbox, "");
             if (ooowp) this.roundwts = !this.roundwts;
             if (this.roundwts)
             {
-                GUI.DrawTexture(setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
             }
             else
             {
-                GUI.DrawTexture(setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setwtslabel1, "round ScrollsPost prices in WTS-generator ");
-            if (GUI.Button(setwtsbutton1, ""))
+            GUI.Label(recto.setwtslabel1, "round ScrollsPost prices in WTS-generator ");
+            if (GUI.Button(recto.setwtsbutton1, ""))
             {
                 this.wtsroundup = !this.wtsroundup;
             }
-            GUI.Label(setwtslabel2, " to next ");
-            if (GUI.Button(setwtsbutton2, ""))
+            GUI.Label(recto.setwtslabel2, " to next ");
+            if (GUI.Button(recto.setwtsbutton2, ""))
             {
                 this.wtsroundmode = (this.wtsroundmode + 1) % 3;
             }
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (this.wtsroundup) { GUI.Label(setwtsbutton1, "up"); } else { GUI.Label(setwtsbutton1, "down"); }
-            if (this.wtsroundmode == 0) { GUI.Label(setwtsbutton2, "5"); }
-            if (this.wtsroundmode == 1) { GUI.Label(setwtsbutton2, "10"); }
-            if (this.wtsroundmode == 2) { GUI.Label(setwtsbutton2, "50"); }
+            if (this.wtsroundup) { GUI.Label(recto.setwtsbutton1, "up"); } else { GUI.Label(recto.setwtsbutton1, "down"); }
+            if (this.wtsroundmode == 0) { GUI.Label(recto.setwtsbutton2, "5"); }
+            if (this.wtsroundmode == 1) { GUI.Label(recto.setwtsbutton2, "10"); }
+            if (this.wtsroundmode == 2) { GUI.Label(recto.setwtsbutton2, "50"); }
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
             //round wtb
 
 
-            bool ooowwp = GUI.Button(setwtbbox, "");
+            bool ooowwp = GUI.Button(recto.setwtbbox, "");
             if (ooowwp) this.roundwtb = !this.roundwtb;
             if (this.roundwtb)
             {
-                GUI.DrawTexture(setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
+                GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb_checked"));
             }
             else
             {
-                GUI.DrawTexture(setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
+                GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
             GUI.skin = this.cardListPopupLeftButtonSkin;
-            GUI.Label(setwtblabel1, "round ScrollsPost prices in WTB-generator ");
-            if (GUI.Button(setwtbbutton1, ""))
+            GUI.Label(recto.setwtblabel1, "round ScrollsPost prices in WTB-generator ");
+            if (GUI.Button(recto.setwtbbutton1, ""))
             {
                 this.wtbroundup = !this.wtbroundup;
             }
-            GUI.Label(setwtblabel2, " to next ");
-            if (GUI.Button(setwtbbutton2, ""))
+            GUI.Label(recto.setwtblabel2, " to next ");
+            if (GUI.Button(recto.setwtbbutton2, ""))
             {
                 this.wtbroundmode = (this.wtbroundmode + 1) % 3;
             }
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (this.wtbroundup) { GUI.Label(setwtbbutton1, "up"); } else { GUI.Label(setwtbbutton1, "down"); }
-            if (this.wtbroundmode == 0) { GUI.Label(setwtbbutton2, "5"); }
-            if (this.wtbroundmode == 1) { GUI.Label(setwtbbutton2, "10"); }
-            if (this.wtbroundmode == 2) { GUI.Label(setwtbbutton2, "50"); }
+            if (this.wtbroundup) { GUI.Label(recto.setwtbbutton1, "up"); } else { GUI.Label(recto.setwtbbutton1, "down"); }
+            if (this.wtbroundmode == 0) { GUI.Label(recto.setwtbbutton2, "5"); }
+            if (this.wtbroundmode == 1) { GUI.Label(recto.setwtbbutton2, "10"); }
+            if (this.wtbroundmode == 2) { GUI.Label(recto.setwtbbutton2, "50"); }
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
             //take price generator
-            GUI.Label(settakewtsgenlabel, "WTS-Generator takes ");
-            if (GUI.Button(settakewtsgenbutton, ""))
+            GUI.Label(recto.settakewtsgenlabel, "WTS-Generator takes ");
+            if (GUI.Button(recto.settakewtsgenbutton, ""))
             {
                 this.takewtsgenint = (this.takewtsgenint + 1) % 3;
             }
-            GUI.Label(settakewtsgenlabel2, "ScrollsPost price");
-            GUI.Label(settakewtbgenlabel, "WTB-Generator takes ");
-            if (GUI.Button(settakewtbgenbutton, ""))
+            GUI.Label(recto.settakewtsgenlabel2, "ScrollsPost price");
+            GUI.Label(recto.settakewtbgenlabel, "WTB-Generator takes ");
+            if (GUI.Button(recto.settakewtbgenbutton, ""))
             {
                 this.takewtbgenint = (this.takewtbgenint + 1) % 3;
             }
-            GUI.Label(settakewtbgenlabel2, "ScrollsPost price");
+            GUI.Label(recto.settakewtbgenlabel2, "ScrollsPost price");
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (this.takewtsgenint == 0) { GUI.Label(settakewtsgenbutton, "lower"); }
-            if (this.takewtsgenint == 1) { GUI.Label(settakewtsgenbutton, "sugg."); }
-            if (this.takewtsgenint == 2) { GUI.Label(settakewtsgenbutton, "upper"); }
-            if (this.takewtbgenint == 0) { GUI.Label(settakewtbgenbutton, "lower"); }
-            if (this.takewtbgenint == 1) { GUI.Label(settakewtbgenbutton, "sugg."); }
-            if (this.takewtbgenint == 2) { GUI.Label(settakewtbgenbutton, "upper"); }
+            if (this.takewtsgenint == 0) { GUI.Label(recto.settakewtsgenbutton, "lower"); }
+            if (this.takewtsgenint == 1) { GUI.Label(recto.settakewtsgenbutton, "sugg."); }
+            if (this.takewtsgenint == 2) { GUI.Label(recto.settakewtsgenbutton, "upper"); }
+            if (this.takewtbgenint == 0) { GUI.Label(recto.settakewtbgenbutton, "lower"); }
+            if (this.takewtbgenint == 1) { GUI.Label(recto.settakewtbgenbutton, "sugg."); }
+            if (this.takewtbgenint == 2) { GUI.Label(recto.settakewtbgenbutton, "upper"); }
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             //show price ah
             if (this.showsugrange)
             {
-                GUI.Label(setwtsahlabel, "show in WTS-AH the ");
-                if (GUI.Button(setwtsahbutton, ""))
+                GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
+                if (GUI.Button(recto.setwtsahbutton, ""))
                 {
                     this.takewtsahint = (this.takewtsahint + 1) % 3;
                 }
-                if (GUI.Button(setwtsahbutton2, ""))
+                if (GUI.Button(recto.setwtsahbutton2, ""))
                 {
                     this.takewtsahint2 = (this.takewtsahint2 + 1) % 3;
                 }
-                GUI.Label(setwtsahlabel3, "and");
-                GUI.Label(setwtsahlabel4, "ScrollsPost prices");
-                GUI.Label(setwtbahlabel, "show in WTB-AH the ");
-                if (GUI.Button(setwtbahbutton, ""))
+                GUI.Label(recto.setwtsahlabel3, "and");
+                GUI.Label(recto.setwtsahlabel4, "ScrollsPost prices");
+                GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
+                if (GUI.Button(recto.setwtbahbutton, ""))
                 {
                     this.takewtbahint = (this.takewtbahint + 1) % 3;
                 }
-                if (GUI.Button(setwtbahbutton2, ""))
+                if (GUI.Button(recto.setwtbahbutton2, ""))
                 {
                     this.takewtbahint2 = (this.takewtbahint2 + 1) % 3;
                 }
-                GUI.Label(setwtbahlabel3, "and");
-                GUI.Label(setwtbahlabel4, "ScrollsPost prices");
+                GUI.Label(recto.setwtbahlabel3, "and");
+                GUI.Label(recto.setwtbahlabel4, "ScrollsPost prices");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (this.takewtsahint == 0) { GUI.Label(setwtsahbutton, "lower"); }
-                if (this.takewtsahint == 1) { GUI.Label(setwtsahbutton, "sugg."); }
-                if (this.takewtsahint == 2) { GUI.Label(setwtsahbutton, "upper"); }
-                if (this.takewtbahint == 0) { GUI.Label(setwtbahbutton, "lower"); }
-                if (this.takewtbahint == 1) { GUI.Label(setwtbahbutton, "sugg."); }
-                if (this.takewtbahint == 2) { GUI.Label(setwtbahbutton, "upper"); }
-                if (this.takewtsahint2 == 0) { GUI.Label(setwtsahbutton2, "lower"); }
-                if (this.takewtsahint2 == 1) { GUI.Label(setwtsahbutton2, "sugg."); }
-                if (this.takewtsahint2 == 2) { GUI.Label(setwtsahbutton2, "upper"); }
-                if (this.takewtbahint2 == 0) { GUI.Label(setwtbahbutton2, "lower"); }
-                if (this.takewtbahint2 == 1) { GUI.Label(setwtbahbutton2, "sugg."); }
-                if (this.takewtbahint2 == 2) { GUI.Label(setwtbahbutton2, "upper"); }
+                if (this.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
+                if (this.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
+                if (this.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
+                if (this.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
+                if (this.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
+                if (this.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
+                if (this.takewtsahint2 == 0) { GUI.Label(recto.setwtsahbutton2, "lower"); }
+                if (this.takewtsahint2 == 1) { GUI.Label(recto.setwtsahbutton2, "sugg."); }
+                if (this.takewtsahint2 == 2) { GUI.Label(recto.setwtsahbutton2, "upper"); }
+                if (this.takewtbahint2 == 0) { GUI.Label(recto.setwtbahbutton2, "lower"); }
+                if (this.takewtbahint2 == 1) { GUI.Label(recto.setwtbahbutton2, "sugg."); }
+                if (this.takewtbahint2 == 2) { GUI.Label(recto.setwtbahbutton2, "upper"); }
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
             else
             {
-                GUI.Label(setwtsahlabel, "show in WTS-AH the ");
-                if (GUI.Button(setwtsahbutton, ""))
+                GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
+                if (GUI.Button(recto.setwtsahbutton, ""))
                 {
                     this.takewtsahint = (this.takewtsahint + 1) % 3;
                 }
-                GUI.Label(setwtsahlabel2, "ScrollsPost price");
-                GUI.Label(setwtbahlabel, "show in WTB-AH the ");
-                if (GUI.Button(setwtbahbutton, ""))
+                GUI.Label(recto.setwtsahlabel2, "ScrollsPost price");
+                GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
+                if (GUI.Button(recto.setwtbahbutton, ""))
                 {
                     this.takewtbahint = (this.takewtbahint + 1) % 3;
                 }
-                GUI.Label(setwtbahlabel2, "ScrollsPost price");
+                GUI.Label(recto.setwtbahlabel2, "ScrollsPost price");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (this.takewtsahint == 0) { GUI.Label(setwtsahbutton, "lower"); }
-                if (this.takewtsahint == 1) { GUI.Label(setwtsahbutton, "sugg."); }
-                if (this.takewtsahint == 2) { GUI.Label(setwtsahbutton, "upper"); }
-                if (this.takewtbahint == 0) { GUI.Label(setwtbahbutton, "lower"); }
-                if (this.takewtbahint == 1) { GUI.Label(setwtbahbutton, "sugg."); }
-                if (this.takewtbahint == 2) { GUI.Label(setwtbahbutton, "upper"); }
+                if (this.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
+                if (this.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
+                if (this.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
+                if (this.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
+                if (this.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
+                if (this.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
 
@@ -2748,7 +2695,7 @@ namespace Auction.mod
         {
             // asks the user if he wants to trade
             GUI.skin = this.cardListPopupSkin;
-            GUI.Box(tradingbox, "");
+            GUI.Box(recto.tradingbox, "");
             GUI.skin = this.cardListPopupBigLabelSkin;
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 
@@ -2756,14 +2703,14 @@ namespace Auction.mod
             if (wts) text = "buy";
             int anzcard = auclsts.available[cname];
             string message = "You want to " + text + "\r\n" + cname + " for " + price + " Gold" +"\r\nYou own this card "  + anzcard+" times\r\n\r\nOriginal Message:";
-            GUI.Label(tbmessage, message);
+            GUI.Label(recto.tbmessage, message);
             GUI.skin.label.wordWrap = true;
-            float msghigh = GUI.skin.label.CalcHeight(new GUIContent(orgmsg), tbmessage.width - 30f);
+            float msghigh = GUI.skin.label.CalcHeight(new GUIContent(orgmsg), recto.tbmessage.width - 30f);
             GUI.skin = this.cardListPopupSkin;
-            scrolll = GUI.BeginScrollView(tbmessagescroll, scrolll, new Rect(0f, 0f, this.tbmessagescroll.width - 20f, msghigh));
+            scrolll = GUI.BeginScrollView(recto.tbmessagescroll, scrolll, new Rect(0f, 0f, recto.tbmessagescroll.width - 20f, msghigh));
             GUI.skin = this.cardListPopupBigLabelSkin;
-            
-            GUI.Label(new Rect(5f, 5f, tbmessagescroll.width - 30f, msghigh), orgmsg);
+
+            GUI.Label(new Rect(5f, 5f, recto.tbmessagescroll.width - 30f, msghigh), orgmsg);
 
             //Console.WriteLine(message);
             
@@ -2772,36 +2719,36 @@ namespace Auction.mod
             GUI.skin.label.wordWrap = false;
             GUI.skin = this.cardListPopupLeftButtonSkin;
 
-            if (GUI.Button(tbok, "OK"))
+            if (GUI.Button(recto.tbok, "OK"))
             { 
                 this.showtradedialog = false;
                 App.GameActionManager.TradeUser(this.globalusers[name]);
                 this.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + " Gold" + ". You own this card " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
                 this.postmsgontrading = true;
             };
-            if (GUI.Button(tbwhisper, "Whisper"))
+            if (GUI.Button(recto.tbwhisper, "Whisper"))
             { 
                 this.showtradedialog = false;
                 this.chatRooms.OpenWhisperRoom(name);
             };
-            if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false;};
+            if (GUI.Button(recto.tbcancel, "Cancel")) { this.showtradedialog = false; };
         }
 
         private void reallywanttosave(bool wts)
         {
             // asks the user if he wants to trade
             GUI.skin = this.cardListPopupSkin;
-            GUI.Box(tradingbox, "");
+            GUI.Box(recto.tradingbox, "");
             GUI.skin = this.cardListPopupBigLabelSkin;
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 
             string message = "You want to override existing file?";
-            
-            GUI.Label(tradingbox, message);
+
+            GUI.Label(recto.tradingbox, message);
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             GUI.skin = this.cardListPopupLeftButtonSkin;
 
-            if (GUI.Button(tbok, "OK"))
+            if (GUI.Button(recto.tbok, "OK"))
             {
                 if (wts)
                 {
@@ -2815,207 +2762,11 @@ namespace Auction.mod
                 }
                 this.showtradedialog = false;
             };
-            if (GUI.Button(tbcancel, "Cancel")) { this.showtradedialog = false; };
+            if (GUI.Button(recto.tbcancel, "Cancel")) { this.showtradedialog = false; };
             
         }
 
-        private void setupPositions()
-        {// set rects for menus
-            this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.57f);
-            if (!chatisshown) { this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.80f); }
-            this.filtermenurect = new Rect(screenRect.xMax + (float)Screen.width * 0.01f, screenRect.y, (float)Screen.width * 0.37f, (float)Screen.height * 0.57f);
-            
-            this.itemButtonTexture = null;
-            this.margins = new Vector4(12f, 12f, 12f, 12f + this.BOTTOM_MARGIN_EXTRA);
-            this.outerRect = this.screenRect;
-            this.innerBGRect = new Rect(this.outerRect.x + this.margins.x, this.outerRect.y + this.margins.y, this.outerRect.width - (this.margins.x + this.margins.z), this.outerRect.height - (this.margins.y + this.margins.w));
-            float num = 0.005f * (float)Screen.width;
-            this.innerRect = new Rect(this.innerBGRect.x + num, this.innerBGRect.y + num, this.innerBGRect.width - 2f * num, this.innerBGRect.height - 2f * num);
-            float num2 = this.BOTTOM_MARGIN_EXTRA - 0.01f * (float)Screen.height;
-            this.buttonLeftRect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
-            this.buttonRightRect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.48f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
-
-            this.wtsbuttonrect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-            this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-            this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-            this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-
-            num = (float)Screen.height / (float)Screen.width * 0.16f * this.rowscale;//0.16
-            this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);
-            this.costIconSize = this.fieldHeight;
-            this.costIconWidth = this.fieldHeight / 1.1f;
-            this.costIconHeight = this.costIconWidth * 72f / 73f;
-            this.cardHeight = this.fieldHeight * 0.72f;
-            this.cardWidth = this.cardHeight * 100f / 75f;
-            this.labelX = this.cardWidth * 1.45f;
-            this.labelsWidth = this.innerRect.width - this.labelX - 2 * this.costIconSize - this.scrollBarSize - this.costIconWidth;
-            this.labelsWidth = this.labelsWidth /2.5f ;
-            this.maxCharsName = (int)(this.labelsWidth / 12f);
-            this.maxCharsRK = (int)(this.labelsWidth / 10f);
-
-            float sbiconwidth = (filtermenurect.width - 2 * num2 - 6f * 4f) / 6f;
-            float sbiconhight = costIconHeight;
-            float chatheight = this.chatLogStyle.CalcHeight(new GUIContent("JScrollg"), 1000);
-            float texthight = chatheight+2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
-
-            this.sbarlabelrect = new Rect(filtermenurect.x + num2, filtermenurect.y + num2, filtermenurect.width * 0.2f, texthight);
-            this.sbrect = new Rect(sbarlabelrect.xMax + num2, sbarlabelrect.y, filtermenurect.xMax - sbarlabelrect.xMax - 2 * num2, texthight);
-
-
-            this.sbgrect = new Rect(sbarlabelrect.x, sbarlabelrect.yMax + 4, sbiconwidth, sbiconhight);
-            this.sborect = new Rect(sbgrect.xMax + 4, sbgrect.y, sbiconwidth, sbiconhight);
-            this.sberect = new Rect(sborect.xMax + 4, sbgrect.y, sbiconwidth, sbiconhight);
-            this.sbdrect = new Rect(sberect.xMax + 4, sbgrect.y, sbiconwidth, sbiconhight);
-
-            this.sbcommonrect = new Rect(sbarlabelrect.x, sbgrect.yMax + 4, sbiconwidth, sbiconhight);
-            this.sbuncommonrect = new Rect(sbcommonrect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
-            this.sbrarerect = new Rect(sbuncommonrect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
-            this.sbthreerect = new Rect(sbdrect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
-            this.sbonerect = new Rect(sbthreerect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
-
-            this.sbsellerlabelrect = new Rect(sbarlabelrect.x, sbcommonrect.yMax + 4, sbrarerect.xMax-sbarlabelrect.x, texthight);
-            this.sbsellerrect = new Rect(sbdrect.x, sbsellerlabelrect.y, filtermenurect.xMax - sbdrect.x - num2, texthight);
-
-            this.sbpricerect = new Rect(sbgrect.x, sbsellerlabelrect.yMax + 4, sborect.xMax - sbgrect.x, texthight);
-            this.sbpricelabelrect = new Rect(sberect.x, sbpricerect.y, sbdrect.xMax - sberect.x, texthight);
-            this.sbpricerect2 = new Rect(sbthreerect.x, sbpricerect.y, sbrect.xMax - sbthreerect.x, texthight);
-
-            this.sbtimelabel = new Rect(sbarlabelrect.x, sbpricelabelrect.yMax + 4, sbsellerlabelrect.width, texthight);
-            this.sbtimerect = new Rect(sbsellerrect.x, sbtimelabel.y, sbsellerrect.width, texthight);
-
-            this.sbtpfgen = new Rect(sbarlabelrect.x, sbtimelabel.yMax + 4, texthight, texthight);//take price from gen = tpfgen 
-            this.sbtpfgenlabel = new Rect(sbtpfgen.xMax + 4, sbtimelabel.yMax + 4, filtermenurect.width - sbtpfgen.width - num2, texthight);
-
-            this.sbonlywithpricebox = new Rect(sbarlabelrect.x, sbtpfgen.yMax + 4, texthight, texthight);
-            this.sbonlywithpricelabelbox = new Rect(sbonlywithpricebox.xMax + 4, sbtpfgen.yMax + 4, filtermenurect.width - sbonlywithpricebox.width - num2, texthight);
-
-            this.sbclearrect = new Rect(filtermenurect.xMax - num2 - costIconWidth, filtermenurect.yMax - num2 - texthight, costIconWidth, texthight);
-            this.sbclrearpricesbutton= new Rect(sbarlabelrect.x, sbclearrect.y, sbclearrect.x - sbarlabelrect.x - num2, texthight);
-            this.sbgeneratebutton = new Rect(sbarlabelrect.x, sbclearrect.y - 4 - texthight, sbclearrect.x - sbarlabelrect.x - num2, texthight);
-            this.sbloadbutton = new Rect(sbarlabelrect.x, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2-4f) / 2f, texthight);
-            this.sbsavebutton = new Rect(sbloadbutton.xMax+4, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2-4f) / 2f, texthight);
-
-
-            GUI.skin = this.cardListPopupSkin;
-            float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("Jg"),1000);
-            this.sbnetworklabel = new Rect(filtermenurect.x+4, filtermenurect.yMax - smalltexthight-4, filtermenurect.width, smalltexthight);
-
-            this.tradingbox = new Rect((float)Screen.width / 2f - (float)Screen.width * 0.15f, (float)Screen.height / 2f - (float)Screen.height * 0.15f, (float)Screen.width * 0.3f, (float)Screen.height * 0.3f);
-            this.tradingbox = new Rect(innerRect);
-            this.tradingbox.x = tradingbox.x + this.cardWidth;
-            this.tradingbox.width = tradingbox.width - this.cardWidth - this.costIconWidth;
-            
-            this.tbok = new Rect(tradingbox.xMin + (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2*(float)Screen.height * 0.05f, (float)Screen.height * 0.05f-2f);
-            this.tbcancel = new Rect(tradingbox.xMax - (float)Screen.width * 0.15f +  (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2 * (float)Screen.height * 0.05f, (float)Screen.height * 0.05f-2f);
-            this.tbwhisper = new Rect(tbok.xMax + (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2 * (float)Screen.height * 0.05f, (float)Screen.height * 0.05f - 2f);
-            
-            this.tbmessage = new Rect(this.tradingbox.x, this.tradingbox.y, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f)/2f);
-            this.tbmessagescroll = new Rect(this.tradingbox.x, this.tbmessage.yMax, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f) / 2f);
-            setupsettingpositions();
-        }
-
-        private void setupsettingpositions()
-        {
-            float num = 0.005f * (float)Screen.width;
-            
-            this.settingRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.98f, (float)Screen.height * 0.57f);
-            float buttonleng = this.settingRect.width * 0.10f;
-            float chatheight = this.chatLogStyle.CalcHeight(new GUIContent("JSllg"), 1000);
-            float texthight = chatheight + 2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
-            this.setreset = new Rect(settingRect.xMax - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
-            this.setload = new Rect(setreset.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
-            this.setsave = new Rect(setload.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
-            GUI.skin = this.cardListPopupLeftButtonSkin;
-            Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent("dont update Messages which are younger than:"));
-            this.setpreventspammlabel = new Rect(settingRect.x + 4, settingRect.y + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("99999"));
-            this.setpreventspammrect = new Rect(setpreventspammlabel.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("minutes"));
-            this.setpreventspammlabel2 = new Rect(setpreventspammrect.xMax + 4, setpreventspammlabel.y, vector2.x, texthight);
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls beside cardname"));
-            this.setowncardsanzbox = new Rect(setpreventspammlabel.x, setpreventspammlabel.yMax + 4, texthight, texthight);
-            this.setowncardsanzlabel = new Rect(setowncardsanzbox.xMax + 4, setpreventspammlabel.yMax + 4, vector2.x, texthight);
-
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show in WTS-AH the "));
-            this.setwtsahlabel = new Rect(setowncardsanzbox.x, setowncardsanzbox.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.setwtsahbutton = new Rect(setwtsahlabel.xMax + 4, setwtsahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost price"));
-            this.setwtsahlabel2 = new Rect(setwtsahbutton.xMax + 4, setwtsahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("and"));
-            this.setwtsahlabel3 = new Rect(setwtsahbutton.xMax + 4, setwtsahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.setwtsahbutton2 = new Rect(setwtsahlabel3.xMax + 4, setwtsahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost prices"));
-            this.setwtsahlabel4 = new Rect(setwtsahbutton2.xMax + 4, setwtsahlabel.y, vector2.x, texthight);
-
-
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show in WTB-AH the "));
-            this.setwtbahlabel = new Rect(setowncardsanzbox.x, setwtsahlabel.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.setwtbahbutton = new Rect(setwtsahlabel.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost price"));
-            this.setwtbahlabel2 = new Rect(setwtsahbutton.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("and"));
-            this.setwtbahlabel3 = new Rect(setwtsahbutton.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.setwtbahbutton2 = new Rect(setwtbahlabel3.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost prices"));
-            this.setwtbahlabel4 = new Rect(setwtbahbutton2.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show ScrollsPost price as range"));
-            this.setsugrangebox = new Rect(setowncardsanzbox.x, setwtbahlabel.yMax + 4, texthight, texthight);
-            this.setsugrangelabel = new Rect(setsugrangebox.xMax + 4, setsugrangebox.y, vector2.x, texthight);
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("scale row hight by factor"));
-            this.setrowhightlabel = new Rect(setowncardsanzbox.x, setsugrangebox.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("99999"));
-            this.setrowhightbox = new Rect(setrowhightlabel.xMax + 4, setsugrangebox.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("/10"));
-            this.setrowhightlabel2 = new Rect(setrowhightbox.xMax + 4, setsugrangebox.yMax + 4, vector2.x, texthight);
-
-            // take prices from
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("WTS-Generator takes "));
-            this.settakewtsgenlabel = new Rect(setowncardsanzbox.x, setrowhightlabel.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.settakewtsgenbutton = new Rect(settakewtsgenlabel.xMax + 4, settakewtsgenlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsPost price"));
-            this.settakewtsgenlabel2= new Rect(settakewtsgenbutton.xMax + 4, settakewtsgenlabel.y, vector2.x, texthight);
-
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("WTB-Generator takes "));
-            this.settakewtbgenlabel = new Rect(setowncardsanzbox.x, settakewtsgenlabel.yMax + 4, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
-            this.settakewtbgenbutton = new Rect(settakewtbgenlabel.xMax + 4, settakewtbgenlabel.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsPost price"));
-            this.settakewtbgenlabel2 = new Rect(settakewtbgenbutton.xMax + 4, settakewtbgenlabel.y, vector2.x, texthight);
-
-            // rounding
-            this.setwtsbox = new Rect(setowncardsanzbox.x, settakewtbgenlabel.yMax + 4, texthight, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTS-generator "));
-            this.setwtslabel1 = new Rect(setwtsbox.xMax + 4, setwtsbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
-            this.setwtsbutton1 = new Rect(setwtslabel1.xMax + 4, setwtsbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" to next "));
-            this.setwtslabel2 = new Rect(setwtsbutton1.xMax + 4, setwtsbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
-            this.setwtsbutton2 = new Rect(setwtslabel2.xMax + 4, setwtsbox.y, vector2.x, texthight);
-            // rounding
-            this.setwtbbox = new Rect(setowncardsanzbox.x, setwtsbox.yMax + 4, texthight, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTB-generator "));
-            this.setwtblabel1 = new Rect(setwtbbox.xMax + 4, setwtbbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
-            this.setwtbbutton1 = new Rect(setwtblabel1.xMax + 4, setwtbbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" to next "));
-            this.setwtblabel2 = new Rect(setwtbbutton1.xMax + 4, setwtbbox.y, vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
-            this.setwtbbutton2 = new Rect(setwtblabel2.xMax + 4, setwtbbox.y, vector2.x, texthight);
-
-
-        }
+      
         
         private void RenderCost(Rect rect, Card card)
         {
