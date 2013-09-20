@@ -7,7 +7,6 @@ namespace Auction.mod
 {
     class Network
     {
-        private Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
         public bool contonetwork;
         private DateTime joindate = DateTime.Now;
         public bool rooomsearched=false;
@@ -18,6 +17,7 @@ namespace Auction.mod
         List<string> roooms = new List<string>();
         Dictionary<string, string> usertoaucroom = new Dictionary<string, string>();
         public bool inbattle=false;
+
 
         public void connect()
         {
@@ -72,7 +72,7 @@ namespace Auction.mod
 
                 foreach (RoomInfoProfile roinpro in rip) // add the new user to the aucusers and globalusers
                 {
-                    if (!this.globalusers.ContainsKey(roinpro.name))
+                    if (!helpf.globalusers.ContainsKey(roinpro.name))
                     {
                         ChatUser newuser = new ChatUser();
                         newuser.acceptChallenges = false;
@@ -80,7 +80,7 @@ namespace Auction.mod
                         newuser.adminRole = AdminRole.None;
                         newuser.name = roinpro.name;
                         newuser.id = roinpro.id;
-                        this.globalusers.Add(roinpro.name, newuser);
+                        helpf.globalusers.Add(roinpro.name, newuser);
                     }
                     if (!this.aucusers.ContainsKey(roinpro.name) && roinpro.name != App.MyProfile.ProfileInfo.name) { this.aucusers.Add(roinpro.name, roinpro.id); }
                     if (!this.usertoaucroom.ContainsKey(roinpro.name)) this.usertoaucroom.Add(roinpro.name, roominfo.roomName.Split('-')[1]);
@@ -318,12 +318,12 @@ namespace Auction.mod
 
        public void addglobalusers(ChatUser user)
        {
-           this.globalusers.Add(user.name, user);
+           helpf.globalusers.Add(user.name, user);
        }
 
        public void saveaucid(string text,string from)
        {
-           if (!this.globalusers.ContainsKey(from))
+           if (!helpf.globalusers.ContainsKey(from))
            {
                string id = text.Split(new string[] { "aucid " }, StringSplitOptions.None)[1];
                //test aucid:
@@ -334,7 +334,7 @@ namespace Auction.mod
            }
            else
            {
-               this.addusernoidtest(this.globalusers[from]);
+               this.addusernoidtest(helpf.globalusers[from]);
            }
        }
 
