@@ -40,8 +40,12 @@ namespace Auction.mod
 
     public class Auction : BaseMod, ICommListener
     {
-
-        private bool hidewispers = true; //  false = testmodus
+#if DEBUG
+		private bool hideNetworkMessages = false; //  false = testmodus
+#else
+		private bool hideNetworkMessages = true; //  false = testmodus
+#endif
+        
 
 
          // = realcardnames + loadedscrollsnicks
@@ -225,7 +229,6 @@ namespace Auction.mod
             helpf.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
 
             sttngs = new Settings();
-            ntwrk = new Network();
             srchsvr = new Searchsettings();
             Console.WriteLine("saveall");
             srchsvr.saveall();
@@ -239,6 +242,7 @@ namespace Auction.mod
             ahui = new AuctionHouseUI(mssgprsr,alists,recto,lstfltrs,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf);
             genui = new GeneratorUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
             setui = new SettingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
+			ntwrk = new Network(alists, srchsvr, mssgprsr, helpf);
 
             helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -336,7 +340,7 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
+                    if (hideNetworkMessages && Network.isNetworkCommand(wmsg)) return true;
                 }
             }
             
@@ -346,39 +350,27 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-                    if (hidewispers)
+					if (hideNetworkMessages && Network.isNetworkCommand(wmsg))
                     { // hides all whisper messages from auc-mod
-                        if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                    }
-                    else
-                    {// show some whispers if not connected (testmode)
-                        if (ntwrk.contonetwork)
-                        {
-
-                            if ((wmsg.text).StartsWith("aucdeletes") || (wmsg.text).StartsWith("aucdeleteb") || (wmsg.text).StartsWith("aucupdate") || (wmsg.text).StartsWith("aucto1please") || (wmsg.text).StartsWith("aucstay? ") || (wmsg.text).StartsWith("aucstay! ") || (wmsg.text).StartsWith("aucrooms ") || (wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucs ") || (wmsg.text).StartsWith("aucb ") || (wmsg.text).StartsWith("needaucid") || (wmsg.text).StartsWith("aucid ")) return true;
-                        }
-                        else
-                        {
-                            if ((wmsg.text).StartsWith("aucstop") || (wmsg.text).StartsWith("aucto1please")) return true;
-                        }
+						return true;
                     }
                 }
                 if (msg is RoomChatMessageMessage)
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
-                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+					if (hideNetworkMessages  && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
                 if (msg is RoomEnterMessage)
                 {   
                     RoomEnterMessage rem = (RoomEnterMessage) msg;
-                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+					if (hideNetworkMessages && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
                 if (msg is RoomInfoMessage)
                 {
                     RoomInfoMessage rem = (RoomInfoMessage)msg;
-                    if (ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+					if (hideNetworkMessages && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
 
@@ -406,112 +398,8 @@ namespace Auction.mod
 
         public override void ReplaceMethod(InvocationInfo info, out object returnValue)
         {
+			//Replace Methods by NOPs
             returnValue = null;
-            if (info.target is ArenaChat && info.targetMethod.Equals("handleMessage"))
-            {
-                
-                Message msg = (Message)info.arguments[0];
-                if (msg is WhisperMessage)
-                {
-                    WhisperMessage wmsg = (WhisperMessage)msg;
-                    string text = wmsg.text;
-
-                    if (text.StartsWith("aucdeletes"))
-                    {
-
-                            alists.wtslistfulltimed.RemoveAll(element => element.seller == wmsg.from);
-                            alists.wtslistfull.RemoveAll(element => element.seller == wmsg.from);
-                            alists.wtslist.RemoveAll(element => element.seller == wmsg.from);
-
-
-                        
-
-                    }
-                    if (text.StartsWith("aucdeleteb"))
-                    {
-
-                        alists.wtblistfulltimed.RemoveAll(element => element.seller == wmsg.from);
-                        alists.wtblistfull.RemoveAll(element => element.seller == wmsg.from);
-                        alists.wtblist.RemoveAll(element => element.seller == wmsg.from);
-                    
-
-                    }
-
-                    if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
-                    {
-                        mssgprsr.getaucitemsformmsg(text, wmsg.from, wmsg.GetChatroomName(), helpf.generator, helpf.inauchouse, helpf.settings, helpf.wtsmenue);
-                        //need playerid (wispering doesnt send it)
-                        if (!helpf.globalusers.ContainsKey(wmsg.from)) { WhisperMessage needid = new WhisperMessage(wmsg.from, "needaucid"); App.Communicator.sendRequest(needid); }
-                    }
-
-                    if(wmsg.from==App.MyProfile.ProfileInfo.name)  return;
-
-                    if (text.StartsWith("aucto1please") && ntwrk.contonetwork)
-                    {
-                        App.Communicator.sendRequest(new RoomExitMessage("auc-" + ntwrk.ownroomnumber));
-                        ntwrk.ownroomnumber = 0;
-                        App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
-                        Console.WriteLine("aucto1please");
-                    
-                    }
-
-                    if (text.StartsWith("aucstay? ") && ntwrk.contonetwork)
-                    {   // user founded a room, but dont know if this is all
-
-                        ntwrk.aucstayquestion(text, wmsg.from, srchsvr.shortgeneratedwtsmessage, srchsvr.shortgeneratedwtbmessage);
-
-                    
-                    }
-
-                    if (text.StartsWith("aucstay! "))
-                    {   // user founded a room, and he dont want to get the room-list
-                        ntwrk.aucstay(text, wmsg.from, srchsvr.shortgeneratedwtsmessage, srchsvr.shortgeneratedwtbmessage);
-                    }
-
-                    if (text.StartsWith("aucrooms ") && !ntwrk.rooomsearched && ntwrk.contonetwork)
-                    {
-                        if (text.EndsWith("aucrooms ")) { ntwrk.realycontonetwork = true; }
-                        else
-                        {
-                            ntwrk.visitrooms(text);
-                            
-                        }
-                    }
-                    
-                    if (text.StartsWith("aucstop"))
-                    {
-                        ntwrk.deleteuser(wmsg.from);
-                    }
-
-                    
-
-                    if (text.StartsWith("aucupdate"))  
-                    {
-                        ntwrk.sendownauctionstosingleuser(srchsvr.shortgeneratedwtsmessage, srchsvr.shortgeneratedwtbmessage);
-                    }
-                    
-
-                    
-                    //dont needed anymore left in only to be shure :D
-                    if (text.StartsWith("needaucid"))
-                    {
-                        ntwrk.needid(wmsg.from);
-                    }
-                     //dont needed anymore
-                    if (text.StartsWith("aucid "))
-                    {
-                        ntwrk.saveaucid(text,wmsg.from);
-                        
-                        
-                    }
-
-
-                }
-            }
-
-            
-            
-
         }
 
         public override void BeforeInvoke(InvocationInfo info)
