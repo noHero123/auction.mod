@@ -157,7 +157,7 @@ namespace Auction.mod
        public Rect restyperect(int num) { return new Rect(this.labelX + this.labelsWidth + (this.costIconSize - this.costIconWidth) / 2f - 5f, (float)num * this.fieldHeight + (this.fieldHeight - this.costIconHeight) / 2f, this.costIconWidth, this.costIconHeight); }
        public Rect position10(int num) { return new Rect(0f, (float)num * this.fieldHeight, this.cardWidth + 8f, this.fieldHeight); }
 
-       public void setupsettingpositions(GUIStyle chatLogStyle, GUISkin cardListPopupLeftButtonSkin)
+       public void setupsettingpositions(GUIStyle chatLogStyle, GUISkin cardListPopupBigLabelSkin)
         {
            // buttons in store:
             GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
@@ -176,7 +176,7 @@ namespace Auction.mod
             this.setreset = new Rect(settingRect.xMax - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
             this.setload = new Rect(setreset.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
             this.setsave = new Rect(setload.x - 4 - buttonleng, settingRect.yMax - 4 - texthight, buttonleng, texthight);
-            GUI.skin = cardListPopupLeftButtonSkin;
+            GUI.skin = cardListPopupBigLabelSkin;
             Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent("dont update Messages which are younger than:"));
             this.setpreventspammlabel = new Rect(settingRect.x + 4, settingRect.y + 4, vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent("99999"));

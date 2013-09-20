@@ -591,9 +591,10 @@ namespace Auction.mod
                     {
                         screenh = Screen.height;
                         screenw = Screen.width;
+                        App.ChatUI.AdjustToResolution();
                         helpf.chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(helpf.target);
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle,helpf.cardListPopupSkin);
-                        recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupLeftButtonSkin);
+                        recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
                    

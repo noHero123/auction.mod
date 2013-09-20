@@ -82,6 +82,7 @@ namespace Auction.mod
             }
 
             // spam preventor
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.Label(recto.setpreventspammlabel, "dont update messages which are younger than:");
             GUI.Label(recto.setpreventspammlabel2, "minutes");
 
@@ -95,7 +96,7 @@ namespace Auction.mod
             if (sttngs.spamprevint > 30) { sttngs.spampreventtime = "30"; sttngs.spamprevint = 30; }
 
             //anz cards
-            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.Label(recto.setowncardsanzlabel, "show owned number of scrolls beside scrollname");
             bool owp = GUI.Button(recto.setowncardsanzbox, "");
             if (owp) sttngs.shownumberscrolls = !sttngs.shownumberscrolls;
@@ -109,7 +110,7 @@ namespace Auction.mod
             }
 
             // show range
-            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.Label(recto.setsugrangelabel, "show ScrollsPost price as range");
             bool oowp = GUI.Button(recto.setsugrangebox, "");
             if (oowp) sttngs.showsugrange = !sttngs.showsugrange;
@@ -149,7 +150,7 @@ namespace Auction.mod
             {
                 GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
-            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.Label(recto.setwtslabel1, "round ScrollsPost prices in WTS-generator ");
             if (GUI.Button(recto.setwtsbutton1, ""))
             {
@@ -180,7 +181,7 @@ namespace Auction.mod
             {
                 GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
-            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.Label(recto.setwtblabel1, "round ScrollsPost prices in WTB-generator ");
             if (GUI.Button(recto.setwtbbutton1, ""))
             {
@@ -283,7 +284,7 @@ namespace Auction.mod
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
 
-            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.color = Color.white;
             GUI.contentColor = Color.white;
         }
