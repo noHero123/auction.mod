@@ -592,30 +592,22 @@ namespace Auction.mod
                             int p1 = 0, p2 = 0;
                             if (helpf.wtsmenue)
                             {
-                                if (sttngs.takewtsahint == 0) p1 = prcs.lowerprice[index];
-                                if (sttngs.takewtsahint == 1) p1 = prcs.sugprice[index];
-                                if (sttngs.takewtsahint == 2) p1 = prcs.upperprice[index];
+								p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
                             }
                             else
                             {
-                                if (sttngs.takewtbahint == 0) p1 = prcs.lowerprice[index];
-                                if (sttngs.takewtbahint == 1) p1 = prcs.sugprice[index];
-                                if (sttngs.takewtbahint == 2) p1 = prcs.upperprice[index];
+								p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
                             }
                             suggeprice = "SP: " + p1;
                             if (sttngs.showsugrange)
                             {
                                 if (helpf.wtsmenue)
                                 {
-                                    if (sttngs.takewtsahint2 == 0) p2 = prcs.lowerprice[index];
-                                    if (sttngs.takewtsahint2 == 1) p2 = prcs.sugprice[index];
-                                    if (sttngs.takewtsahint2 == 2) p2 = prcs.upperprice[index];
+									p2 = prcs.getPrice(index, sttngs.wtsAHpriceType2);
                                 }
                                 else
                                 {
-                                    if (sttngs.takewtbahint2 == 0) p2 = prcs.lowerprice[index];
-                                    if (sttngs.takewtbahint2 == 1) p2 = prcs.sugprice[index];
-                                    if (sttngs.takewtbahint2 == 2) p2 = prcs.upperprice[index];
+									p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
                                 }
                             }
                             if (sttngs.showsugrange && p1 != p2) suggeprice = "SP: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);

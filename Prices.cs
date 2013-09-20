@@ -30,6 +30,19 @@ namespace Auction.mod
             helpf = h;
         }
 
+		public int getPrice(int index, ScrollsPostPriceType type ) {
+			switch(type) {
+			case ScrollsPostPriceType.LOWER:
+				return lowerprice [index];
+			case ScrollsPostPriceType.SUGGESTED:
+				return sugprice [index];
+			case ScrollsPostPriceType.UPPER:
+				return upperprice [index];
+			default:
+				throw new ArgumentException ();
+			}
+		}
+
         public int pricerounder(int index, bool wts)
         {
             int price = 0;
