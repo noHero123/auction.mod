@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Auction.mod
 {
-    class Network
+    class Network:ICommListener
     {
-        private Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
+        private Dictionary<string, ChatUser> globalusers;
         public bool contonetwork;
         private DateTime joindate = DateTime.Now;
         public bool rooomsearched=false;
@@ -19,12 +19,118 @@ namespace Auction.mod
         Dictionary<string, string> usertoaucroom = new Dictionary<string, string>();
         public bool inbattle=false;
 
+		Auclists alists;
+		Searchsettings searchSettings;
+		Messageparser messageParser;
+		Helpfunktions helpf;
+		public Network(Auclists alists, Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
+			this.alists = alists;
+			this.searchSettings = searchsettings;
+			this.messageParser = messageParser;
+			this.helpf = helpf;
+			globalusers = helpf.globalusers;
+
+		}
+
         public void connect()
         {
             this.contonetwork = true;
+			App.Communicator.addListener (this);
             App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
             this.joindate = DateTime.Now;
         }
+
+
+		public void handleMessage(Message msg) {
+			if (msg is WhisperMessage)
+			{
+				WhisperMessage wmsg = (WhisperMessage)msg;
+				string text = wmsg.text;
+
+				if (text.StartsWith("aucdeletes"))
+				{
+
+					alists.wtslistfulltimed.RemoveAll(element => element.seller == wmsg.from);
+					alists.wtslistfull.RemoveAll(element => element.seller == wmsg.from);
+					alists.wtslist.RemoveAll(element => element.seller == wmsg.from);
+				}
+				if (text.StartsWith("aucdeleteb"))
+				{
+					alists.wtblistfulltimed.RemoveAll(element => element.seller == wmsg.from);
+					alists.wtblistfull.RemoveAll(element => element.seller == wmsg.from);
+					alists.wtblist.RemoveAll(element => element.seller == wmsg.from);
+				}
+
+				if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
+				{
+					messageParser.getaucitemsformmsg(text, wmsg.from, wmsg.GetChatroomName(), helpf.generator, helpf.inauchouse, helpf.settings, helpf.wtsmenue);
+					//need playerid (wispering doesnt send it)
+					if (!helpf.globalusers.ContainsKey(wmsg.from)) { WhisperMessage needid = new WhisperMessage(wmsg.from, "needaucid"); App.Communicator.sendRequest(needid); }
+				}
+
+				if(wmsg.from==App.MyProfile.ProfileInfo.name)  return;
+
+				if (text.StartsWith("aucto1please") && this.contonetwork)
+				{
+					App.Communicator.sendRequest(new RoomExitMessage("auc-" + this.ownroomnumber));
+					this.ownroomnumber = 0;
+					App.Communicator.sendRequest(new RoomEnterMessage("auc-1"));
+					Console.WriteLine("aucto1please");
+
+				}
+
+				if (text.StartsWith("aucstay? ") && this.contonetwork)
+				{   // user founded a room, but dont know if this is all
+					this.aucstayquestion(text, wmsg.from, searchSettings.shortgeneratedwtsmessage, searchSettings.shortgeneratedwtbmessage);
+				}
+
+				if (text.StartsWith("aucstay! "))
+				{   // user founded a room, and he dont want to get the room-list
+					this.aucstay(text, wmsg.from, searchSettings.shortgeneratedwtsmessage, searchSettings.shortgeneratedwtbmessage);
+				}
+
+				if (text.StartsWith("aucrooms ") && !this.rooomsearched && this.contonetwork)
+				{
+					if (text.EndsWith("aucrooms ")) { this.realycontonetwork = true; }
+					else
+					{
+						this.visitrooms(text);
+
+					}
+				}
+
+				if (text.StartsWith("aucstop"))
+				{
+					this.deleteuser(wmsg.from);
+				}
+
+
+
+				if (text.StartsWith("aucupdate"))  
+				{
+					this.sendownauctionstosingleuser(searchSettings.shortgeneratedwtsmessage, searchSettings.shortgeneratedwtbmessage);
+				}
+
+
+
+				//dont needed anymore left in only to be shure :D
+				if (text.StartsWith("needaucid"))
+				{
+					this.needid(wmsg.from);
+				}
+				//dont needed anymore
+				if (text.StartsWith("aucid "))
+				{
+					this.saveaucid(text,wmsg.from);
+				}
+			}
+		}
+
+		public void onReconnect ()
+		{
+		}
+
+
 
         public void disconfromaucnet()
         {
@@ -60,6 +166,7 @@ namespace Auction.mod
             this.rooomsearched = false;
             this.contonetwork = false;
             this.realycontonetwork = false;
+			App.Communicator.removeListener (this);
 
         }
 
@@ -316,11 +423,6 @@ namespace Auction.mod
            this.rooomsearched = true;
        }
 
-       public void addglobalusers(ChatUser user)
-       {
-           this.globalusers.Add(user.name, user);
-       }
-
        public void saveaucid(string text,string from)
        {
            if (!this.globalusers.ContainsKey(from))
@@ -337,8 +439,10 @@ namespace Auction.mod
                this.addusernoidtest(this.globalusers[from]);
            }
        }
-
+		
        public void needid(string from) { WhisperMessage sendid = new WhisperMessage(from, "aucid " + App.MyProfile.ProfileInfo.id); App.Communicator.sendRequest(sendid); }
-
+		public static bool isNetworkCommand(WhisperMessage wmsg) {
+			return (wmsg.text).StartsWith ("aucdeletes") || (wmsg.text).StartsWith ("aucdeleteb") || (wmsg.text).StartsWith ("aucupdate") || (wmsg.text).StartsWith ("aucto1please") || (wmsg.text).StartsWith ("aucstay? ") || (wmsg.text).StartsWith ("aucstay! ") || (wmsg.text).StartsWith ("aucrooms ") || (wmsg.text).StartsWith ("aucstop") || (wmsg.text).StartsWith ("aucs ") || (wmsg.text).StartsWith ("aucb ") || (wmsg.text).StartsWith ("needaucid") || (wmsg.text).StartsWith ("aucid ");
+		}
     }
 }
