@@ -81,6 +81,12 @@ namespace Auction.mod
 
         }
 
+        public void adjustskins(float fieldHeight)
+        {
+            this.cardListPopupBigLabelSkin.label.fontSize = (int)(fieldHeight / 1.7f);
+            this.cardListPopupSkin.label.fontSize = (int)(fieldHeight / 2.5f);
+        }
+
         public void setlobbyskin(GUISkin lby)
         {
             this.lobbySkin = lby;

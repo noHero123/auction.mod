@@ -589,11 +589,13 @@ namespace Auction.mod
 
                     if (!(Screen.height == screenh) || !(Screen.width == screenw)|| helpf.chatLogStyle==null) // if resolution was changed, recalc positions
                     {
+                        Console.WriteLine("change resolution");
                         screenh = Screen.height;
                         screenw = Screen.width;
-                        App.ChatUI.AdjustToResolution();
                         helpf.chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(helpf.target);
-                        recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle,helpf.cardListPopupSkin);
+                        //recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        //helpf.adjustskins(recto.fieldHeight);
+                        recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
