@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Auction.mod
 {
+	enum ScrollsPostPriceType {
+		LOWER, SUGGESTED, UPPER
+	}
+
     class Settings
     {
         public bool shownumberscrolls;
@@ -17,8 +21,8 @@ namespace Auction.mod
         public bool wtbroundup = false;
         public int wtbroundmode = 0;
         public bool roundwtb = false;
-        public int takewtsgenint = 2, takewtbgenint = 0;
-        public int takewtsahint = 1, takewtbahint = 1, takewtsahint2 = 1, takewtbahint2 = 1;
+		public ScrollsPostPriceType wtsGeneratorPriceType = ScrollsPostPriceType.UPPER, wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
+		public ScrollsPostPriceType wtsAHpriceType = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType = ScrollsPostPriceType.SUGGESTED, wtsAHpriceType2 = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
 
         public string spampreventtime = "";
         public int spamprevint=0;
@@ -83,27 +87,27 @@ namespace Auction.mod
                 }
                 if (setting.Equals("takegens"))
                 {
-                    takewtsgenint = Convert.ToInt32(value);
+					wtsGeneratorPriceType = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
                 if (setting.Equals("takegenb"))
                 {
-                    takewtbgenint = Convert.ToInt32(value);
+					wtbGeneratorPriceType = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
                 if (setting.Equals("takeahs1"))
                 {
-                    takewtsahint = Convert.ToInt32(value);
+                    wtsAHpriceType = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
                 if (setting.Equals("takeahs2"))
                 {
-                    takewtsahint2 = Convert.ToInt32(value);
+					wtsAHpriceType2 = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
                 if (setting.Equals("takeahb1"))
                 {
-                    takewtbahint = Convert.ToInt32(value);
+					wtbAHpriceType = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
                 if (setting.Equals("takeahb2"))
                 {
-                    takewtbahint2 = Convert.ToInt32(value);
+					wtbAHpriceType2 = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
             }
 
@@ -123,12 +127,9 @@ namespace Auction.mod
             roundwtb = false;
             wtbroundup = false;
             wtbroundmode = 0;
-            takewtsgenint = 2;
-            takewtbgenint = 0;
-            takewtsahint = 1;
-            takewtsahint = 1;
-            takewtsahint2 = 1;
-            takewtbahint2 = 1;
+			wtsGeneratorPriceType = ScrollsPostPriceType.SUGGESTED;
+			wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
+			wtsAHpriceType = wtsAHpriceType = wtsAHpriceType2 = wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
         }
 
         public void savesettings(string ownaucpath)
@@ -144,12 +145,12 @@ namespace Auction.mod
             text = text + "bround " + roundwtb.ToString() + ";";
             text = text + "broundu " + wtbroundup.ToString() + ";";
             text = text + "broundm " + wtbroundmode.ToString() + ";";
-            text = text + "takegens " + takewtsgenint.ToString() + ";";
-            text = text + "takegenb " + takewtbgenint.ToString() + ";";
-            text = text + "takeahs1 " + takewtsahint.ToString() + ";";
-            text = text + "takeahs2 " + takewtsahint2.ToString() + ";";
-            text = text + "takeahb1 " + takewtbahint.ToString() + ";";
-            text = text + "takeahb2 " + takewtbahint2.ToString() + ";";
+            text = text + "takegens " + (int)wtsGeneratorPriceType + ";";
+			text = text + "takegenb " + (int)wtbGeneratorPriceType + ";";
+			text = text + "takeahs1 " + (int)wtsAHpriceType + ";";
+			text = text + "takeahs2 " + (int)wtsAHpriceType2 + ";";
+			text = text + "takeahb1 " + (int)wtbAHpriceType + ";";
+			text = text + "takeahb2 " + (int)wtbAHpriceType2 + ";";
             System.IO.File.WriteAllText(ownaucpath + "settingsauc.txt", text);
         }
 
