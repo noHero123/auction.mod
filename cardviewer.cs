@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Auction.mod
 {
-    class cardviewer : iEffect, iCardRule, ICardListCallback
+    class Cardviewer : iEffect, iCardRule, ICardListCallback
     {
 
         struct cardtextures
@@ -46,7 +46,7 @@ namespace Auction.mod
         private FieldInfo cardImageField;
         Rect cardrect=new Rect();
 
-        public cardviewer()
+        public Cardviewer()
         {
             //needed for getting the textures of the drawing card
             statsBGField = typeof(CardView).GetField("statsBG", BindingFlags.Instance | BindingFlags.NonPublic);

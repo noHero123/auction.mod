@@ -16,12 +16,12 @@ namespace Auction.mod
         private bool clickableItems=false;
         private float opacity;
         public Vector2 scrollPos;
-        messageparser mssgprsr;
-        auclists alists;
+        Messageparser mssgprsr;
+        Auclists alists;
         Rectomat recto;
-        listfilters lstfltrs;
+        Listfilters lstfltrs;
         Prices prcs;
-        cardviewer crdvwr;
+        Cardviewer crdvwr;
         Searchsettings srchsvr;
         Network ntwrk;
         Settings sttngs;
@@ -35,7 +35,7 @@ namespace Auction.mod
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
 
-        public AuctionHouseUI(messageparser mssgprsr,auclists alists,Rectomat recto,listfilters lstfltrs,Prices prcs,cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h)
+        public AuctionHouseUI(Messageparser mssgprsr,Auclists alists,Rectomat recto,Listfilters lstfltrs,Prices prcs,Cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h)
         {
             this.helpf = h;
             this.mssgprsr = mssgprsr;

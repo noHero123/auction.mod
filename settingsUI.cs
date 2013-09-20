@@ -7,21 +7,21 @@ using System.Text.RegularExpressions;
 
 namespace Auction.mod
 {
-    class settingsUI
+    class SettingsUI
     {
 
-        messageparser mssgprsr;
-        auclists alists;
+        Messageparser mssgprsr;
+        Auclists alists;
         Rectomat recto;
-        listfilters lstfltrs;
+        Listfilters lstfltrs;
         Prices prcs;
-        cardviewer crdvwr;
+        Cardviewer crdvwr;
         Searchsettings srchsvr;
         Network ntwrk;
         Settings sttngs;
         Helpfunktions helpf;
 
-        public settingsUI(messageparser mssgprsr, auclists alists, Rectomat recto, listfilters lstfltrs, Prices prcs, cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
+        public SettingsUI(Messageparser mssgprsr, Auclists alists, Rectomat recto, Listfilters lstfltrs, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
         {
             this.helpf = h;
             this.mssgprsr = mssgprsr;

@@ -17,12 +17,12 @@ namespace Auction.mod
 
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
-        messageparser mssgprsr;
-        auclists alists;
+        Messageparser mssgprsr;
+        Auclists alists;
         Rectomat recto;
-        listfilters lstfltrs;
+        Listfilters lstfltrs;
         Prices prcs;
-        cardviewer crdvwr;
+        Cardviewer crdvwr;
         Searchsettings srchsvr;
         Network ntwrk;
         Settings sttngs;
@@ -33,7 +33,7 @@ namespace Auction.mod
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
         Texture2D decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
 
-        public GeneratorUI(messageparser mssgprsr, auclists alists, Rectomat recto, listfilters lstfltrs, Prices prcs, cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
+        public GeneratorUI(Messageparser mssgprsr, Auclists alists, Rectomat recto, Listfilters lstfltrs, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
         {
             this.helpf = h;
             this.mssgprsr = mssgprsr;

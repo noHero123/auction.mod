@@ -58,16 +58,16 @@ namespace Auction.mod
         Settings sttngs;
         Network ntwrk;
         Searchsettings srchsvr;
-        cardviewer crdvwr;
+        Cardviewer crdvwr;
         Prices prcs;
-        listfilters lstfltrs;
-        messageparser mssgprsr;
+        Listfilters lstfltrs;
+        Messageparser mssgprsr;
         Rectomat recto;
-        auclists alists;
+        Auclists alists;
         Helpfunktions helpf;
         AuctionHouseUI ahui;
         GeneratorUI genui;
-        settingsUI setui;
+        SettingsUI setui;
         
         
 
@@ -230,15 +230,15 @@ namespace Auction.mod
             Console.WriteLine("saveall");
             srchsvr.saveall();
             Console.WriteLine("savealldone");
-            crdvwr = new cardviewer();
+            crdvwr = new Cardviewer();
             prcs = new Prices(helpf);
-            lstfltrs = new listfilters(srchsvr, prcs);
+            lstfltrs = new Listfilters(srchsvr, prcs);
             recto = new Rectomat();
-            alists = new auclists(lstfltrs, prcs, srchsvr);
-            mssgprsr = new messageparser(alists, lstfltrs, this.sttngs, this.helpf);
+            alists = new Auclists(lstfltrs, prcs, srchsvr);
+            mssgprsr = new Messageparser(alists, lstfltrs, this.sttngs, this.helpf);
             ahui = new AuctionHouseUI(mssgprsr,alists,recto,lstfltrs,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf);
             genui = new GeneratorUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
-            setui = new settingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
+            setui = new SettingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
 
             helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);

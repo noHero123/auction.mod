@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auction.mod
 {
-    class auclists
+    class Auclists
     {
         public List<aucitem> wtslistfull = new List<aucitem>();
         public List<aucitem> wtblistfull = new List<aucitem>();
@@ -20,11 +20,11 @@ namespace Auction.mod
         private List<aucitem> orgicardsPlayerwountrade = new List<aucitem>(); // cards player owns minus the untradable cards
         private List<Card> orgicardsPlayer = new List<Card>(); // all cards the player owns
         private List<aucitem> wtbPlayer = new List<aucitem>();
-        listfilters lstfltrs;
+        Listfilters lstfltrs;
         Prices prcs;
         Searchsettings srchsvr;
 
-        public auclists( listfilters l,Prices p, Searchsettings s)
+        public Auclists( Listfilters l,Prices p, Searchsettings s)
         {
             this.lstfltrs = l;
             this.prcs = p;

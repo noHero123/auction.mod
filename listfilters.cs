@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auction.mod
 {
-    class listfilters
+    class Listfilters
     {
         public int sortmode = 0;
         Searchsettings sttngs;
@@ -36,7 +36,7 @@ namespace Auction.mod
             }
         }
 
-        public listfilters(Searchsettings sets, Prices prs)
+        public Listfilters(Searchsettings sets, Prices prs)
         {
             this.sttngs = sets;
             this.prcs = prs;

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Auction.mod
 {
-    class messageparser
+    class Messageparser
     {
         
 
@@ -19,8 +19,8 @@ namespace Auction.mod
 
 
         Helpfunktions helpf;
-        listfilters lstfltrs;
-        auclists alist;
+        Listfilters lstfltrs;
+        Auclists alist;
         Settings sttngs;
         private Regex priceregex=new Regex(@".*[^x0-9]+[0-9]{2,9}[g]?[^x0-9]+.*");
         private Regex priceregexpriceonname = new Regex(@"[^x0-9]{2,}[0-9]{2,9}[g]?[^x0-9]+.*");
@@ -33,7 +33,7 @@ namespace Auction.mod
 
         
 
-        public messageparser(auclists a,listfilters lstfltr,Settings s,Helpfunktions h)
+        public Messageparser(Auclists a,Listfilters lstfltr,Settings s,Helpfunktions h)
         {
             this.helpf = h;
             this.alist = a;
