@@ -10,6 +10,18 @@ namespace Auction.mod
     class SettingsUI
     {
 
+		private static ScrollsPostPriceType nextScrollsPostPriceType(ScrollsPostPriceType type) {
+			return (ScrollsPostPriceType)(((int)type + 1) % 3);
+		}
+		private static string scrollsPostPriceTypeToString(ScrollsPostPriceType type) {
+			switch(type){
+			case ScrollsPostPriceType.LOWER: return "lower";
+			case ScrollsPostPriceType.SUGGESTED: return "sugg.";
+			case ScrollsPostPriceType.UPPER: return "upper";
+			default: throw new ArgumentException();
+			}
+		}
+
         Messageparser mssgprsr;
         Auclists alists;
         Rectomat recto;
@@ -203,22 +215,18 @@ namespace Auction.mod
             GUI.Label(recto.settakewtsgenlabel, "WTS-Generator takes ");
             if (GUI.Button(recto.settakewtsgenbutton, ""))
             {
-                sttngs.takewtsgenint = (sttngs.takewtsgenint + 1) % 3;
+				sttngs.wtsGeneratorPriceType = nextScrollsPostPriceType(sttngs.wtsGeneratorPriceType);
             }
             GUI.Label(recto.settakewtsgenlabel2, "ScrollsPost price");
             GUI.Label(recto.settakewtbgenlabel, "WTB-Generator takes ");
             if (GUI.Button(recto.settakewtbgenbutton, ""))
             {
-                sttngs.takewtbgenint = (sttngs.takewtbgenint + 1) % 3;
+				sttngs.wtbGeneratorPriceType = nextScrollsPostPriceType(sttngs.wtbGeneratorPriceType);
             }
             GUI.Label(recto.settakewtbgenlabel2, "ScrollsPost price");
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-            if (sttngs.takewtsgenint == 0) { GUI.Label(recto.settakewtsgenbutton, "lower"); }
-            if (sttngs.takewtsgenint == 1) { GUI.Label(recto.settakewtsgenbutton, "sugg."); }
-            if (sttngs.takewtsgenint == 2) { GUI.Label(recto.settakewtsgenbutton, "upper"); }
-            if (sttngs.takewtbgenint == 0) { GUI.Label(recto.settakewtbgenbutton, "lower"); }
-            if (sttngs.takewtbgenint == 1) { GUI.Label(recto.settakewtbgenbutton, "sugg."); }
-            if (sttngs.takewtbgenint == 2) { GUI.Label(recto.settakewtbgenbutton, "upper"); }
+			GUI.Label(recto.settakewtsgenbutton, scrollsPostPriceTypeToString(sttngs.wtsGeneratorPriceType));
+			GUI.Label(recto.settakewtbgenbutton, scrollsPostPriceTypeToString(sttngs.wtbGeneratorPriceType));
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             //show price ah
             if (sttngs.showsugrange)
@@ -226,38 +234,31 @@ namespace Auction.mod
                 GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
                 if (GUI.Button(recto.setwtsahbutton, ""))
                 {
-                    sttngs.takewtsahint = (sttngs.takewtsahint + 1) % 3;
+                    sttngs.wtsAHpriceType = nextScrollsPostPriceType(sttngs.wtsAHpriceType);
                 }
                 if (GUI.Button(recto.setwtsahbutton2, ""))
                 {
-                    sttngs.takewtsahint2 = (sttngs.takewtsahint2 + 1) % 3;
+                    sttngs.wtsAHpriceType2 = nextScrollsPostPriceType(sttngs.wtsAHpriceType2);
                 }
                 GUI.Label(recto.setwtsahlabel3, "and");
                 GUI.Label(recto.setwtsahlabel4, "ScrollsPost prices");
                 GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
                 if (GUI.Button(recto.setwtbahbutton, ""))
                 {
-                    sttngs.takewtbahint = (sttngs.takewtbahint + 1) % 3;
+					sttngs.wtbAHpriceType = nextScrollsPostPriceType (sttngs.wtbAHpriceType);
                 }
                 if (GUI.Button(recto.setwtbahbutton2, ""))
                 {
-                    sttngs.takewtbahint2 = (sttngs.takewtbahint2 + 1) % 3;
+                    sttngs.wtbAHpriceType2 = nextScrollsPostPriceType(sttngs.wtbAHpriceType2);
                 }
                 GUI.Label(recto.setwtbahlabel3, "and");
                 GUI.Label(recto.setwtbahlabel4, "ScrollsPost prices");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (sttngs.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
-                if (sttngs.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
-                if (sttngs.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
-                if (sttngs.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
-                if (sttngs.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
-                if (sttngs.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
-                if (sttngs.takewtsahint2 == 0) { GUI.Label(recto.setwtsahbutton2, "lower"); }
-                if (sttngs.takewtsahint2 == 1) { GUI.Label(recto.setwtsahbutton2, "sugg."); }
-                if (sttngs.takewtsahint2 == 2) { GUI.Label(recto.setwtsahbutton2, "upper"); }
-                if (sttngs.takewtbahint2 == 0) { GUI.Label(recto.setwtbahbutton2, "lower"); }
-                if (sttngs.takewtbahint2 == 1) { GUI.Label(recto.setwtbahbutton2, "sugg."); }
-                if (sttngs.takewtbahint2 == 2) { GUI.Label(recto.setwtbahbutton2, "upper"); }
+				GUI.Label(recto.setwtsahbutton, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType));
+				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
+				GUI.Label(recto.setwtsahbutton2, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType2));
+				GUI.Label(recto.setwtbahbutton2, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType2)); 
+
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
             else
@@ -265,22 +266,18 @@ namespace Auction.mod
                 GUI.Label(recto.setwtsahlabel, "show in WTS-AH the ");
                 if (GUI.Button(recto.setwtsahbutton, ""))
                 {
-                    sttngs.takewtsahint = (sttngs.takewtsahint + 1) % 3;
+                    sttngs.wtsAHpriceType = nextScrollsPostPriceType(sttngs.wtsAHpriceType);
                 }
                 GUI.Label(recto.setwtsahlabel2, "ScrollsPost price");
                 GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
                 if (GUI.Button(recto.setwtbahbutton, ""))
                 {
-                    sttngs.takewtbahint = (sttngs.takewtbahint + 1) % 3;
+                    sttngs.wtbAHpriceType = nextScrollsPostPriceType(sttngs.wtbAHpriceType);
                 }
                 GUI.Label(recto.setwtbahlabel2, "ScrollsPost price");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                if (sttngs.takewtsahint == 0) { GUI.Label(recto.setwtsahbutton, "lower"); }
-                if (sttngs.takewtsahint == 1) { GUI.Label(recto.setwtsahbutton, "sugg."); }
-                if (sttngs.takewtsahint == 2) { GUI.Label(recto.setwtsahbutton, "upper"); }
-                if (sttngs.takewtbahint == 0) { GUI.Label(recto.setwtbahbutton, "lower"); }
-                if (sttngs.takewtbahint == 1) { GUI.Label(recto.setwtbahbutton, "sugg."); }
-                if (sttngs.takewtbahint == 2) { GUI.Label(recto.setwtbahbutton, "upper"); }
+				GUI.Label(recto.setwtsahbutton, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType));
+				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
 
