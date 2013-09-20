@@ -239,10 +239,11 @@ namespace Auction.mod
             recto = new Rectomat();
             alists = new Auclists(lstfltrs, prcs, srchsvr);
             mssgprsr = new Messageparser(alists, lstfltrs, this.sttngs, this.helpf);
+			ntwrk = new Network(alists, srchsvr, mssgprsr, helpf);
             ahui = new AuctionHouseUI(mssgprsr,alists,recto,lstfltrs,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf);
             genui = new GeneratorUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
             setui = new SettingsUI(mssgprsr, alists, recto, lstfltrs, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
-			ntwrk = new Network(alists, srchsvr, mssgprsr, helpf);
+
 
             helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
             helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
