@@ -179,7 +179,7 @@ namespace Auction.mod
                 newuser.adminRole = AdminRole.None;
                 newuser.name = ppim.name;
                 newuser.id = ppim.id;
-                if (!helpf.globalusers.ContainsKey(newuser.name)) { helpf.globalusers.Add(newuser.name, newuser); ntwrk.addglobalusers(newuser); }
+                if (!helpf.globalusers.ContainsKey(newuser.name)) { helpf.globalusers.Add(newuser.name, newuser); }
                 ntwrk.adduser(newuser);
 
             }
@@ -449,12 +449,12 @@ namespace Auction.mod
                 {
                     RoomInfoProfile p = profiles[i];
                     ChatUser user = ChatUser.FromRoomInfoProfile(p) ;
-                    if (!helpf.globalusers.ContainsKey(user.name)) { helpf.globalusers.Add(user.name, user); ntwrk.addglobalusers(user); };
+                    if (!helpf.globalusers.ContainsKey(user.name)) { helpf.globalusers.Add(user.name, user); };
                 } 
             }
 
             if (info.target is Store && info.targetMethod.Equals("handleMessage"))// update orginal cards!
-            {
+            { //TODO: We don't need to hook something to get the LibraryViewMessage - we can use our own Communicator!
                 
                 Message msg = (Message)info.arguments[0];
                 if (msg is LibraryViewMessage)

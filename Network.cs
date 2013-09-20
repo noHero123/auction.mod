@@ -7,7 +7,7 @@ namespace Auction.mod
 {
     class Network:ICommListener
     {
-        private Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
+        private Dictionary<string, ChatUser> globalusers;
         public bool contonetwork;
         private DateTime joindate = DateTime.Now;
         public bool rooomsearched=false;
@@ -28,6 +28,7 @@ namespace Auction.mod
 			this.searchSettings = searchsettings;
 			this.messageParser = messageParser;
 			this.helpf = helpf;
+			globalusers = helpf.globalusers;
 
 		}
 
@@ -420,11 +421,6 @@ namespace Auction.mod
            App.Communicator.sendRequest(new RoomEnterMessage(roooms[0]));
            roooms.RemoveAt(0);
            this.rooomsearched = true;
-       }
-
-       public void addglobalusers(ChatUser user)
-       {
-           this.globalusers.Add(user.name, user);
        }
 
        public void saveaucid(string text,string from)
