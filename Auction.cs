@@ -294,7 +294,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 4;
+            return 5;
         }
 
         public static MethodDefinition[] GetHooks(TypeDefinitionCollection scrollsTypes, int version)
