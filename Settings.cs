@@ -145,12 +145,12 @@ namespace Auction.mod
             text = text + "bround " + roundwtb.ToString() + ";";
             text = text + "broundu " + wtbroundup.ToString() + ";";
             text = text + "broundm " + wtbroundmode.ToString() + ";";
-            text = text + "takegens " + wtsGeneratorPriceType.ToString() + ";";
-            text = text + "takegenb " + wtbGeneratorPriceType.ToString() + ";";
-            text = text + "takeahs1 " + wtsAHpriceType.ToString() + ";";
-            text = text + "takeahs2 " + wtsAHpriceType2.ToString() + ";";
-            text = text + "takeahb1 " + wtbAHpriceType.ToString() + ";";
-            text = text + "takeahb2 " + wtbAHpriceType2.ToString() + ";";
+            text = text + "takegens " + (int)wtsGeneratorPriceType + ";";
+			text = text + "takegenb " + (int)wtbGeneratorPriceType + ";";
+			text = text + "takeahs1 " + (int)wtsAHpriceType + ";";
+			text = text + "takeahs2 " + (int)wtsAHpriceType2 + ";";
+			text = text + "takeahb1 " + (int)wtbAHpriceType + ";";
+			text = text + "takeahb2 " + (int)wtbAHpriceType2 + ";";
             System.IO.File.WriteAllText(ownaucpath + "settingsauc.txt", text);
         }
 
