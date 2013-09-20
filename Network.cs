@@ -7,7 +7,6 @@ namespace Auction.mod
 {
     class Network:ICommListener
     {
-        private Dictionary<string, ChatUser> globalusers;
         public bool contonetwork;
         private DateTime joindate = DateTime.Now;
         public bool rooomsearched=false;
@@ -28,7 +27,6 @@ namespace Auction.mod
 			this.searchSettings = searchsettings;
 			this.messageParser = messageParser;
 			this.helpf = helpf;
-			globalusers = helpf.globalusers;
 
 		}
 
@@ -179,7 +177,7 @@ namespace Auction.mod
 
                 foreach (RoomInfoProfile roinpro in rip) // add the new user to the aucusers and globalusers
                 {
-                    if (!this.globalusers.ContainsKey(roinpro.name))
+                    if (!helpf.globalusers.ContainsKey(roinpro.name))
                     {
                         ChatUser newuser = new ChatUser();
                         newuser.acceptChallenges = false;
@@ -187,7 +185,7 @@ namespace Auction.mod
                         newuser.adminRole = AdminRole.None;
                         newuser.name = roinpro.name;
                         newuser.id = roinpro.id;
-                        this.globalusers.Add(roinpro.name, newuser);
+                        helpf.globalusers.Add(roinpro.name, newuser);
                     }
                     if (!this.aucusers.ContainsKey(roinpro.name) && roinpro.name != App.MyProfile.ProfileInfo.name) { this.aucusers.Add(roinpro.name, roinpro.id); }
                     if (!this.usertoaucroom.ContainsKey(roinpro.name)) this.usertoaucroom.Add(roinpro.name, roominfo.roomName.Split('-')[1]);
@@ -226,13 +224,14 @@ namespace Auction.mod
                     { // stayed in ownroom, but have to visit others :D
                         // so just leave this room (and join the next if multijoin doesnt work)
 
-                        foreach (RoomInfoProfile roinpro in rip)//whisper to the users in this channel, what your channel is
-                        {
-                            if (App.MyProfile.ProfileInfo.name == roinpro.name) continue;
-                            senttosingleusr("aucstay! " + ownroomnumber, roinpro.name);
-                        }
+                        
                         if (ownroomnumber != Convert.ToInt32(roominfo.roomName.Split('-')[1])) // leave room, only when its not the own room
                         {
+                            foreach (RoomInfoProfile roinpro in rip)//whisper to the users in this channel, what your channel is
+                            {
+                                if (App.MyProfile.ProfileInfo.name == roinpro.name) continue;
+                                senttosingleusr("aucstay! " + ownroomnumber, roinpro.name);
+                            }
                             App.Communicator.sendRequest(new RoomExitMessage(roominfo.roomName));
                         }
                         if (this.roooms.Count >= 1) { App.Communicator.sendRequest(new RoomEnterMessage(this.roooms[0])); this.roooms.RemoveAt(0); }
@@ -425,7 +424,7 @@ namespace Auction.mod
 
        public void saveaucid(string text,string from)
        {
-           if (!this.globalusers.ContainsKey(from))
+           if (!helpf.globalusers.ContainsKey(from))
            {
                string id = text.Split(new string[] { "aucid " }, StringSplitOptions.None)[1];
                //test aucid:
@@ -436,7 +435,7 @@ namespace Auction.mod
            }
            else
            {
-               this.addusernoidtest(this.globalusers[from]);
+               this.addusernoidtest(helpf.globalusers[from]);
            }
        }
 		
