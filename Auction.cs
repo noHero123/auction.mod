@@ -280,7 +280,6 @@ namespace Auction.mod
                 App.Communicator.addListener(this);
             }
             catch { }
-
         }
 
         public static string GetName()

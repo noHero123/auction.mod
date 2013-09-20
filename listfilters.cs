@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace Auction.mod
 {
     class Listfilters
@@ -189,7 +190,17 @@ namespace Auction.mod
 
         public void containsname(string name, List<aucitem> list)
         {
-            AucItemFilter.filterList(list, (aucitem a) => (a.card.getName().ToLower().Contains(name.ToLower())));
+            /*if (name.ToLower().StartsWith("d:"))
+            {
+                string des = name.Substring(2).ToLower();
+                AucItemFilter.filterList(list, (aucitem a) => (a.card.getDescription().ToLower().Contains(des))); 
+            }
+            else
+            {
+                AucItemFilter.filterList(list, (aucitem a) => (a.card.getName().ToLower().Contains(name.ToLower())));
+            }*/
+            CardFilter filter = new CardFilter(name);
+            AucItemFilter.filterList(list, (aucitem a) => (filter.isIncluded(a.card))); 
         }
 
         public void searchforownenergy(string[] resources, List<aucitem> list)

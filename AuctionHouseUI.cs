@@ -273,7 +273,7 @@ namespace Auction.mod
 
                 //clear p1moddedlist only if necessary
                 //if (selfcopy.Length > this.wtssearchstring.Length || (owp&&!ignore0)|| sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
-                if (selfcopy.Length > srchsvr.wtssearchstring.Length || (owp && !srchsvr.ignore0) || sellercopy.Length > srchsvr.sellersearchstring.Length || pricecheck || closeclick || (growthclick && srchsvr.growthbool) || (orderclick && srchsvr.orderbool) || (energyclick && srchsvr.energybool) || (decayclick && srchsvr.decaybool) || (commonclick && srchsvr.commonbool) || (uncommonclick && srchsvr.uncommonbool) || (rareclick && srchsvr.rarebool) || mt3click || mt0click)
+                if (selfcopy.Length != srchsvr.wtssearchstring.Length || (owp && !srchsvr.ignore0) || sellercopy.Length > srchsvr.sellersearchstring.Length || pricecheck || closeclick || (growthclick && srchsvr.growthbool) || (orderclick && srchsvr.orderbool) || (energyclick && srchsvr.energybool) || (decayclick && srchsvr.decaybool) || (commonclick && srchsvr.commonbool) || (uncommonclick && srchsvr.uncommonbool) || (rareclick && srchsvr.rarebool) || mt3click || mt0click)
                 {
                     //Console.WriteLine("delete dings####");
                     lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
