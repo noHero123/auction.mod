@@ -142,7 +142,7 @@ namespace Auction.mod
                 if (ntwrk.inbattle == false) { ntwrk.inbattle = true; ntwrk.disconfromaucnet(); Console.WriteLine("discon"); }
             }
 
-            if (msg is RoomInfoMessage && ntwrk.contonetwork)
+            if (msg is RoomInfoMessage && ntwrk.contonetwork) //TODO: move to network class
             {
                 // you enter a auc-x room , while connected to network... so do communication stuff, like adding the users etc
                 RoomInfoMessage roominfo = (RoomInfoMessage)msg;
@@ -153,7 +153,7 @@ namespace Auction.mod
             
             }
 
-            if ( msg is FailMessage)
+            if ( msg is FailMessage) //TODO: move to Network - detect if it was a TradeNetwork-Message that faild!
             {   // delete user if he cant be whispered ( so he doesnt check out propperly... blame on him!)
                 FailMessage fm = (FailMessage)msg;
                 if (ntwrk.idtesting > 0)
