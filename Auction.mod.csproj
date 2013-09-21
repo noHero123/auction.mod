@@ -28,21 +28,8 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="JsonFx">
       <HintPath>..\JsonFx.dll</HintPath>
-    </Reference>
-    <Reference Include="ScrollsModLoader, Version=1.0.4955.32313, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ScrollsModLoader.dll</HintPath>
-      <Aliases>foo</Aliases>
-    </Reference>
-    <Reference Include="ScrollsModLoader.Interfaces, Version=1.0.4955.30082, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ScrollsModLoader.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +38,12 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ScrollsModLoader.Interfaces">
+      <HintPath>..\ScrollsModLoader.Interfaces.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
