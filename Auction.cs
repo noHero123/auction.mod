@@ -52,7 +52,6 @@ namespace Auction.mod
         private string[] aucfiles;
         int screenh = 0;
         int screenw = 0;
-        private const bool debug = false;
         bool deckchanged = false;
         private FieldInfo chatLogStyleinfo;
         private MethodInfo drawsubmenu;
@@ -77,6 +76,14 @@ namespace Auction.mod
 
         public void handleMessage(Message msg)
         {
+
+            if (msg is LibraryViewMessage)
+            {
+                if (!(((LibraryViewMessage)msg).profileId == "test"))
+                {
+                    alists.setowncards(msg, helpf.inauchouse, helpf.generator, helpf.wtsmenue);
+                }
+            }
 
             if (msg is BuyStoreItemResponseMessage)
             {
@@ -313,7 +320,6 @@ namespace Auction.mod
                    scrollsTypes["Store"].Methods.GetMethod("Start")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
-                     scrollsTypes["Store"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
                      scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
                      scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
                      
@@ -452,20 +458,7 @@ namespace Auction.mod
                 } 
             }
 
-            if (info.target is Store && info.targetMethod.Equals("handleMessage"))// update orginal cards!
-            { //TODO: We don't need to hook something to get the LibraryViewMessage - we can use our own Communicator!
-                
-                Message msg = (Message)info.arguments[0];
-                if (msg is LibraryViewMessage)
-                {
-                    if (!(((LibraryViewMessage)msg).profileId == "test"))
-                    {
-                        alists.setowncards(msg, helpf.inauchouse, helpf.generator, helpf.wtsmenue);
-                    }
-                }
-            }
-
-            else if (info.target is Store && info.targetMethod.Equals("OnGUI"))
+            if (info.target is Store && info.targetMethod.Equals("OnGUI"))
             {
 
                
