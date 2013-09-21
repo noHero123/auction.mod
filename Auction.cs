@@ -501,7 +501,7 @@ namespace Auction.mod
                         genui.genbuttonpressed();
                     }
 
-                    if (LobbyMenu.drawButton(recto.settingsbutton, "settings", helpf.lobbySkin) && !helpf.showtradedialog)
+                    if (LobbyMenu.drawButton(recto.settingsbutton, "Settings", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
                         setui.setbuttonpressed();
                         
