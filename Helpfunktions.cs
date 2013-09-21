@@ -20,8 +20,8 @@ namespace Auction.mod
         public FieldInfo showSellinfo;
 
         public bool chatisshown = false;
-        public bool wtsmsgload = false;
-        public bool wtbmsgload = false;
+        public bool canLoadWTSmsg = false;
+        public bool canLoadWTBmsg = false;
         public string ownaucpath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar;
         public bool inauchouse = false;
         public bool wtsmenue=false;
