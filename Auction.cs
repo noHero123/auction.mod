@@ -269,11 +269,11 @@ namespace Auction.mod
             this.aucfiles = Directory.GetFiles(helpf.ownaucpath, "*auc.txt");
             if (aucfiles.Contains(helpf.ownaucpath + "wtsauc.txt"))//File.Exists() was slower
             {
-                helpf.wtsmsgload = true;
+                helpf.canLoadWTSmsg = true;
             }
             if (aucfiles.Contains(helpf.ownaucpath + "wtbauc.txt"))//File.Exists() was slower
             {
-                helpf.wtbmsgload = true;
+                helpf.canLoadWTBmsg = true;
             }
             if (aucfiles.Contains(helpf.ownaucpath + "nicauc.txt"))//File.Exists() was slower
             {

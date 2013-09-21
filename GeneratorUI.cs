@@ -296,8 +296,8 @@ namespace Auction.mod
                 GUI.color = Color.white;
                 if (helpf.wtsmenue)
                 {
-                    if (!helpf.wtsmsgload) GUI.color = dblack;
-                    if (GUI.Button(recto.sbloadbutton, "load WTS msg") && helpf.wtsmsgload)
+                    if (!helpf.canLoadWTSmsg) GUI.color = dblack;
+                    if (GUI.Button(recto.sbloadbutton, "load WTS msg") && helpf.canLoadWTSmsg)
                     {
 
                         for (int i = 0; i < prcs.wtspricelist1.Count; i++)
@@ -327,8 +327,8 @@ namespace Auction.mod
                 }
                 else
                 {
-                    if (!helpf.wtbmsgload) GUI.color = dblack;
-                    if (GUI.Button(recto.sbloadbutton, "load WTB msg") && helpf.wtbmsgload)
+                    if (!helpf.canLoadWTBmsg) GUI.color = dblack;
+                    if (GUI.Button(recto.sbloadbutton, "load WTB msg") && helpf.canLoadWTBmsg)
                     {
                         for (int i = 0; i < prcs.wtbpricelist1.Count; i++)
                         {
@@ -680,12 +680,12 @@ namespace Auction.mod
                 if (wts)
                 {
                     System.IO.File.WriteAllText(helpf.ownaucpath + "wtsauc.txt", srchsvr.shortgeneratedwtsmessage);
-                    helpf.wtsmsgload = true;
+                    helpf.canLoadWTSmsg = true;
                 }
                 else
                 {
                     System.IO.File.WriteAllText(helpf.ownaucpath + "wtbauc.txt", srchsvr.shortgeneratedwtbmessage);
-                    helpf.wtbmsgload = true;
+                    helpf.canLoadWTBmsg = true;
                 }
                 helpf.showtradedialog = false;
             };
