@@ -8,6 +8,8 @@ namespace Auction.mod
 {
     class Rectomat
     {
+        Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
+
         public Rect ahbutton;
         public Rect genbutton;
         public Rect settingsbutton;
@@ -25,7 +27,7 @@ namespace Auction.mod
        public Rect updatebuttonrect;
        public Rect fillbuttonrect;
         //filterrects
-       public Rect filtermenurect,sbarlabelrect,sbrect,sbgrect,sborect,sberect,sbdrect,sbcommonrect,sbuncommonrect,sbrarerect,sbthreerect,sbonerect;
+       public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
        public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2;
        public Rect sbonlywithpricebox,sbonlywithpricelabelbox,tradingbox,tbok,tbcancel,tbwhisper,tbmessage,tbmessagescroll,sbtpfgen,sbtpfgenlabel;
        public Rect sbclrearpricesbutton,sbnetworklabel,sbtimelabel,sbtimerect;
@@ -43,6 +45,37 @@ namespace Auction.mod
 
        public int maxCharsName,maxCharsRK;
        public Rect position, position2, position3;
+
+       GUIStyle gUIStyle;
+       GUISkin pulldownSkin;
+
+
+       Searchsettings srchsvr;
+       public Rectomat( Searchsettings s)
+       {
+           this.srchsvr = s;
+           GUISkin gUISkin = (GUISkin)Resources.Load("_GUISkins/Lobby");
+           gUIStyle = new GUIStyle(gUISkin.button);
+           gUIStyle.normal.background = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
+           GUIStyleState arg_13A_0 = gUIStyle.hover;
+           Texture2D background = ResourceManager.LoadTexture("ChatUI/dropdown_arrow_mouseover");
+           arg_13A_0.background = background;
+           gUIStyle.active.background = background;
+
+           GUISkin buttonSkin = (GUISkin)Resources.Load("_GUISkins/Lobby");
+           this.pulldownSkin = ScriptableObject.CreateInstance<GUISkin>();
+           this.pulldownSkin.button = new GUIStyle(buttonSkin.button);
+           this.pulldownSkin.label = new GUIStyle(buttonSkin.label);
+           this.pulldownSkin.button.normal.background = ResourceManager.LoadTexture("ChatUI/button_160a");
+           GUIStyle arg_162_0 = this.pulldownSkin.button;
+           TextAnchor alignment = TextAnchor.MiddleLeft;
+           this.pulldownSkin.label.alignment = alignment;
+           arg_162_0.alignment = alignment;
+           int num8 = Screen.height / 36;
+           this.pulldownSkin.label.fontSize = num8;
+           this.pulldownSkin.button.fontSize = num8;
+
+       }
 
        public void setupPositions(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
         {
@@ -86,7 +119,8 @@ namespace Auction.mod
             float texthight = chatheight + 2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
 
             this.sbarlabelrect = new Rect(filtermenurect.x + num2, filtermenurect.y + num2, filtermenurect.width * 0.2f, texthight);
-            this.sbrect = new Rect(sbarlabelrect.xMax + num2, sbarlabelrect.y, filtermenurect.xMax - sbarlabelrect.xMax - 2 * num2, texthight);
+            this.sbrect = new Rect(sbarlabelrect.xMax + num2, sbarlabelrect.y, filtermenurect.xMax - sbarlabelrect.xMax - 2 * num2-texthight, texthight);
+            this.sbrectbutton = new Rect(sbrect.xMax, sbarlabelrect.y, texthight, texthight);
 
 
             this.sbgrect = new Rect(sbarlabelrect.x, sbarlabelrect.yMax + 4, sbiconwidth, sbiconhight);
@@ -185,7 +219,7 @@ namespace Auction.mod
             vector2 = GUI.skin.label.CalcSize(new GUIContent("minutes"));
             this.setpreventspammlabel2 = new Rect(setpreventspammrect.xMax + 4, setpreventspammlabel.y, lenfactor * vector2.x, texthight);
 
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls beside cardname"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show owned number of scrolls ahead cardname"));
             this.setowncardsanzbox = new Rect(setpreventspammlabel.x, setpreventspammlabel.yMax + 4, texthight, texthight);
             this.setowncardsanzlabel = new Rect(setowncardsanzbox.xMax + 4, setpreventspammlabel.yMax + 4, lenfactor * vector2.x, texthight);
 
@@ -268,6 +302,105 @@ namespace Auction.mod
 
 
         }
+
+
+       public bool _showSearchDropdown = false;
+       public Rect _searchDropdownBoundingRect;
+       public int _setFocusState=2;
+
+       public void handleMouseUp()
+       {
+
+           Vector2 screenMousePos = GUIUtil.getScreenMousePos();
+           if (this._showSearchDropdown && !this._searchDropdownBoundingRect.Contains(screenMousePos))
+           {
+               Console.WriteLine("MU");
+               this._showSearchDropdown = false;
+           }
+       }
+
+       private static string _append(string s, char add)
+       {
+           if (s == "Search   ")
+           {
+               s = string.Empty;
+           }
+           s = s.TrimEnd(new char[]
+		{
+			' '
+		});
+           int num = s.LastIndexOf(' ') + 1;
+           int num2 = s.LastIndexOf(':');
+           if (num2 == s.Length - 1 && num == num2 - 1)
+           {
+               char[] array = s.ToCharArray();
+               array[num] = add;
+               return new string(array);
+           }
+           return string.Concat(new object[]
+		{
+			s,
+			(!(s == string.Empty)) ? " " : string.Empty,
+			add,
+			":"
+		});
+       }
+
+       public string OnGUI_drawSearchPulldown(Rect searchbarRect)
+       {
+           float itemHeight = searchbarRect.height * 1.2f;
+           GUIContent[] content = new GUIContent[]
+		{
+			new GUIContent("   Type"),
+			new GUIContent("   Description"),
+			new GUIContent("   Rarity")
+		};
+           string[] array = new string[]
+		{
+			"t:",
+			"d:",
+			"r:"
+		};
+           int num = DeckBuilder2.OnGUI_drawButtonList(this.pulldownSkin, searchbarRect, true, itemHeight, content, array, out this._searchDropdownBoundingRect);
+           return (num < 0) ? null : array[num];
+       }
+
+       public void drawsearchpulldown()
+       {
+           if (GUI.Button(this.sbrectbutton, string.Empty, this.gUIStyle))
+           {
+               this._showSearchDropdown = true;
+           }
+           if (this._showSearchDropdown)
+           {
+               string text2 = this.OnGUI_drawSearchPulldown(this.sbrect);
+               if (text2 != null)
+               {
+                   this._showSearchDropdown = false;
+                   this._setFocusState = 2;
+                   srchsvr.wtssearchstring = Rectomat._append(srchsvr.wtssearchstring, text2[0]);
+               }
+           }
+
+           if (this._setFocusState == 1)
+           {
+               this._setFocusState--;
+               int keyboardControl = GUIUtility.keyboardControl;
+               TextEditor textEditor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), keyboardControl);
+               if (textEditor != null)
+               {
+                   textEditor.SelectNone();
+                   textEditor.MoveTextEnd();
+                   textEditor.selectPos = 99999;
+               }
+           }
+           if (this._setFocusState == 2)
+           {
+               this._setFocusState--;
+               GUI.FocusControl("dbSearchfield");
+           }
+       }
+
 
 
     }

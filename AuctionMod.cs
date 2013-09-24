@@ -216,7 +216,7 @@ namespace Auction.mod
             Console.WriteLine("savealldone");
             crdvwr = new Cardviewer();
             prcs = new Prices(helpf,sttngs);
-            recto = new Rectomat();
+            recto = new Rectomat(srchsvr);
 
             auctionHouse = new AuctionHouse(helpf,prcs);
 
@@ -296,14 +296,12 @@ namespace Auction.mod
                     scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
                     scrollsTypes["ChatRooms"].Methods.GetMethod("ChatMessage", new Type[]{typeof(RoomChatMessageMessage)}),
                    scrollsTypes["ArenaChat"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
-                   //scrollsTypes["Lobby"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
                    scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
                    scrollsTypes["Store"].Methods.GetMethod("Start")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
                      scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
                      scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
                      scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
-                     
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
                 };
@@ -397,6 +395,7 @@ namespace Auction.mod
 
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
+
             if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
 
             if (info.target is ChatUI && info.targetMethod.Equals("Show")) { helpf.chatisshown = (bool)info.arguments[0]; this.screenh = 0; }// so position will be calculatet new on next ongui
@@ -447,7 +446,6 @@ namespace Auction.mod
                 GUI.contentColor = Color.white;
                 drawsubmenu.Invoke(info.target, null);
                     Vector2 screenMousePos = GUIUtil.getScreenMousePos();
-                   
 
                     if (!(Screen.height == screenh) || !(Screen.width == screenw)|| helpf.chatLogStyle==null) // if resolution was changed, recalc positions
                     {

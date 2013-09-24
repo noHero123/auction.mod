@@ -110,7 +110,9 @@ namespace Auction.mod
                 GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbrect, string.Empty);
                 string selfcopy = srchsvr.wtssearchstring;
+                GUI.SetNextControlName("dbSearchfield");
                 srchsvr.wtssearchstring = GUI.TextField(recto.sbrect, srchsvr.wtssearchstring, helpf.chatLogStyle);
+                recto.drawsearchpulldown();// draw here to be the pull down menue the first clicked object
 
                 GUI.contentColor = Color.white;
                 GUI.color = Color.white;
@@ -172,6 +174,8 @@ namespace Auction.mod
                 GUI.contentColor = Color.red;
                 bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
+
+                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
 
                 if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };
                 if (orderclick) { srchsvr.orderbool = !srchsvr.orderbool; }

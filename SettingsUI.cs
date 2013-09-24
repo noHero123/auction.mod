@@ -105,7 +105,7 @@ namespace Auction.mod
 
             //anz cards
             GUI.skin = helpf.cardListPopupBigLabelSkin;
-            GUI.Label(recto.setowncardsanzlabel, "show owned number of scrolls beside scrollname");
+            GUI.Label(recto.setowncardsanzlabel, "show owned number of scrolls ahead scrollname");
             bool owp = GUI.Button(recto.setowncardsanzbox, "");
             if (owp) sttngs.shownumberscrolls = !sttngs.shownumberscrolls;
             if (sttngs.shownumberscrolls)

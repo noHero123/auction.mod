@@ -31,6 +31,8 @@ namespace Auction.mod
         List<Auction> ahlist;
         //ReadOnlyCollection<Auction> ahlist;
 
+        
+
         Texture2D growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
@@ -38,7 +40,7 @@ namespace Auction.mod
 
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
-
+    	
         public AuctionHouseUI(Messageparser mssgprsr,Rectomat recto,Prices prcs,Cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h,AuctionHouse ah)
         {
             this.helpf = h;
@@ -98,14 +100,19 @@ namespace Auction.mod
         
         }
 
+
+        
         public void drawAH()
         {
 
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
             if (helpf.inauchouse)
             {
-                
 
+                if (Event.current.type == EventType.MouseUp)
+                {
+                    recto.handleMouseUp();
+                }
                 GUI.color = Color.white;
 
                 // draw filter menue
@@ -117,7 +124,9 @@ namespace Auction.mod
                 GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbrect, string.Empty);
                 string selfcopy = srchsvr.wtssearchstring;
+                GUI.SetNextControlName("dbSearchfield");
                 srchsvr.wtssearchstring = GUI.TextField(recto.sbrect, srchsvr.wtssearchstring, helpf.chatLogStyle);
+                recto.drawsearchpulldown();// draw here to be the pull down menue the first clicked object
 
 
                 GUI.contentColor = Color.white;
@@ -243,6 +252,10 @@ namespace Auction.mod
                 {
                     GUI.Label(recto.sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
                 }
+
+
+
+                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
 
                 GUI.contentColor = Color.red;
                 bool closeclick = GUI.Button(recto.sbclearrect, "X");
@@ -492,16 +505,10 @@ namespace Auction.mod
                     srchsvr.sortmode = 0;
                     if (helpf.wtsmenue)
                     {
-                        //alists.wtslistfull.Clear();
-                        //alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                        //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
                         ah.setSellSortMode(AuctionHouse.SortMode.TIME);
                     }
                     else
                     {
-                        //alists.wtblistfull.Clear();
-                        //alists.wtblistfull.AddRange(alists.wtblistfulltimed);
-                        //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
                         ah.setBuySortMode(AuctionHouse.SortMode.TIME);
                     }
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
@@ -565,7 +572,7 @@ namespace Auction.mod
 
                         string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = name + " (" + helpf.cardNameToNumberOwned[current.card.getName()] + ")";
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + ") "+ name ;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
