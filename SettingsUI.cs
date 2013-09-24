@@ -23,9 +23,7 @@ namespace Auction.mod
 		}
 
         Messageparser mssgprsr;
-        Auclists alists;
         Rectomat recto;
-        Listfilters lstfltrs;
         Prices prcs;
         Cardviewer crdvwr;
         Searchsettings srchsvr;
@@ -33,13 +31,11 @@ namespace Auction.mod
         Settings sttngs;
         Helpfunktions helpf;
 
-        public SettingsUI(Messageparser mssgprsr, Auclists alists, Rectomat recto, Listfilters lstfltrs, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
+        public SettingsUI(Messageparser mssgprsr, Rectomat recto, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
         {
             this.helpf = h;
             this.mssgprsr = mssgprsr;
-            this.alists = alists;
             this.recto = recto;
-            this.lstfltrs = lstfltrs;
             this.prcs = prcs;
             this.crdvwr = crdvwr;
             this.srchsvr = srchsvr;

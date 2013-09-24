@@ -8,8 +8,12 @@ using System.Reflection;
 
 namespace Auction.mod
 {
-    class Helpfunktions
+    public class Helpfunktions
     {
+
+
+
+
         public FieldInfo targetchathightinfo;
         public ChatUI target = null;
         public MethodInfo hideInformationinfo;
@@ -24,13 +28,13 @@ namespace Auction.mod
         public bool canLoadWTBmsg = false;
         public string ownaucpath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar;
         public bool inauchouse = false;
-        public bool wtsmenue=false;
-        public bool generator=false;
+        public bool wtsmenue = false;
+        public bool generator = false;
         public bool settings = false;
         public string postmsgmsg = "";
-        public bool postmsgontrading=false;
+        public bool postmsgontrading = false;
         public bool postmsggetnextroomenter = false;
-        public bool showtradedialog=false;
+        public bool showtradedialog = false;
         public int[] cardids;
         public string[] cardnames;
         public int[] cardImageid;
@@ -41,6 +45,7 @@ namespace Auction.mod
         public Dictionary<string, int> cardnamesToImgidDic = new Dictionary<string, int>();
         public Dictionary<int, string> cardidsToCardnames = new Dictionary<int, string>();
         public Dictionary<string, int> cardnamesToID = new Dictionary<string, int>();
+        public Dictionary<string, int> cardNameToNumberOwned = new Dictionary<string, int>();
 
         public Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
         public GUISkin cardListPopupSkin;
@@ -54,22 +59,22 @@ namespace Auction.mod
         public List<nickelement> loadedscrollsnicks = new List<nickelement>();
 
         public int cardnameToArrayIndex(string name)
-        { 
-            int ret; 
-            if (cardnamesToIndex.TryGetValue(name,out ret)) return ret;
-            return -1; 
+        {
+            int ret;
+            if (cardnamesToIndex.TryGetValue(name, out ret)) return ret;
+            return -1;
         }
-        public int cardidToArrayIndex(int id) 
+        public int cardidToArrayIndex(int id)
         {
             int ret;
             if (cardidsToIndex.TryGetValue(id, out ret)) return ret;
             return -1;
         }
-        public int cardnametoimageid(string name) 
+        public int cardnametoimageid(string name)
         {
             int ret;
             if (cardnamesToImgidDic.TryGetValue(name, out ret)) return ret;
-            return -1; 
+            return -1;
         }
 
         public void setskins(GUISkin cllps, GUISkin clpgs, GUISkin clpbls, GUISkin clplbs)
@@ -97,7 +102,7 @@ namespace Auction.mod
             this.chatLogStyle = cls;
         }
 
-        public void  setarrays(Message msg)
+        public void setarrays(Message msg)
         {
             JsonReader jsonReader = new JsonReader();
             Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(msg.getRawText());
@@ -143,8 +148,8 @@ namespace Auction.mod
 
             }
         }
-    
-    
+
+
         private void generatedictionarys()
         {
             this.cardidsToIndex.Clear();
@@ -159,10 +164,11 @@ namespace Auction.mod
                 this.cardnamesToImgidDic.Add(cardnames[i], cardImageid[i]);
                 this.cardidsToCardnames.Add(cardids[i], cardnames[i]);
                 this.cardnamesToID.Add(cardnames[i], cardids[i]);
-                
+
             }
-        
+
         }
-    
+
     }
+        
 }

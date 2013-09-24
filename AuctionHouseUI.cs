@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -11,21 +12,24 @@ namespace Auction.mod
     {
         Vector2 scrolll = new Vector2(0, 0);
         public bool wtsinah = true;//remembers which menupoint in ah was the last one
-        private aucitem tradeitem;
+        private Auction tradeitem;
         private bool selectable=true;
         private bool clickableItems=false;
         private float opacity;
         public Vector2 scrollPos;
         Messageparser mssgprsr;
-        Auclists alists;
+        //Auclists alists;
         Rectomat recto;
-        Listfilters lstfltrs;
+        //Listfilters lstfltrs;
         Prices prcs;
         Cardviewer crdvwr;
         Searchsettings srchsvr;
         Network ntwrk;
         Settings sttngs;
         Helpfunktions helpf;
+        AuctionHouse ah;
+        List<Auction> ahlist;
+        //ReadOnlyCollection<Auction> ahlist;
 
         Texture2D growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
@@ -35,18 +39,19 @@ namespace Auction.mod
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
 
-        public AuctionHouseUI(Messageparser mssgprsr,Auclists alists,Rectomat recto,Listfilters lstfltrs,Prices prcs,Cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h)
+        public AuctionHouseUI(Messageparser mssgprsr,Rectomat recto,Prices prcs,Cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h,AuctionHouse ah)
         {
             this.helpf = h;
             this.mssgprsr = mssgprsr;
-            this.alists = alists;
+            //this.alists = alists;
             this.recto = recto;
-            this.lstfltrs = lstfltrs;
+            //this.lstfltrs = lstfltrs;
             this.prcs = prcs;
             this.crdvwr = crdvwr;
             this.srchsvr = srchsvr;
             this.ntwrk = ntwrk;
             this.sttngs = sttngs;
+            this.ah = ah;
         }
 
         public void ahbuttonpressed()
@@ -69,26 +74,23 @@ namespace Auction.mod
             Store.ENABLE_SHARD_PURCHASES = false;
 
 
-
+            ah.sellOfferFilter.filtersChanged = true;
+            ah.buyOfferFilter.filtersChanged = true;
             if (this.wtsinah)
             {
-                alists.wtslistfull.Clear();
-                alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                //lstfltrs.sortlist(mssgprsr.wtslistfull);
-
-                alists.setAhlistsToAHWtsLists(true);
-
+                //alists.wtslistfull.Clear();
+                //alists.wtslistfull.AddRange(alists.wtslistfulltimed);
+                //alists.setAhlistsToAHWtsLists(true);
+                srchsvr.setsettings(true, true);
                 helpf.wtsmenue = true;
 
             }
             else
             {
-                alists.wtblistfull.Clear();
-                alists.wtblistfull.AddRange(alists.wtblistfulltimed);
-
-                //lstfltrs.sortlist(mssgprsr.wtblistfull);
-
-                alists.setAhlistsToAHWtbLists(true);
+                //alists.wtblistfull.Clear();
+                //alists.wtblistfull.AddRange(alists.wtblistfulltimed);
+                //alists.setAhlistsToAHWtbLists(true);
+                srchsvr.setsettings(true, false);
                 helpf.wtsmenue = false;
 
             }
@@ -262,97 +264,144 @@ namespace Auction.mod
                 if (closeclick)
                 {
                     srchsvr.resetsearchsettings();
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.resetFilters();
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.resetFilters();
+                    }
+
                 }
 
                 if (helpf.wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
 
-                bool pricecheck = false;
-                //if (wtsmenue) { pricecheck = (pricecopy2.Length < this.pricesearchstring2.Length) || (pricecopy2.Length != this.pricesearchstring2.Length && pricesearchstring2 == "") || (tpfgen); } else { pricecheck = pricecopy.Length > this.pricesearchstring.Length || (tpfgen); }
-
-                pricecheck = (pricecopy2.Length < srchsvr.pricesearchstring2.Length) || (pricecopy2.Length != srchsvr.pricesearchstring2.Length && srchsvr.pricesearchstring2 == "") || (tpfgen) || pricecopy.Length > srchsvr.pricesearchstring.Length || (tpfgen);
-
-                //clear p1moddedlist only if necessary
-                //if (selfcopy.Length > this.wtssearchstring.Length || (owp&&!ignore0)|| sellercopy.Length > this.sellersearchstring.Length || pricecheck || closeclick || (growthclick && growthbool) || (orderclick && orderbool) || (energyclick && energybool) || (decayclick && decaybool) || (commonclick && commonbool) || (uncommonclick && uncommonbool) || (rareclick && rarebool) || mt3click || mt0click)
-                if (selfcopy.Length != srchsvr.wtssearchstring.Length || (owp && !srchsvr.ignore0) || sellercopy.Length > srchsvr.sellersearchstring.Length || pricecheck || closeclick || (growthclick && srchsvr.growthbool) || (orderclick && srchsvr.orderbool) || (energyclick && srchsvr.energybool) || (decayclick && srchsvr.decaybool) || (commonclick && srchsvr.commonbool) || (uncommonclick && srchsvr.uncommonbool) || (rareclick && srchsvr.rarebool) || mt3click || mt0click)
+                //set filters
+                if (tpfgen)
                 {
-                    //Console.WriteLine("delete dings####");
-                    lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
-
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setTakeWTB(srchsvr.takepriceformgenarator);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setTakeWTS(srchsvr.takepriceformgenarator);
+                    } 
                 }
-                else
+                if (selfcopy != srchsvr.wtssearchstring)
                 {
-
-                    if (selfcopy != srchsvr.wtssearchstring)
+                    if (helpf.wtsmenue)
                     {
-
-                        if (srchsvr.wtssearchstring != "")
-                        {
-                            lstfltrs.containsname(srchsvr.wtssearchstring, alists.ahlist);
-                        }
-
-
+                        ah.sellOfferFilter.setCardFilter(srchsvr.wtssearchstring);
                     }
-                    if (srchsvr.ignore0)
+                    else
                     {
-                        //this.musthaveprice(ahlist);
-                        lstfltrs.priceishigher("1", alists.ahlist);
-                    }
-
-                    if (sellercopy != srchsvr.sellersearchstring)
-                    {
-
-                        if (srchsvr.sellersearchstring != "")
-                        {
-                            lstfltrs.containsseller(srchsvr.sellersearchstring, alists.ahlist);
-                        }
-
-
-                    }
-                    if (pricecopy != srchsvr.pricesearchstring)
-                    {
-
-                        if (srchsvr.pricesearchstring != "")
-                        {
-                            lstfltrs.priceishigher(srchsvr.pricesearchstring, alists.ahlist);
-
-                        }
-
-
-                    }
-                    if (pricecopy2 != srchsvr.pricesearchstring2)
-                    {
-
-                        if (srchsvr.pricesearchstring2 != "")
-                        {
-                            lstfltrs.priceislower(srchsvr.pricesearchstring2, alists.ahlist);
-                        }
-
-
-                    }
-
-                    if (growthclick || orderclick || energyclick || decayclick)
-                    {
-                        string[] res = { "", "", "", "" };
-                        if (srchsvr.decaybool) { res[0] = "decay"; };
-                        if (srchsvr.energybool) { res[1] = "energy"; };
-                        if (srchsvr.growthbool) { res[2] = "growth"; };
-                        if (srchsvr.orderbool) { res[3] = "order"; };
-                        lstfltrs.searchforownenergy(res, alists.ahlist);
-
-
-                    }
-                    if (commonclick || uncommonclick || rareclick)
-                    {
-
-                        int[] rare = { -1, -1, -1 };
-                        if (srchsvr.rarebool) { rare[2] = 2; };
-                        if (srchsvr.uncommonbool) { rare[1] = 1; };
-                        if (srchsvr.commonbool) { rare[0] = 0; };
-                        lstfltrs.searchforownrarity(rare, alists.ahlist);
-
+                        ah.buyOfferFilter.setCardFilter(srchsvr.wtssearchstring);
                     }
 
                 }
+                if (owp)
+                {
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setDontShowNoPrice(srchsvr.ignore0);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setDontShowNoPrice(srchsvr.ignore0);
+                    }
+                }
+                if (mt3click||mt0click)
+                {
+                    int filter = 0;
+                    
+                    if (helpf.wtsmenue)
+                    {
+                        if (srchsvr.threebool) filter = 3;
+                        ah.sellOfferFilter.setAmountFilter(filter);
+                    }
+                    else
+                    {
+                        if (srchsvr.onebool) filter = 1;
+                        if (srchsvr.threebool) filter = 2;//(onebool < threebool)
+                        ah.buyOfferFilter.setAmountFilter(filter);
+                    }
+                }
+
+                if (sellercopy != srchsvr.sellersearchstring)
+                {
+
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setIgnoredSellers(srchsvr.sellersearchstring);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setIgnoredSellers(srchsvr.sellersearchstring);
+                    }
+
+
+                }
+                if (pricecopy != srchsvr.pricesearchstring)
+                {
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setPriceLowerBound(srchsvr.pricesearchstring);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setPriceLowerBound(srchsvr.pricesearchstring);
+                    }
+                }
+                if (pricecopy2 != srchsvr.pricesearchstring2)
+                {
+
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setPriceUpperBound(srchsvr.pricesearchstring2);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setPriceUpperBound(srchsvr.pricesearchstring2);
+                    }
+                }
+
+
+                if (growthclick || orderclick || energyclick || decayclick)
+                {
+                    string[] res = { "", "", "", "" };
+                    if (srchsvr.decaybool) { res[0] = "decay"; };
+                    if (srchsvr.energybool) { res[1] = "energy"; };
+                    if (srchsvr.growthbool) { res[2] = "growth"; };
+                    if (srchsvr.orderbool) { res[3] = "order"; };
+
+
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setResourceFilter(res);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setResourceFilter(res);
+                    }
+
+
+                }
+                if (commonclick || uncommonclick || rareclick)
+                {
+                    if (helpf.wtsmenue)
+                    {
+                        ah.sellOfferFilter.setRarityFilter(srchsvr.commonbool, srchsvr.uncommonbool, srchsvr.rarebool);
+                    }
+                    else
+                    {
+                        ah.buyOfferFilter.setRarityFilter(srchsvr.commonbool, srchsvr.uncommonbool, srchsvr.rarebool);
+                    }
+
+                }
+
+                
 
             }
             // Draw Auctionhouse here:
@@ -379,8 +428,16 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
                     if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 1;
+                    if (helpf.wtsmenue)
+                    {
+                        ah.setSellSortMode(AuctionHouse.SortMode.CARD);
+                    }
+                    else
+                    {
+                        ah.setBuySortMode(AuctionHouse.SortMode.CARD);
+                    }
 
-                    lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
 
                 }
                 float datelength = GUI.skin.button.CalcSize(new GUIContent("Date")).x;
@@ -394,8 +451,8 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
-
-                        lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                        ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
+                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
                 else
@@ -406,8 +463,8 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
-
-                        lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                        ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
+                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
                 datebeginn = recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
@@ -417,8 +474,16 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                     if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 2;
+                    if (helpf.wtsmenue)
+                    {
+                        ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                    }
+                    else
+                    {
+                        ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
+                    }
 
-                    lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                 }
                 vec11 = GUI.skin.button.CalcSize(new GUIContent("Date"));
                 //if (GUI.Button(new Rect(this.innerRect.x + offX , this.screenRect.yMin - 4, vec11.x * 2, 20), "Date"))
@@ -429,18 +494,19 @@ namespace Auction.mod
                     srchsvr.sortmode = 0;
                     if (helpf.wtsmenue)
                     {
-                        alists.wtslistfull.Clear();
-                        alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                        lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
+                        //alists.wtslistfull.Clear();
+                        //alists.wtslistfull.AddRange(alists.wtslistfulltimed);
+                        //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
+                        ah.setSellSortMode(AuctionHouse.SortMode.TIME);
                     }
                     else
                     {
-                        alists.wtblistfull.Clear();
-                        alists.wtblistfull.AddRange(alists.wtblistfulltimed);
-                        lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
-
+                        //alists.wtblistfull.Clear();
+                        //alists.wtblistfull.AddRange(alists.wtblistfulltimed);
+                        //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);
+                        ah.setBuySortMode(AuctionHouse.SortMode.TIME);
                     }
-                    lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                 }
 
 
@@ -448,8 +514,16 @@ namespace Auction.mod
                 int num = 0;
                 Card card = null;
 
+                // set drawn cards
+                if (helpf.wtsmenue) this.ahlist = ah.getSellOffers();
+                else this.ahlist = ah.getBuyOffers();
+                
+
                 // delete old cards:
                 DateTime currenttime = DateTime.Now.AddMinutes(-30);
+
+                //todo delete old cards
+                /*
                 if (alists.wtslistfulltimed.Count > 0 && alists.wtslistfulltimed[alists.wtslistfulltimed.Count - 1].dtime.CompareTo(currenttime) < 0)
                 {
                     alists.wtslistfulltimed.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
@@ -462,24 +536,26 @@ namespace Auction.mod
                     alists.wtblistfull.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
                     alists.wtblist.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
                 }
+                */
+                
                 // draw auctimes################################################
                 //timefilter: 
                 int time = 0;
                 bool usetimefilter = false;
-                float anzcards = anzcards = (float)alists.ahlist.Count();
+                float anzcards = anzcards = (float)this.ahlist.Count();
                 if (srchsvr.timesearchstring != "")
                 {
                     time = Convert.ToInt32(srchsvr.timesearchstring);
                     currenttime = DateTime.Now.AddMinutes(-1 * time); usetimefilter = true;
-                    anzcards = (float)alists.ahlist.Count(delegate(aucitem p1) { return (p1.dtime).CompareTo(currenttime) >= 0; });
+                    anzcards = (float)this.ahlist.Count(delegate(Auction p1) { return (p1.time).CompareTo(currenttime) >= 0; });
                 }
 
                 this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
-                if (srchsvr.reverse) { alists.ahlist.Reverse(); }
+                if (srchsvr.reverse) { this.ahlist.Reverse(); }
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
-                foreach (aucitem current in alists.ahlist)
+                foreach (Auction current in this.ahlist)
                 {
-                    if (usetimefilter && (current.dtime).CompareTo(currenttime) < 0) { continue; }
+                    if (usetimefilter && (current.time).CompareTo(currenttime) < 0) { continue; }
                     if (!current.card.tradable)
                     {
                         GUI.color = new Color(1f, 1f, 1f, 0.5f);
@@ -509,7 +585,7 @@ namespace Auction.mod
 
                         string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = name + " (" + lstfltrs.available[current.card.getName()] + ")";
+                        if (sttngs.shownumberscrolls) name = name + " (" + helpf.cardNameToNumberOwned[current.card.getName()] + ")";
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -550,7 +626,7 @@ namespace Auction.mod
                         //draw timestamp
                         GUI.skin = helpf.cardListPopupSkin;
                         DateTime temptime = DateTime.Now;
-                        TimeSpan ts = temptime.Subtract(current.dtime);
+                        TimeSpan ts = temptime.Subtract(current.time);
 
                         if (ts.Minutes >= 1) { sellername = "" + ts.Minutes + " minutes ago"; }
                         else
@@ -575,6 +651,7 @@ namespace Auction.mod
                         //draw gold cost
                         float nextx = position11.xMax + recto.costIconWidth;
                         string gold = current.price + " G";
+                        if (current.price == 0) gold = "? G";
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
@@ -691,7 +768,7 @@ namespace Auction.mod
                         num++;
                     }
                 }
-                if (srchsvr.reverse) { alists.ahlist.Reverse(); }
+                if (srchsvr.reverse) { this.ahlist.Reverse(); }
                 GUI.EndScrollView();
                 GUI.color = Color.white;
                 if (card != null)
@@ -717,7 +794,7 @@ namespace Auction.mod
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
-                if (mssgprsr.newwtsmsgs)
+                if (ah.newSellOffers)
                 {
                     GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
@@ -727,13 +804,14 @@ namespace Auction.mod
                 if (GUI.Button(recto.wtsbuttonrect, "WTS") && !helpf.showtradedialog)
                 {
 
-                    alists.wtslistfull.Clear(); alists.wtslistfull.AddRange(alists.wtslistfulltimed);
+                    //alists.wtslistfull.Clear(); alists.wtslistfull.AddRange(alists.wtslistfulltimed);
                     //sortlist(wtslistfull);
 
-                    alists.setAhlistsToAHWtsLists(true);
+                    //alists.setAhlistsToAHWtsLists(true);
 
                     helpf.wtsmenue = true; this.wtsinah = true;
-
+                    srchsvr.setsettings(true, true);
+                    ah.setSellSortMode(srchsvr.sortmode);
                     //lstfltrs.sortlist(alists.ahlist); 
                     mssgprsr.newwtsmsgs = false;
                 }
@@ -751,20 +829,21 @@ namespace Auction.mod
                 {
                     GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                 }
-                if (mssgprsr.newwtbmsgs)
+                if (ah.newBuyOffers)
                 {
                     GUI.skin.button.normal.textColor = new Color(2f, 2f, 2f, 1f);
                     GUI.skin.button.hover.textColor = new Color(2f, 2f, 2f, 1f);
                 }
                 if (GUI.Button(recto.wtbbuttonrect, "WTB") && !helpf.showtradedialog)
                 {
-                    alists.wtblistfull.Clear(); alists.wtblistfull.AddRange(alists.wtblistfulltimed);
+                    //alists.wtblistfull.Clear(); alists.wtblistfull.AddRange(alists.wtblistfulltimed);
                     //sortlist(wtblistfull);
-                    alists.setAhlistsToAHWtbLists(true);
+                    //alists.setAhlistsToAHWtbLists(true);
                     helpf.wtsmenue = false; this.wtsinah = false;
 
                     //lstfltrs.sortlist(alists.ahlist);
-
+                    srchsvr.setsettings(true, false);
+                    ah.setSellSortMode(srchsvr.sortmode);
                     mssgprsr.newwtbmsgs = false;
                 }
                 GUI.skin.button.normal.textColor = Color.white;
@@ -813,7 +892,7 @@ namespace Auction.mod
 
                 }
 
-                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.priceinint, helpf.wtsmenue, tradeitem.whole); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message); }
 
 
 
@@ -835,7 +914,7 @@ namespace Auction.mod
 
             string text = "sell";
             if (wts) text = "buy";
-            int anzcard = lstfltrs.available[cname];
+            int anzcard = helpf.cardNameToNumberOwned[cname];
             string message = "You want to " + text + "\r\n" + cname + " for " + price + " Gold" + "\r\nYou own this card " + anzcard + " times\r\n\r\nOriginal Message:";
             GUI.Label(recto.tbmessage, message);
             GUI.skin.label.wordWrap = true;

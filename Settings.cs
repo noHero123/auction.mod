@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auction.mod
 {
-	enum ScrollsPostPriceType {
+	public enum ScrollsPostPriceType {
 		LOWER, SUGGESTED, UPPER
 	}
 

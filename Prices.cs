@@ -7,7 +7,7 @@ using JsonFx.Json;
 
 namespace Auction.mod
 {
-    class Prices
+    public class Prices
     {
 
         public int[] lowerprice = new int[0];

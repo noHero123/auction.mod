@@ -18,12 +18,10 @@ namespace Auction.mod
         Dictionary<string, string> usertoaucroom = new Dictionary<string, string>();
         public bool inbattle=false;
 
-		Auclists alists;
 		Searchsettings searchSettings;
 		Messageparser messageParser;
 		Helpfunktions helpf;
-		public Network(Auclists alists, Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
-			this.alists = alists;
+		public Network(Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
 			this.searchSettings = searchsettings;
 			this.messageParser = messageParser;
 			this.helpf = helpf;
@@ -44,7 +42,7 @@ namespace Auction.mod
 			{
 				WhisperMessage wmsg = (WhisperMessage)msg;
 				string text = wmsg.text;
-
+                /*
 				if (text.StartsWith("aucdeletes"))
 				{
 
@@ -58,6 +56,7 @@ namespace Auction.mod
 					alists.wtblistfull.RemoveAll(element => element.seller == wmsg.from);
 					alists.wtblist.RemoveAll(element => element.seller == wmsg.from);
 				}
+                */
 
 				if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
 				{
@@ -135,6 +134,7 @@ namespace Auction.mod
             this.rooomsearched = false;
             this.contonetwork = false;
 
+            
             foreach (KeyValuePair<string, string> pair in this.aucusers)
             {
 
@@ -158,6 +158,8 @@ namespace Auction.mod
                 if (biggestroomnumber > 1) { senttosingleusr("aucto1please", name); };
 
             };
+
+            App.Communicator.sendRequest(new RoomExitMessage("auc-" + this.ownroomnumber));
             this.aucusers.Clear();
             this.usertoaucroom.Clear();
             this.ownroomnumber = 0;
