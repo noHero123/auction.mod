@@ -6,8 +6,7 @@ namespace Auction.mod
     public class AuctionFilter
     {
 
-        
-        public AuctionFilter (Helpfunktions h, Prices p)
+        public AuctionFilter(Helpfunktions h, Prices p)
         {
             helpf = h;
             prcs = p;

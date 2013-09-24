@@ -33,6 +33,7 @@ namespace Auction.mod
         Helpfunktions helpf;
         public AuctionFilter sellOfferFilter;
         public AuctionFilter buyOfferFilter;
+        public readonly SpamFilter spamFilter = new SpamFilter();
         //protected List<Auction> fullList = new List<Auction>();
         protected List<Auction> fullSellOfferList = new List<Auction>();
         protected List<Auction> fullBuyOfferList = new List<Auction>();
@@ -64,7 +65,7 @@ namespace Auction.mod
                 this.buySortModeCopy = this.buySortMode; 
                 buyOfferListFiltered.Sort(Auction.getComparison(buySortMode));
             }
-            
+            buyOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
             return buyOfferListFiltered;
         }
 
@@ -81,11 +82,12 @@ namespace Auction.mod
                 this.sellSortModeCopy = this.sellSortMode;
                 sellOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
             }
+            sellOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
             return sellOfferListFiltered;
         }
 
         private void addAuction(Auction a) {
-            //fullList.Add (a);
+            spamFilter.addAuction(a);
             if (a.offer == Auction.OfferType.BUY) {
                 fullBuyOfferList.Add (a);
                 newBuyOffers = true;
@@ -133,13 +135,13 @@ namespace Auction.mod
 
         public void removeSeller(string seller)
         {
-            fullSellOfferList.RemoveAll(a => a.seller.Equals(seller));
-            sellOfferListFiltered.RemoveAll(a => a.seller.Equals(seller));
+            //fullSellOfferList.RemoveAll(a => a.seller.Equals(seller));
+            //sellOfferListFiltered.RemoveAll(a => a.seller.Equals(seller));
         }
         public void removeBuyer(string buyer)
         {
-            fullBuyOfferList.RemoveAll(a => a.seller.Equals(buyer));
-            buyOfferListFiltered.RemoveAll(a => a.seller.Equals(buyer));
+            //fullBuyOfferList.RemoveAll(a => a.seller.Equals(buyer));
+            //buyOfferListFiltered.RemoveAll(a => a.seller.Equals(buyer));
         }
 
 

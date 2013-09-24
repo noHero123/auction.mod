@@ -62,6 +62,8 @@ namespace Auction.mod
             //this.hideInformation();
             helpf.hideInformationinfo.Invoke(helpf.storeinfo, null);
 
+            if (sttngs.spampreventtime != "") ah.spamFilter.setSpamTime(new TimeSpan(0,sttngs.spamprevint,0));
+            else ah.spamFilter.disableSpamFilter();
 
             iTween.MoveTo((GameObject)(helpf.buymen).GetValue(helpf.storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
             helpf.showBuyinfo.SetValue(helpf.storeinfo, false);
