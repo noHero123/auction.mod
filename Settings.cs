@@ -9,7 +9,7 @@ namespace Auction.mod
 		LOWER, SUGGESTED, UPPER
 	}
 
-    class Settings
+   public class Settings
     {
         public bool shownumberscrolls;
         public string rowscalestring = "10";

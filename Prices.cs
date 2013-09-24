@@ -13,21 +13,22 @@ namespace Auction.mod
         public int[] lowerprice = new int[0];
         public int[] upperprice = new int[0];
         public int[] sugprice = new int[0];
-        public bool roundwts = false;
-        public bool wtsroundup = true;
-        public int wtsroundmode = 0;
-        public bool roundwtb = false;
-        public bool wtbroundup = false;
-        public int wtbroundmode = 0;
-        public int takewtsgenint = 2;
-        public int takewtbgenint = 0;
+        //public bool roundwts = false;
+        //public bool wtsroundup = true;
+        //public int wtsroundmode = 0;
+        //public bool roundwtb = false;
+        //public bool wtbroundup = false;
+        //public int wtbroundmode = 0;
+        //public int takewtsgenint = 2;
+        //public int takewtbgenint = 0;
         public Dictionary<string, string> wtspricelist1 = new Dictionary<string, string>();
         public Dictionary<string, string> wtbpricelist1 = new Dictionary<string, string>();
         Helpfunktions helpf;
-
-        public Prices(Helpfunktions h)
+        Settings sttngs;
+        public Prices(Helpfunktions h,Settings s)
         {
             helpf = h;
+            sttngs = s;
         }
 
 		public int getPrice(int index, ScrollsPostPriceType type ) {
@@ -48,27 +49,27 @@ namespace Auction.mod
             int price = 0;
             if (wts)
             {
-                if (takewtsgenint == 0) price = this.lowerprice[index];
-                if (takewtsgenint == 1) price = this.sugprice[index];
-                if (takewtsgenint == 2) price = this.upperprice[index];
-                if (roundwts)
+                if ((int)sttngs.wtsGeneratorPriceType == 0) price = this.lowerprice[index];
+                if ((int)sttngs.wtsGeneratorPriceType == 1) price = this.sugprice[index];
+                if ((int)sttngs.wtsGeneratorPriceType == 2) price = this.upperprice[index];
+                if (sttngs.roundwts)
                 {
-                    if (wtsroundup)
+                    if (sttngs.wtsroundup)
                     {
 
 
-                        if (wtsroundmode == 0)
+                        if (sttngs.wtsroundmode == 0)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0 && lastdigit < 5) { price = price + 5 - lastdigit; }
                             if (lastdigit > 5) { price = price + 10 - lastdigit; }
                         }
-                        if (wtsroundmode == 1)
+                        if (sttngs.wtsroundmode == 1)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0) { price = price + 10 - lastdigit; }
                         }
-                        if (wtsroundmode == 2)
+                        if (sttngs.wtsroundmode == 2)
                         {
                             int lastdigit = price % 100;
                             if (lastdigit > 0 && lastdigit < 50) { price = price + 50 - lastdigit; }
@@ -78,18 +79,18 @@ namespace Auction.mod
                     }
                     else
                     {
-                        if (wtsroundmode == 0)
+                        if (sttngs.wtsroundmode == 0)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0 && lastdigit < 5) { price = price - lastdigit; }
                             if (lastdigit > 5) { price = price + 5 - lastdigit; }
                         }
-                        if (wtsroundmode == 1)
+                        if (sttngs.wtsroundmode == 1)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0) { price = price - lastdigit; }
                         }
-                        if (wtsroundmode == 2)
+                        if (sttngs.wtsroundmode == 2)
                         {
                             int lastdigit = price % 100;
                             if (lastdigit > 0 && lastdigit < 50) { price = price - lastdigit; }
@@ -101,27 +102,27 @@ namespace Auction.mod
             }
             else
             {
-                if (takewtbgenint == 0) price = this.lowerprice[index];
-                if (takewtbgenint == 1) price = this.sugprice[index];
-                if (takewtbgenint == 2) price = this.upperprice[index];
-                if (roundwtb)
+                if ((int)sttngs.wtbGeneratorPriceType == 0) price = this.lowerprice[index];
+                if ((int)sttngs.wtbGeneratorPriceType == 1) price = this.sugprice[index];
+                if ((int)sttngs.wtbGeneratorPriceType == 2) price = this.upperprice[index];
+                if (sttngs.roundwtb)
                 {
-                    if (wtbroundup)
+                    if (sttngs.wtbroundup)
                     {
 
 
-                        if (wtbroundmode == 0)
+                        if (sttngs.wtbroundmode == 0)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0 && lastdigit < 5) { price = price + 5 - lastdigit; }
                             if (lastdigit > 5) { price = price + 10 - lastdigit; }
                         }
-                        if (wtbroundmode == 1)
+                        if (sttngs.wtbroundmode == 1)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0) { price = price + 10 - lastdigit; }
                         }
-                        if (wtbroundmode == 2)
+                        if (sttngs.wtbroundmode == 2)
                         {
                             int lastdigit = price % 100;
                             if (lastdigit > 0 && lastdigit < 50) { price = price + 50 - lastdigit; }
@@ -131,18 +132,18 @@ namespace Auction.mod
                     }
                     else
                     {
-                        if (wtbroundmode == 0)
+                        if (sttngs.wtbroundmode == 0)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0 && lastdigit < 5) { price = price - lastdigit; }
                             if (lastdigit > 5) { price = price + 5 - lastdigit; }
                         }
-                        if (wtbroundmode == 1)
+                        if (sttngs.wtbroundmode == 1)
                         {
                             int lastdigit = price % 10;
                             if (lastdigit > 0) { price = price - lastdigit; }
                         }
-                        if (wtbroundmode == 2)
+                        if (sttngs.wtbroundmode == 2)
                         {
                             int lastdigit = price % 100;
                             if (lastdigit > 0 && lastdigit < 50) { price = price - lastdigit; }

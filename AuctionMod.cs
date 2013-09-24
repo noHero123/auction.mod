@@ -215,7 +215,7 @@ namespace Auction.mod
             srchsvr.saveall();
             Console.WriteLine("savealldone");
             crdvwr = new Cardviewer();
-            prcs = new Prices(helpf);
+            prcs = new Prices(helpf,sttngs);
             recto = new Rectomat();
 
             auctionHouse = new AuctionHouse(helpf,prcs);
