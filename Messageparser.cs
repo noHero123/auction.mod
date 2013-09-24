@@ -87,10 +87,8 @@ namespace Auction.mod
             {
                 addingwtscards.Reverse();
                 string seller = addingwtscards[0].seller;
-                ah.removeSeller(seller);
-                //alist.wtslistfulltimed.RemoveAll(element => element.seller == seller);
-                //alist.wtslistfull.RemoveAll(element => element.seller == seller);
-                //alist.wtslist.RemoveAll(element => element.seller == seller);
+                //ah.removeSeller(seller);
+
 
             }
 
@@ -98,10 +96,7 @@ namespace Auction.mod
             {
                 addingwtbcards.Reverse();
                 string seller = addingwtbcards[0].seller;
-                ah.removeBuyer(seller);
-                //alist.wtblistfulltimed.RemoveAll(element => element.seller == seller);
-                //alist.wtblistfull.RemoveAll(element => element.seller == seller);
-                //alist.wtblist.RemoveAll(element => element.seller == seller);
+                //ah.removeBuyer(seller);
             }
             //add auctions to ah-lists
             ah.addAuctions(this.addingwtscards);

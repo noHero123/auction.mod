@@ -221,7 +221,7 @@ namespace Auction.mod
             auctionHouse = new AuctionHouse(helpf,prcs);
 
             mssgprsr = new Messageparser(auctionHouse, this.sttngs, this.helpf);
-			ntwrk = new Network( srchsvr, mssgprsr, helpf);
+            ntwrk = new Network(auctionHouse, srchsvr, mssgprsr, helpf);
 
             
             ahui = new AuctionHouseUI(mssgprsr,recto,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf,auctionHouse);

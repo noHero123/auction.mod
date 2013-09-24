@@ -80,18 +80,14 @@ namespace Auction.mod
             ah.buyOfferFilter.filtersChanged = true;
             if (this.wtsinah)
             {
-                //alists.wtslistfull.Clear();
-                //alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                //alists.setAhlistsToAHWtsLists(true);
+
                 srchsvr.setsettings(true, true);
                 helpf.wtsmenue = true;
 
             }
             else
             {
-                //alists.wtblistfull.Clear();
-                //alists.wtblistfull.AddRange(alists.wtblistfulltimed);
-                //alists.setAhlistsToAHWtbLists(true);
+
                 srchsvr.setsettings(true, false);
                 helpf.wtsmenue = false;
 
@@ -521,25 +517,7 @@ namespace Auction.mod
                 else this.ahlist = ah.getBuyOffers();
                 
 
-                // delete old cards:
                 DateTime currenttime = DateTime.Now.AddMinutes(-30);
-
-                //todo delete old cards
-                /*
-                if (alists.wtslistfulltimed.Count > 0 && alists.wtslistfulltimed[alists.wtslistfulltimed.Count - 1].dtime.CompareTo(currenttime) < 0)
-                {
-                    alists.wtslistfulltimed.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                    alists.wtslistfull.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                    alists.wtslist.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                }
-                if (alists.wtblistfulltimed.Count > 0 && alists.wtblistfulltimed[alists.wtblistfulltimed.Count - 1].dtime.CompareTo(currenttime) < 0)
-                {
-                    alists.wtblistfulltimed.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                    alists.wtblistfull.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                    alists.wtblist.RemoveAll(element => element.dtime.CompareTo(currenttime) < 0);
-                }
-                */
-                
                 // draw auctimes################################################
                 //timefilter: 
                 int time = 0;

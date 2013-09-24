@@ -21,10 +21,12 @@ namespace Auction.mod
 		Searchsettings searchSettings;
 		Messageparser messageParser;
 		Helpfunktions helpf;
-		public Network(Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
+        AuctionHouse ah;
+		public Network(AuctionHouse ah, Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
 			this.searchSettings = searchsettings;
 			this.messageParser = messageParser;
 			this.helpf = helpf;
+            this.ah = ah;
 
 		}
 
@@ -42,21 +44,17 @@ namespace Auction.mod
 			{
 				WhisperMessage wmsg = (WhisperMessage)msg;
 				string text = wmsg.text;
-                /*
+                
 				if (text.StartsWith("aucdeletes"))
 				{
-
-					alists.wtslistfulltimed.RemoveAll(element => element.seller == wmsg.from);
-					alists.wtslistfull.RemoveAll(element => element.seller == wmsg.from);
-					alists.wtslist.RemoveAll(element => element.seller == wmsg.from);
+                    ah.removeSeller(wmsg.from);
+                
 				}
 				if (text.StartsWith("aucdeleteb"))
 				{
-					alists.wtblistfulltimed.RemoveAll(element => element.seller == wmsg.from);
-					alists.wtblistfull.RemoveAll(element => element.seller == wmsg.from);
-					alists.wtblist.RemoveAll(element => element.seller == wmsg.from);
+                    ah.removeBuyer(wmsg.from);
 				}
-                */
+                
 
 				if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
 				{
