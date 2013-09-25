@@ -314,7 +314,6 @@ namespace Auction.mod
            Vector2 screenMousePos = GUIUtil.getScreenMousePos();
            if (this._showSearchDropdown && !this._searchDropdownBoundingRect.Contains(screenMousePos))
            {
-               Console.WriteLine("MU");
                this._showSearchDropdown = false;
            }
        }
@@ -367,6 +366,11 @@ namespace Auction.mod
 
        public void drawsearchpulldown()
        {
+           if (Event.current.type == EventType.MouseUp)
+           {
+               this.handleMouseUp();
+           }
+
            if (GUI.Button(this.sbrectbutton, string.Empty, this.gUIStyle))
            {
                this._showSearchDropdown = true;

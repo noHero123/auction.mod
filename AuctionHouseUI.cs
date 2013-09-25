@@ -109,10 +109,7 @@ namespace Auction.mod
             if (helpf.inauchouse)
             {
 
-                if (Event.current.type == EventType.MouseUp)
-                {
-                    recto.handleMouseUp();
-                }
+                
                 GUI.color = Color.white;
 
                 // draw filter menue
@@ -755,7 +752,6 @@ namespace Auction.mod
                         num++;
                     }
                 }
-                if (srchsvr.reverse) { this.ahlist.Reverse(); }
                 GUI.EndScrollView();
                 GUI.color = Color.white;
                 if (card != null)

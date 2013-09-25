@@ -6,7 +6,7 @@ namespace Auction.mod
     public class AuctionHouse
     {
         public enum SortMode {
-            CARD,SELLER,TIME,PRICE
+            TIME, CARD, PRICE, SELLER
         }
         /*
         #region Singleton-Pattern
@@ -66,7 +66,7 @@ namespace Auction.mod
                 buyOfferListFiltered.Sort(Auction.getComparison(buySortMode));
             }
             buyOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
-            return buyOfferListFiltered;
+            return new List<Auction>(buyOfferListFiltered);
         }
 
         public List<Auction> getSellOffers()
@@ -83,7 +83,7 @@ namespace Auction.mod
                 sellOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
             }
             sellOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
-            return sellOfferListFiltered;
+            return new List<Auction>(sellOfferListFiltered);
         }
 
         private void addAuction(Auction a) {

@@ -85,7 +85,7 @@ namespace Auction.mod
             }
             if (addingwtscards.Count() > 0)
             {
-                addingwtscards.Reverse();
+                //addingwtscards.Reverse();
                 string seller = addingwtscards[0].seller;
                 //ah.removeSeller(seller);
 
@@ -94,7 +94,7 @@ namespace Auction.mod
 
             if (addingwtbcards.Count() > 0)
             {
-                addingwtbcards.Reverse();
+                //addingwtbcards.Reverse();
                 string seller = addingwtbcards[0].seller;
                 //ah.removeBuyer(seller);
             }

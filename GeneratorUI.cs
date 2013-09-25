@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Auction.mod
 {
@@ -35,6 +36,9 @@ namespace Auction.mod
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
         Texture2D decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
+        Type T = typeof(GUIUtility);
+        PropertyInfo systemCopyBufferProperty;
+        
 
         public GeneratorUI(Messageparser mssgprsr,  Rectomat recto, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h, Generator g)
         {
@@ -49,6 +53,7 @@ namespace Auction.mod
             this.ntwrk = ntwrk;
             this.sttngs = sttngs;
             this.generator = g;
+            systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
         }
 
         public void genbuttonpressed()
@@ -830,6 +835,7 @@ namespace Auction.mod
                 msg = msg.Remove(msg.Length - 2);
                 shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
+            if (msg.Length < 512) systemCopyBufferProperty.SetValue(null, msg, null);
             if (msg.Length >= 512) { msg = "msg to long"; }
             if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
             if (helpf.wtsmenue) { srchsvr.generatedwtsmessage = msg; srchsvr.shortgeneratedwtsmessage = shortmsg; } else { srchsvr.generatedwtbmessage = msg; srchsvr.shortgeneratedwtbmessage = shortmsg; }
@@ -837,6 +843,8 @@ namespace Auction.mod
             //Console.WriteLine(shortmsg);
             srchsvr.sellersearchstring = msg;
             srchsvr.pricesearchstring = shortmsg;
+            
+            
 
         }
 
