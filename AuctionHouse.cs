@@ -86,24 +86,7 @@ namespace Auction.mod
             return new List<Auction>(sellOfferListFiltered);
         }
 
-        private void addAuction(Auction a) {
-            spamFilter.addAuction(a);
-            if (a.offer == Auction.OfferType.BUY) {
-                fullBuyOfferList.Insert(0,a);
-                
-                if (!buyOfferFilter.isFiltered(a)) {
-                    buyOfferListFiltered.Insert(0, a);
-                    newBuyOffers = true;
-                }
-            } else if (a.offer == Auction.OfferType.SELL) {
-                fullSellOfferList.Insert(0, a);
-                
-                if (!sellOfferFilter.isFiltered(a)) {
-                    sellOfferListFiltered.Insert(0, a);
-                    newSellOffers = true;
-                }
-            }
-        }
+        
         public void setBuySortMode(SortMode sortMode) {
             this.buySortMode = sortMode;
         }
@@ -114,6 +97,7 @@ namespace Auction.mod
           if (sortint == 3) this.buySortMode = AuctionHouse.SortMode.SELLER;
           if (sortint == 0) this.buySortMode = AuctionHouse.SortMode.TIME;
         }
+        
         public void setSellSortMode(SortMode sortMode)
         {
 
@@ -126,6 +110,7 @@ namespace Auction.mod
             if (sortint == 3) this.sellSortMode = AuctionHouse.SortMode.SELLER;
             if (sortint == 0) this.sellSortMode = AuctionHouse.SortMode.TIME;
         }
+        
         public void addAuctions(List<Auction> list) {
             list.ForEach (addAuction);
             if (fullBuyOfferList.Count > maxLen) { fullBuyOfferList.RemoveRange(maxLen, fullBuyOfferList.Count - maxLen); this.buyOfferFilter.filtersChanged = true; }
@@ -136,6 +121,30 @@ namespace Auction.mod
             //fullSellOfferList.Sort (Auction.getComparison(sellSortMode));
             sellOfferListFiltered.Sort (Auction.getComparison(sellSortMode));
 
+        }
+        private void addAuction(Auction a)
+        {
+            spamFilter.addAuction(a);
+            if (a.offer == Auction.OfferType.BUY)
+            {
+                fullBuyOfferList.Insert(0, a);
+
+                if (!buyOfferFilter.isFiltered(a))
+                {
+                    buyOfferListFiltered.Insert(0, a);
+                    newBuyOffers = true;
+                }
+            }
+            else if (a.offer == Auction.OfferType.SELL)
+            {
+                fullSellOfferList.Insert(0, a);
+
+                if (!sellOfferFilter.isFiltered(a))
+                {
+                    sellOfferListFiltered.Insert(0, a);
+                    newSellOffers = true;
+                }
+            }
         }
 
         public void removeSeller(string seller)
