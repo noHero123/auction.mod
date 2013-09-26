@@ -47,7 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AucItemFilter.cs" />
     <Compile Include="AuctionHouseUI.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="GeneratorUI.cs" />

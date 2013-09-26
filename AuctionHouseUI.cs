@@ -209,7 +209,7 @@ namespace Auction.mod
                 GUI.Box(recto.sbtimerect, string.Empty);
                 string timecopy = srchsvr.timesearchstring;
                 srchsvr.timesearchstring = Regex.Replace(GUI.TextField(recto.sbtimerect, srchsvr.timesearchstring, 2, helpf.chatLogStyle), @"[^0-9]", "");
-                if (srchsvr.timesearchstring != "" && Convert.ToInt32(srchsvr.timesearchstring) > 30) { srchsvr.timesearchstring = "30"; }
+                if (srchsvr.timesearchstring != "" && Convert.ToInt32(srchsvr.timesearchstring) > helpf.deleteTime) { srchsvr.timesearchstring = ((int)helpf.deleteTime).ToString(); }
                 GUI.color = Color.white;
 
 
@@ -415,6 +415,7 @@ namespace Auction.mod
             // Draw Auctionhouse here:
             if (helpf.inauchouse)
             {
+                bool deleteOldEntrys = false;
                 //Console.WriteLine(GUI.GetNameOfFocusedControl());
                 GUI.depth = 15;
                 this.opacity = 1f;
@@ -521,13 +522,13 @@ namespace Auction.mod
                 else this.ahlist = ah.getBuyOffers();
                 
 
-                DateTime currenttime = DateTime.Now.AddMinutes(-30);
+                DateTime currenttime = DateTime.Now;
                 // draw auctimes################################################
                 //timefilter: 
                 int time = 0;
                 bool usetimefilter = false;
                 float anzcards = anzcards = (float)this.ahlist.Count();
-                if (srchsvr.timesearchstring != "")
+                if (srchsvr.timesearchstring != "")//doesnt show "old" offers filtered by time-filter
                 {
                     time = Convert.ToInt32(srchsvr.timesearchstring);
                     currenttime = DateTime.Now.AddMinutes(-1 * time); usetimefilter = true;
@@ -611,8 +612,11 @@ namespace Auction.mod
                         GUI.skin = helpf.cardListPopupSkin;
                         DateTime temptime = DateTime.Now;
                         TimeSpan ts = temptime.Subtract(current.time);
-
-                        if (ts.Minutes >= 1) { sellername = "" + ts.Minutes + " minutes ago"; }
+                        if (ts.TotalMinutes >= 1.0) 
+                        { 
+                            sellername = "" + ts.Minutes + " minutes ago";
+                            if (ts.TotalMinutes >= helpf.deleteTime) deleteOldEntrys = true;
+                        }
                         else
                         {
                             //sellername = "" + ts.Seconds + " seconds ago"; // to mutch changing numbers XD
@@ -752,8 +756,14 @@ namespace Auction.mod
                         num++;
                     }
                 }
+
                 GUI.EndScrollView();
+
+                // delete old entrys
+                if (deleteOldEntrys) { ah.removeOldEntrys(); };
+
                 GUI.color = Color.white;
+                // show clicked card
                 if (card != null)
                 {
                     //this.callback.ItemButtonClicked(this, card);

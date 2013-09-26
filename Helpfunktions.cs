@@ -13,7 +13,7 @@ namespace Auction.mod
 
 
 
-
+        public readonly double deleteTime = 30.0;
         public FieldInfo targetchathightinfo;
         public ChatUI target = null;
         public MethodInfo hideInformationinfo;

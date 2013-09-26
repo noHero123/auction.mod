@@ -63,7 +63,7 @@ namespace Auction.mod
         public List<Auction> getAllOwnSellOffers() { return fullSellOwnList; }
 
 
-        public void setowncards(Message msg, bool inauchouse, bool gen, bool wtsmenue)
+        public void setowncards(Message msg)
         {
             List<Card> orgicardsPlayer = new List<Card>();
             this.fullSellOwnList.Clear();

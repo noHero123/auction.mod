@@ -180,6 +180,13 @@ namespace Auction.mod
                 bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
 
+                GUI.skin = helpf.cardListPopupSkin;
+
+                if (ntwrk.contonetwork)
+                {
+                    GUI.Label(recto.sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
+                }
+
                 if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
 
                 if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };

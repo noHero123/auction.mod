@@ -18,7 +18,7 @@ namespace Auction.mod
 
             public int GetHashCode(Auction a)
             {
-                int hCode = (((251 * a.seller.GetHashCode()) + a.card.getCardType().id) * 251 + a.price) * 251 + a.offer.GetHashCode();
+                int hCode = (((251 * a.seller.GetHashCode()) + a.card.getType()) * 251 + a.price) * 251 + a.offer.GetHashCode();
                 return hCode.GetHashCode();
             }
         }

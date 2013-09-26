@@ -78,7 +78,7 @@ namespace Auction.mod
             }
             if (GUI.Button(recto.setload, "Load"))
             {
-                sttngs.loadsettings(helpf.ownaucpath);
+                sttngs.loadsettings(helpf.ownaucpath,helpf.deleteTime);
                 recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
             }
             if (GUI.Button(recto.setsave, "Save"))
@@ -101,7 +101,7 @@ namespace Auction.mod
             sttngs.spampreventtime = Regex.Replace(GUI.TextField(recto.setpreventspammrect, sttngs.spampreventtime, helpf.chatLogStyle), @"[^0-9]", "");
             helpf.chatLogStyle.alignment = TextAnchor.MiddleLeft;
             if (sttngs.spampreventtime != "") sttngs.spamprevint = Convert.ToInt32(sttngs.spampreventtime);
-            if (sttngs.spamprevint > 30) { sttngs.spampreventtime = "30"; sttngs.spamprevint = 30; }
+            if (sttngs.spamprevint > helpf.deleteTime) { sttngs.spampreventtime = ((int)helpf.deleteTime).ToString(); sttngs.spamprevint = (int)helpf.deleteTime; }
 
             //anz cards
             GUI.skin = helpf.cardListPopupBigLabelSkin;

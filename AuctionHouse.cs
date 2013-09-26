@@ -90,15 +90,17 @@ namespace Auction.mod
             spamFilter.addAuction(a);
             if (a.offer == Auction.OfferType.BUY) {
                 fullBuyOfferList.Insert(0,a);
-                newBuyOffers = true;
+                
                 if (!buyOfferFilter.isFiltered(a)) {
                     buyOfferListFiltered.Insert(0, a);
+                    newBuyOffers = true;
                 }
             } else if (a.offer == Auction.OfferType.SELL) {
                 fullSellOfferList.Insert(0, a);
-                newSellOffers = true;
+                
                 if (!sellOfferFilter.isFiltered(a)) {
                     sellOfferListFiltered.Insert(0, a);
+                    newSellOffers = true;
                 }
             }
         }
@@ -147,6 +149,21 @@ namespace Auction.mod
             buyOfferListFiltered.RemoveAll(a => a.seller.Equals(buyer));
         }
 
+        public void removeOldEntrys()
+        {
+            DateTime n = DateTime.Now;
+            if (helpf.wtsmenue)
+            {
+                
+                fullSellOfferList.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
+                sellOfferListFiltered.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
+            }
+            else
+            {
+                fullBuyOfferList.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
+                buyOfferListFiltered.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
+            }
+        }
 
     }
 }

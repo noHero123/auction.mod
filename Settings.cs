@@ -27,7 +27,7 @@ namespace Auction.mod
         public string spampreventtime = "";
         public int spamprevint=0;
 
-        public void loadsettings(string ownaucpath)
+        public void loadsettings(string ownaucpath, double deleteTime)
         {
 
             string text = System.IO.File.ReadAllText(ownaucpath + "settingsauc.txt");
@@ -44,7 +44,7 @@ namespace Auction.mod
                 {
                     spampreventtime = value;
                     if (spampreventtime != "") spamprevint = Convert.ToInt32(spampreventtime);
-                    if (spamprevint > 30) { spampreventtime = "30"; spamprevint = 30; }
+                    if (spamprevint > deleteTime) { spampreventtime = ((int)deleteTime).ToString(); spamprevint = (int)deleteTime; }
                 }
                 if (setting.Equals("numbers"))
                 {

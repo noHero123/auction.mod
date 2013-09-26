@@ -80,7 +80,7 @@ namespace Auction.mod
             {
                 if (!(((LibraryViewMessage)msg).profileId == "test"))
                 {
-                    generator.setowncards(msg, helpf.inauchouse, helpf.generator, helpf.wtsmenue);
+                    generator.setowncards(msg);
                 }
             }
 
@@ -263,7 +263,7 @@ namespace Auction.mod
 
             if (aucfiles.Contains(helpf.ownaucpath + "settingsauc.txt"))//File.Exists() was slower
             {
-                sttngs.loadsettings(helpf.ownaucpath);
+                sttngs.loadsettings(helpf.ownaucpath,helpf.deleteTime);
             }
 
 
