@@ -11,6 +11,25 @@ namespace Auction.mod
 
    public class Settings
     {
+
+       private static Settings instance;
+
+        public static Settings Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Settings();
+                }
+                return instance;
+            }
+        }
+
+        private Settings()
+        {
+        }
+
         public bool shownumberscrolls;
         public string rowscalestring = "10";
         public float rowscale = 1.0f;

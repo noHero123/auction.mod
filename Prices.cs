@@ -10,6 +10,26 @@ namespace Auction.mod
     public class Prices
     {
 
+            private static Prices instance;
+
+        public static Prices Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Prices();
+                }
+                return instance;
+            }
+        }
+
+        private Prices()
+        {
+            helpf = Helpfunktions.Instance;
+            sttngs = Settings.Instance;
+        }
+
         public int[] lowerprice = new int[0];
         public int[] upperprice = new int[0];
         public int[] sugprice = new int[0];
@@ -25,11 +45,7 @@ namespace Auction.mod
         public Dictionary<string, string> wtbpricelist1 = new Dictionary<string, string>();
         Helpfunktions helpf;
         Settings sttngs;
-        public Prices(Helpfunktions h,Settings s)
-        {
-            helpf = h;
-            sttngs = s;
-        }
+
 
 		public int getPrice(int index, ScrollsPostPriceType type ) {
 			switch(type) {

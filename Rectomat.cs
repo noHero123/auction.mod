@@ -8,6 +8,7 @@ namespace Auction.mod
 {
     class Rectomat
     {
+
         Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
 
         public Rect ahbutton;
@@ -51,9 +52,25 @@ namespace Auction.mod
 
 
        Searchsettings srchsvr;
-       public Rectomat( Searchsettings s)
+
+       private static Rectomat instance;
+
+        public static Rectomat Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Rectomat();
+                }
+                return instance;
+            }
+        }
+
+
+       private Rectomat()
        {
-           this.srchsvr = s;
+           this.srchsvr = Searchsettings.Instance;
            GUISkin gUISkin = (GUISkin)Resources.Load("_GUISkins/Lobby");
            gUIStyle = new GUIStyle(gUISkin.button);
            gUIStyle.normal.background = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");

@@ -70,7 +70,7 @@ namespace Auction.mod
         GeneratorUI genui;
         SettingsUI setui;
         Generator generator;
-        AuctionHouse auctionHouse;
+
         
 
         public void handleMessage(Message msg)
@@ -206,43 +206,24 @@ namespace Auction.mod
 
         public AuctionMod()
         {
-            helpf = new Helpfunktions();
-            helpf.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
-
-            sttngs = new Settings();
-            srchsvr = new Searchsettings();
-            Console.WriteLine("saveall");
-            srchsvr.saveall();
-            Console.WriteLine("savealldone");
-            crdvwr = new Cardviewer();
-            prcs = new Prices(helpf,sttngs);
-            recto = new Rectomat(srchsvr);
-
-            auctionHouse = new AuctionHouse(helpf,prcs);
-
-            mssgprsr = new Messageparser(auctionHouse, this.sttngs, this.helpf);
-            ntwrk = new Network(auctionHouse, srchsvr, mssgprsr, helpf);
-
+            helpf = Helpfunktions.Instance;
+            sttngs = Settings.Instance;
+            srchsvr = Searchsettings.Instance;
+            crdvwr = Cardviewer.Instance;
+            prcs = Prices.Instance;
+            recto = Rectomat.Instance;
+            mssgprsr = Messageparser.Instance;
+            ntwrk = Network.Instance;
+            ahui = AuctionHouseUI.Instance;
+            generator = Generator.Instance;
+            genui = GeneratorUI.Instance;
+            setui = SettingsUI.Instance;
             
-            ahui = new AuctionHouseUI(mssgprsr,recto,prcs,crdvwr,srchsvr,ntwrk,sttngs,this.helpf,auctionHouse);
-
-            generator = new Generator(helpf,prcs,mssgprsr);
-            genui = new GeneratorUI(mssgprsr, recto, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf,generator);
-            setui = new SettingsUI(mssgprsr, recto, prcs, crdvwr, srchsvr, ntwrk, sttngs, this.helpf);
-            
-           
-
-
-            helpf.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
-            helpf.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
-            helpf.showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
-
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
-            helpf.targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
+
+
             
-            helpf.buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
-            helpf.sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
 
             
             

@@ -6,10 +6,10 @@ namespace Auction.mod
     public class AuctionFilter
     {
 
-        public AuctionFilter(Helpfunktions h, Prices p)
+        public AuctionFilter()
         {
-            helpf = h;
-            prcs = p;
+            helpf = Helpfunktions.Instance;
+            prcs = Prices.Instance;
             filtersChanged = true;
         }
 

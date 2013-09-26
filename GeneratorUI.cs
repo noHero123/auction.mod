@@ -38,21 +38,34 @@ namespace Auction.mod
         Texture2D decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
         Type T = typeof(GUIUtility);
         PropertyInfo systemCopyBufferProperty;
-        
 
-        public GeneratorUI(Messageparser mssgprsr,  Rectomat recto, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h, Generator g)
+
+        private static GeneratorUI instance;
+
+        public static GeneratorUI Instance
         {
-            this.helpf = h;
-            this.mssgprsr = mssgprsr;
-            //this.alists = alists;
-            this.recto = recto;
-            //this.lstfltrs = lstfltrs;
-            this.prcs = prcs;
-            this.crdvwr = crdvwr;
-            this.srchsvr = srchsvr;
-            this.ntwrk = ntwrk;
-            this.sttngs = sttngs;
-            this.generator = g;
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GeneratorUI();
+                }
+                return instance;
+            }
+        }
+
+        public GeneratorUI()
+        {
+            this.helpf = Helpfunktions.Instance;
+            this.mssgprsr = Messageparser.Instance;
+
+            this.recto = Rectomat.Instance;
+            this.prcs = Prices.Instance;
+            this.crdvwr = Cardviewer.Instance;
+            this.srchsvr = Searchsettings.Instance;
+            this.ntwrk = Network.Instance;
+            this.sttngs = Settings.Instance;
+            this.generator = Generator.Instance;
             systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
         }
 

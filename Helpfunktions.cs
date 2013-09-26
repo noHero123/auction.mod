@@ -5,12 +5,37 @@ using System.Text;
 using JsonFx.Json;
 using UnityEngine;
 using System.Reflection;
+using System.Collections.ObjectModel;
 
 namespace Auction.mod
 {
     public class Helpfunktions
     {
 
+        private static Helpfunktions instance;
+
+        public static Helpfunktions Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Helpfunktions();
+                }
+                return instance;
+            }
+        }
+
+        private Helpfunktions()
+        {
+            this.hideInformationinfo = typeof(Store).GetMethod("hideInformation", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.showBuyinfo = typeof(Store).GetField("showBuy", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.showSellinfo = typeof(Store).GetField("showSell", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
+        }
 
 
         public readonly double deleteTime = 30.0;

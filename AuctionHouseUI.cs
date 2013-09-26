@@ -40,20 +40,32 @@ namespace Auction.mod
 
         Color dblack = new Color(1f, 1f, 1f, 0.5f);
 
-    	
-        public AuctionHouseUI(Messageparser mssgprsr,Rectomat recto,Prices prcs,Cardviewer crdvwr,Searchsettings srchsvr,Network ntwrk,Settings sttngs,Helpfunktions h,AuctionHouse ah)
+
+        private static AuctionHouseUI instance;
+
+        public static AuctionHouseUI Instance
         {
-            this.helpf = h;
-            this.mssgprsr = mssgprsr;
-            //this.alists = alists;
-            this.recto = recto;
-            //this.lstfltrs = lstfltrs;
-            this.prcs = prcs;
-            this.crdvwr = crdvwr;
-            this.srchsvr = srchsvr;
-            this.ntwrk = ntwrk;
-            this.sttngs = sttngs;
-            this.ah = ah;
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new AuctionHouseUI();
+                }
+                return instance;
+            }
+        }
+
+        private AuctionHouseUI()
+        {
+            this.helpf = Helpfunktions.Instance;
+            this.mssgprsr = Messageparser.Instance;
+            this.recto = Rectomat.Instance;
+            this.prcs = Prices.Instance;
+            this.crdvwr = Cardviewer.Instance;
+            this.srchsvr = Searchsettings.Instance;
+            this.ntwrk = Network.Instance;
+            this.sttngs = Settings.Instance;
+            this.ah = AuctionHouse.Instance;
         }
 
         public void ahbuttonpressed()

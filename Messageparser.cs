@@ -31,13 +31,25 @@ namespace Auction.mod
        // private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
         
 
-        
+         private static Messageparser instance;
 
-        public Messageparser(AuctionHouse a,Settings s,Helpfunktions h)
+        public static Messageparser Instance
         {
-            this.helpf = h;
-            this.ah = a;
-            this.sttngs=s;
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Messageparser();
+                }
+                return instance;
+            }
+        }
+
+        private Messageparser()
+        {
+            this.helpf = Helpfunktions.Instance;
+            this.ah = AuctionHouse.Instance;
+            this.sttngs=Settings.Instance;
         }
 
 

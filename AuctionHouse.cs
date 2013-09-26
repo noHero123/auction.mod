@@ -8,26 +8,26 @@ namespace Auction.mod
         public enum SortMode {
             TIME, CARD, PRICE, SELLER
         }
-        /*
-        #region Singleton-Pattern
-        private static readonly AuctionHouse instance = new AuctionHouse();
+
+    private static AuctionHouse instance;
 
         public static AuctionHouse Instance
         {
-            get 
+            get
             {
-                return instance; 
+                if (instance == null)
+                {
+                    instance = new AuctionHouse();
+                }
+                return instance;
             }
         }
-        #endregion
 
-        private AuctionHouse () {
-        }*/
-        public AuctionHouse(Helpfunktions h, Prices p)
+        private AuctionHouse()
         {
-            this.helpf = h; 
-            buyOfferFilter = new AuctionFilter(h,p);
-            sellOfferFilter = new AuctionFilter(h,p);
+            this.helpf = Helpfunktions.Instance; 
+            buyOfferFilter = new AuctionFilter();
+            sellOfferFilter = new AuctionFilter();
         }
         int maxLen = 1000;
         Helpfunktions helpf;

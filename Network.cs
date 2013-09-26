@@ -22,11 +22,26 @@ namespace Auction.mod
 		Messageparser messageParser;
 		Helpfunktions helpf;
         AuctionHouse ah;
-		public Network(AuctionHouse ah, Searchsettings searchsettings, Messageparser messageParser, Helpfunktions helpf) {
-			this.searchSettings = searchsettings;
-			this.messageParser = messageParser;
-			this.helpf = helpf;
-            this.ah = ah;
+
+        private static Network instance;
+
+        public static Network Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Network();
+                }
+                return instance;
+            }
+        }
+
+		private Network() {
+			this.searchSettings = Searchsettings.Instance;
+			this.messageParser = Messageparser.Instance;
+			this.helpf = Helpfunktions.Instance;
+            this.ah = AuctionHouse.Instance;
 
 		}
 

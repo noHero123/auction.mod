@@ -57,7 +57,23 @@ namespace Auction.mod
         public string generatedwtsmessage = "";
         public string generatedwtbmessage = "";
 
-        public Searchsettings()
+
+         private static Searchsettings instance;
+
+        public static Searchsettings Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Searchsettings();
+                }
+                return instance;
+            }
+        }
+
+
+        private Searchsettings()
         {
             this.growthbool = true;
             this.orderbool = true;
@@ -77,6 +93,7 @@ namespace Auction.mod
             this.sortmode = 0;
             this.reverse = false;
             this.takepriceformgenarator = false;
+            this.saveall();
         }
 
         public void resetsearchsettings()

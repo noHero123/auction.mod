@@ -46,7 +46,23 @@ namespace Auction.mod
         private FieldInfo cardImageField;
         Rect cardrect=new Rect();
 
-        public Cardviewer()
+
+        private static Cardviewer instance;
+
+        public static Cardviewer Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Cardviewer();
+                }
+                return instance;
+            }
+        }
+
+
+        private Cardviewer()
         {
             //needed for getting the textures of the drawing card
             statsBGField = typeof(CardView).GetField("statsBG", BindingFlags.Instance | BindingFlags.NonPublic);

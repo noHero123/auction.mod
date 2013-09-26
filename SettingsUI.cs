@@ -31,16 +31,30 @@ namespace Auction.mod
         Settings sttngs;
         Helpfunktions helpf;
 
-        public SettingsUI(Messageparser mssgprsr, Rectomat recto, Prices prcs, Cardviewer crdvwr, Searchsettings srchsvr, Network ntwrk, Settings sttngs, Helpfunktions h)
+        private static SettingsUI instance;
+
+        public static SettingsUI Instance
         {
-            this.helpf = h;
-            this.mssgprsr = mssgprsr;
-            this.recto = recto;
-            this.prcs = prcs;
-            this.crdvwr = crdvwr;
-            this.srchsvr = srchsvr;
-            this.ntwrk = ntwrk;
-            this.sttngs = sttngs;
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new SettingsUI();
+                }
+                return instance;
+            }
+        }
+
+        private SettingsUI()
+        {
+            this.helpf = Helpfunktions.Instance;
+            this.mssgprsr = Messageparser.Instance;
+            this.recto = Rectomat.Instance;
+            this.prcs = Prices.Instance;
+            this.crdvwr = Cardviewer.Instance;
+            this.srchsvr = Searchsettings.Instance;
+            this.ntwrk = Network.Instance;
+            this.sttngs = Settings.Instance;
         }
 
        public void setbuttonpressed()

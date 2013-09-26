@@ -9,14 +9,29 @@ namespace Auction.mod
     class Generator
     {
 
+         private static Generator instance;
 
-        public Generator(Helpfunktions h,Prices p,Messageparser mssgprsr)
+        public static Generator Instance
         {
-            helpf = h;
-            prcs = p;
-            this.mssgprsr = mssgprsr;
-            sellOwnCardsFilter = new AuctionFilter(h,p);
-             buyOwnCardsFilter = new AuctionFilter(h,p);
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Generator();
+                }
+                return instance;
+            }
+        }
+
+
+        private Generator()
+        {
+            helpf = Helpfunktions.Instance;
+            prcs = Prices.Instance;
+            this.mssgprsr = Messageparser.Instance;
+
+            sellOwnCardsFilter = new AuctionFilter();
+            buyOwnCardsFilter = new AuctionFilter();
         }
 
         Helpfunktions helpf;
