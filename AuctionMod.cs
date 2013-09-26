@@ -498,7 +498,7 @@ namespace Auction.mod
                 RoomChatMessageMessage msg = (RoomChatMessageMessage)info.arguments[0];
                 if (msg.from != "Scrolls")
                 {
-                    mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName, helpf.generator, helpf.inauchouse, helpf.settings, helpf.wtsmenue);
+                    mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
                 }
             }
 

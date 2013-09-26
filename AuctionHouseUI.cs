@@ -17,10 +17,7 @@ namespace Auction.mod
         private bool clickableItems=false;
         private float opacity;
         public Vector2 scrollPos;
-        Messageparser mssgprsr;
-        //Auclists alists;
         Rectomat recto;
-        //Listfilters lstfltrs;
         Prices prcs;
         Cardviewer crdvwr;
         Searchsettings srchsvr;
@@ -58,7 +55,6 @@ namespace Auction.mod
         private AuctionHouseUI()
         {
             this.helpf = Helpfunktions.Instance;
-            this.mssgprsr = Messageparser.Instance;
             this.recto = Rectomat.Instance;
             this.prcs = Prices.Instance;
             this.crdvwr = Cardviewer.Instance;
@@ -108,7 +104,6 @@ namespace Auction.mod
             }
             //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, this.inauchouse, this.wtsmenue, this.generator);
             helpf.targetchathightinfo.SetValue(helpf.target, (float)Screen.height * 0.25f);
-            if (helpf.wtsmenue) { mssgprsr.newwtsmsgs = false; } else { mssgprsr.newwtbmsgs = false; }
         
         }
 
@@ -809,16 +804,10 @@ namespace Auction.mod
                 if (GUI.Button(recto.wtsbuttonrect, "WTS") && !helpf.showtradedialog)
                 {
 
-                    //alists.wtslistfull.Clear(); alists.wtslistfull.AddRange(alists.wtslistfulltimed);
-                    //sortlist(wtslistfull);
-
-                    //alists.setAhlistsToAHWtsLists(true);
-
                     helpf.wtsmenue = true; this.wtsinah = true;
                     srchsvr.setsettings(true, true);
                     ah.setSellSortMode(srchsvr.sortmode);
-                    //lstfltrs.sortlist(alists.ahlist); 
-                    mssgprsr.newwtsmsgs = false;
+
                 }
                 GUI.skin.button.normal.textColor = Color.white;
                 GUI.skin.button.hover.textColor = Color.white;
@@ -849,7 +838,6 @@ namespace Auction.mod
                     //lstfltrs.sortlist(alists.ahlist);
                     srchsvr.setsettings(true, false);
                     ah.setSellSortMode(srchsvr.sortmode);
-                    mssgprsr.newwtbmsgs = false;
                 }
                 GUI.skin.button.normal.textColor = Color.white;
                 GUI.skin.button.hover.textColor = Color.white;

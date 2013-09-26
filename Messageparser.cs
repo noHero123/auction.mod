@@ -12,8 +12,6 @@ namespace Auction.mod
 
         private List<Auction> addingwtscards = new List<Auction>();
         private List<Auction> addingwtbcards = new List<Auction>();
-        public bool newwtsmsgs = false;
-        public bool newwtbmsgs = false;
 
 
 
@@ -74,27 +72,8 @@ namespace Auction.mod
         }
 
 
-        private void addcardstolist(bool generator, bool inauchouse, bool settings, bool wtsmenue)
+        private void addcardstolist()
         {
-            //Console.WriteLine("##addcars");
-            if (generator || !inauchouse || settings)
-            {
-                if (addingwtbcards.Count() > 0) this.newwtbmsgs = true;
-                if (addingwtscards.Count() > 0) this.newwtsmsgs = true;
-
-            }
-            else
-            {
-                if (wtsmenue)
-                {
-                    if (addingwtbcards.Count() > 0) this.newwtbmsgs = true;
-                }
-                else
-                {
-                    if (addingwtscards.Count() > 0) this.newwtsmsgs = true;
-                }
-
-            }
             if (addingwtscards.Count() > 0)
             {
                 //addingwtscards.Reverse();
@@ -162,7 +141,7 @@ namespace Auction.mod
 
         }
 
-        private void getaucitemsformshortmsg(string msg, string from, string room, bool generator, bool inauchouse, bool settings, bool wtsmenue)
+        private void getaucitemsformshortmsg(string msg, string from, string room)
         {
 
 
@@ -275,16 +254,16 @@ namespace Auction.mod
 
             }
 
-            addcardstolist(generator,inauchouse,settings,wtsmenue);
+            addcardstolist();
         }
 
-        public void getaucitemsformmsg(string msgg, string from, string room,bool generator, bool inauchouse, bool settings, bool wtsmenue)
+        public void getaucitemsformmsg(string msgg, string from, string room)
         {
             string msg = Regex.Replace(msgg, @"(<color=#[A-Za-z0-9]{0,6}>)|(</color>)", String.Empty);
             this.addingwtbcards.Clear();
             this.addingwtscards.Clear();
             // todo: delete old msgs from author
-            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { getaucitemsformshortmsg(msg, from, room,generator,inauchouse,settings,wtsmenue); return; }
+            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { getaucitemsformshortmsg(msg, from, room); return; }
             //if (msg.StartsWith("aucc ")) { respondtocommand(msg,from); return; }
             bool wts = true; ;
             //string[] words=msg.Split(' ');
@@ -380,7 +359,7 @@ namespace Auction.mod
 
             }
 
-            addcardstolist(generator, inauchouse, settings, wtsmenue);
+            addcardstolist();
 
         }
 
