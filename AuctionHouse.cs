@@ -152,17 +152,10 @@ namespace Auction.mod
         public void removeOldEntrys()
         {
             DateTime n = DateTime.Now;
-            if (helpf.wtsmenue)
-            {
-                
                 fullSellOfferList.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
                 sellOfferListFiltered.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
-            }
-            else
-            {
                 fullBuyOfferList.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
                 buyOfferListFiltered.RemoveAll(a => (n.Subtract(a.time)).TotalMinutes >= helpf.deleteTime);
-            }
         }
 
     }
