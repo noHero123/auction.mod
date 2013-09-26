@@ -505,7 +505,7 @@ namespace Auction.mod
 
                         string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + " )"+name ;
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + ") "+name ;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
