@@ -12,18 +12,18 @@ namespace Auction.mod
         public readonly OfferType offer;
         public readonly Card card;
         /// <summary>
-        /// The price. Negative value indicates unknown.
+        /// The price. 0 indicates unknown.
         /// </summary>
         public readonly int price;
         /// <summary>
-        /// The amount offered. Negative value indicates unknown.
+        /// The amount offered. 1 indicates unknown.
         /// </summary>
         public readonly int amountOffered;
         public readonly string message;
-        public Auction (String seller, DateTime time, OfferType offer, Card c,string mssg) : this(seller, time, offer, c,mssg, -1) {
+        public Auction (String seller, DateTime time, OfferType offer, Card c,string mssg) : this(seller, time, offer, c,mssg, 0) {
         }
         public Auction(String seller, DateTime time, OfferType offer, Card c, string mssg, int price)
-            : this(seller, time, offer, c,mssg, price, -1)
+            : this(seller, time, offer, c,mssg, price, 1)
         {
         }
         public Auction(String seller, DateTime time, OfferType offer, Card card, string mssg, int price, int amountOffered)

@@ -73,7 +73,8 @@ namespace Auction.mod
 
 				if (text.StartsWith("aucs ") || text.StartsWith("aucb "))
 				{
-					messageParser.getaucitemsformmsg(text, wmsg.from, wmsg.GetChatroomName());
+					//messageParser.getaucitemsformmsg(text, wmsg.from, wmsg.GetChatroomName());
+                    AuctionHouse.Instance.addAuctions(Messageparser.GetAuctionsFromShortMessage(text, wmsg.from));
 					//need playerid (wispering doesnt send it)
 					if (!helpf.globalusers.ContainsKey(wmsg.from)) { WhisperMessage needid = new WhisperMessage(wmsg.from, "needaucid"); App.Communicator.sendRequest(needid); }
 				}

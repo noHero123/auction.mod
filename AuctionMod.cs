@@ -195,6 +195,8 @@ namespace Auction.mod
                 generator.setallavailablecards(msg);
                 
                 mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
+
+
             }
 
             return;
@@ -325,6 +327,7 @@ namespace Auction.mod
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
 					if (hideNetworkMessages  && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                    if (rem.text.StartsWith("auc parsertest")) { helpf.messegparsingtest(); return true; }
                 }
 
                 if (msg is RoomEnterMessage)
@@ -404,6 +407,7 @@ namespace Auction.mod
                 helpf.inauchouse = false;
                 helpf.generator = false;
                 helpf.settings = false;
+                
                 
             }
 
@@ -502,7 +506,9 @@ namespace Auction.mod
                 RoomChatMessageMessage msg = (RoomChatMessageMessage)info.arguments[0];
                 if (msg.from != "Scrolls")
                 {
-                    mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
+                    //mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
+                    
+                    AuctionHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
                 }
             }
 

@@ -195,6 +195,26 @@ namespace Auction.mod
 
         }
 
+
+        public void messegparsingtest()
+        {
+            RoomChatMessageMessage msg = new RoomChatMessageMessage("parsertest", "");
+            msg.from = "Bob";
+
+            msg.text = "wts burn 100, quake 200";
+            App.ArenaChat.ChatRooms.ChatMessage(msg);
+
+            msg.text = "wtb bunny 100, husk";
+            App.ArenaChat.ChatRooms.ChatMessage(msg);
+
+            msg.text = "aucb 198 4;176 3;171 2;65 1";
+            App.ArenaChat.ChatRooms.ChatMessage(msg);
+
+            msg.text = "aucs 198,176 3;171,65 0";
+            App.ArenaChat.ChatRooms.ChatMessage(msg);
+        }
+
+
     }
         
 }

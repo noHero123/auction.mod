@@ -106,8 +106,6 @@ namespace Auction.mod
 
             //this.genlist.AddRange(this.genlistfull);
 
-
-
             helpf.targetchathightinfo.SetValue(helpf.target, (float)Screen.height * 0.25f);
         }
        

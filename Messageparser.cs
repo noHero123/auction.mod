@@ -9,25 +9,22 @@ namespace Auction.mod
     class Messageparser
     {
 
-        private List<Auction> addingcards = new List<Auction>();
+        //private List<Auction> addingcards = new List<Auction>();
 
 
 
-        AuctionHouse ah;
+
         Helpfunktions helpf;
-        //Listfilters lstfltrs;
-        //Auclists alist;
-        Settings sttngs;
-        private Regex priceregex=new Regex(@".*[^x0-9]+[0-9]{2,9}[g]?[^x0-9]+.*");
+        private Regex priceregex = new Regex(@".*[^x0-9]+[0-9]{2,9}[g]?[^x0-9]+.*");
         private Regex priceregexpriceonname = new Regex(@"[^x0-9]{2,}[0-9]{2,9}[g]?[^x0-9]+.*");
         Regex numberregx = new Regex(@"[0-9]{2,9}");
 
         public List<nickelement> searchscrollsnicks = new List<nickelement>();
 
-       // private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
-        
+        // private int cardnametoid(string name) { return helpf.cardids[Array.FindIndex(helpf.cardnames, element => element.Equals(name))]; }
 
-         private static Messageparser instance;
+
+        private static Messageparser instance;
 
         public static Messageparser Instance
         {
@@ -44,8 +41,6 @@ namespace Auction.mod
         private Messageparser()
         {
             this.helpf = Helpfunktions.Instance;
-            this.ah = AuctionHouse.Instance;
-            this.sttngs=Settings.Instance;
         }
 
 
@@ -70,57 +65,23 @@ namespace Auction.mod
         }
 
 
-        private void additemtolist(Card c, string from, int gold, bool wts, string wholemsg)
+        /*private void additemtolist(Card c, string from, int gold, bool wts, string wholemsg)
+{
+if (wts)
+{
+this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.SELL, c, wholemsg, gold));
+}
+else
+{
+
+this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, wholemsg, gold));
+}
+
+}*/
+
+        private static void GetAuctionsFromShortIntoList(string shortList, string from, Auction.OfferType offerType, List<Auction> outList)
         {
-            
-            if (wts)
-            {
-                this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.SELL, c, wholemsg, gold));   
-            }
-            else
-            {
-
-                this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, wholemsg, gold));
-            }
-
-        }
-
-        private void getaucitemsformshortmsg(string msg, string from, string room)
-        {
-
-
-            bool aucbtoo = false;
-            bool wts = true;
-            string secmsg = "";
-            if (msg.StartsWith("aucs "))
-            {
-                wts = true;
-                msg = msg.Remove(0, 5);
-                if (msg.Contains("aucb "))
-                {
-                    aucbtoo = true;
-                    secmsg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
-                    msg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[0];
-                }
-            }
-            if (msg.StartsWith("aucb "))
-            {
-                wts = false;
-                msg = msg.Remove(0, 5);
-
-
-                if (msg.Contains("aucs "))
-                {
-                    wts = true;
-                    aucbtoo = true;
-                    secmsg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[0];
-                    msg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
-                }
-
-            }
-            //Console.WriteLine(msg + "##" + secmsg);
-
-            string[] words = msg.Split(';');
+            string[] words = shortList.Split(';');
             for (int i = 0; i < words.Length; i++)
             {
                 if (words[i] == "" || words[i] == " ") break;
@@ -138,84 +99,65 @@ namespace Auction.mod
                     price = "0";
                     ids = words[i];
                 }
-                if (ids.Contains(","))
-                {
-                    string[] ideen = ids.Split(',');
-                    foreach (string idd in ideen)
-                    {
-                        int id = Convert.ToInt32(idd);
-                        CardType type = CardTypeManager.getInstance().get(id);
-                        Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts, "");
-                    }
 
-                }
-                else
+                string[] ideen = ids.Split(','); //When string does not contain a , the whole string is the first element of the returned array.
+                foreach (string idd in ideen)
                 {
-                    int id = Convert.ToInt32(ids);
+                    int id = Convert.ToInt32(idd);
                     CardType type = CardTypeManager.getInstance().get(id);
                     Card card = new Card(id, type, true);
-                    additemtolist(card, from, Convert.ToInt32(price), wts, "");
-
+                    outList.Add(new Auction(from, DateTime.Now, offerType, card, "(Network Auction)", Convert.ToInt32(price)));
                 }
 
-
-
             }
+        }
+        public static List<Auction> GetAuctionsFromShortMessage(string msg, string from)
+        {
 
-            if (aucbtoo)
+            List<Auction> addingcards = new List<Auction>();
+            //bool wts = true;
+            string secmsg = "";
+            if (msg.StartsWith("aucs "))
             {
-                wts = false;
-                words = secmsg.Split(';');
-                for (int i = 0; i < words.Length; i++)
+                //wts = true;
+                msg = msg.Remove(0, 5);
+                if (msg.Contains("aucb "))
                 {
-                    if (words[i] == "" || words[i] == " ") break;
-                    string price = words[i].Split(' ')[1];
-                    if (price == "") { price = "0"; }
-                    string ids = words[i].Split(' ')[0];
-                    if (ids.Contains(","))
-                    {
-                        string[] ideen = ids.Split(',');
-                        foreach (string idd in ideen)
-                        {
-                            int id = Convert.ToInt32(idd);
-                            CardType type = CardTypeManager.getInstance().get(id);
-                            Card card = new Card(id, type, true);
-                            additemtolist(card, from, Convert.ToInt32(price), wts, "");
-                        }
-
-                    }
-                    else
-                    {
-                        int id = Convert.ToInt32(ids);
-                        CardType type = CardTypeManager.getInstance().get(id);
-                        Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts, "");
-
-                    }
-
+                    secmsg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
+                    msg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[0];
+                    GetAuctionsFromShortIntoList(secmsg, from, Auction.OfferType.BUY, addingcards);
                 }
+                GetAuctionsFromShortIntoList(msg, from, Auction.OfferType.SELL, addingcards);
 
             }
-            // finished parsing, add cards to auctionHouse
-            ah.addAuctions(this.addingcards);
+            if (msg.StartsWith("aucb "))
+            {
+                msg = msg.Remove(0, 5);
+                if (msg.Contains("aucs "))
+                {
+                    secmsg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
+                    msg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[0];
+                    GetAuctionsFromShortIntoList(secmsg, from, Auction.OfferType.SELL, addingcards);
+                }
+                GetAuctionsFromShortIntoList(msg, from, Auction.OfferType.BUY, addingcards);
+            }
+            return addingcards;
         }
 
-        public void getaucitemsformmsg(string msgg, string from, string room)
+        public List<Auction> GetAuctionsFromMessage(string msgg, string from, string room)
         {
             string msg = Regex.Replace(msgg, @"(<color=#[A-Za-z0-9]{0,6}>)|(</color>)", String.Empty);
-            this.addingcards.Clear();
             // todo: delete old msgs from author
-            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { getaucitemsformshortmsg(msg, from, room); return; }
+            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { return GetAuctionsFromShortMessage(msg, from); }
             //if (msg.StartsWith("aucc ")) { respondtocommand(msg,from); return; }
-            bool wts = true; ;
+            Auction.OfferType currentOfferType = Auction.OfferType.BUY; //Will be overwritten
             //string[] words=msg.Split(' ');
-
+            List<Auction> addingAuctions = new List<Auction>();
             char[] delimiters = new char[] { '\r', '\n', ' ', ',', ';' };
             string[] words = msg.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             //words = Regex.Split(msg, @"");
 
-            if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return;
+            if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return addingAuctions;
             bool wtxfound = false;
 
             for (int i = 0; i < words.Length; i++)
@@ -223,8 +165,8 @@ namespace Auction.mod
                 Card c; int price = 0;
                 string word = words[i].ToLower();
                 // save in wts or wtb?
-                if (word.Contains("wts") || word.Contains("sell")) { wts = true; wtxfound = true; }
-                if (word.Contains("wtb") || word.Contains("buy")) { wts = false; wtxfound = true; }
+                if (word.Contains("wts") || word.Contains("sell")) { currentOfferType = Auction.OfferType.SELL; wtxfound = true; };
+                if (word.Contains("wtb") || word.Contains("buy")) { currentOfferType = Auction.OfferType.BUY; wtxfound = true; };
                 if (!wtxfound) continue;// if no wts or wtb was found, skip card search
                 //int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
                 int arrindex = this.searchscrollsnicks.FindIndex(element => word.Contains(element.nick.Split(' ')[0]));
@@ -262,7 +204,7 @@ namespace Auction.mod
                         //Console.WriteLine("found " + foundedcard + " in " + textplace);
                         string tmpgold = pricetestfirst((textplace.Split(' '))[(textplace.Split(' ')).Length - 1]);
                         if (!(tmpgold == "")) // && iadder >1
-                        {   // case: cardnamegold
+                        { // case: cardnamegold
                             //Console.WriteLine("found " + this.numberregx.Match(tmpgold).Value);
                             price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                         }
@@ -287,27 +229,22 @@ namespace Auction.mod
                                 price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                             }
                         }
-                        additemtolist(c, from, price, wts, msgg);
+                        addingAuctions.Add(new Auction(from, DateTime.Now, currentOfferType, c, msgg,price));
+                        //additemtolist(c, from, price, wts, msgg);
                         i--;
 
 
                     }//if (find) ende
-
-
-
                 }
 
 
 
 
             }
-
-            //finished, add cards to auctionHouse
-            ah.addAuctions(this.addingcards);
-
+            return addingAuctions;
         }
 
-        
-        
+
+
     }
 }
