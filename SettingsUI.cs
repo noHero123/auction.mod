@@ -86,14 +86,17 @@ namespace Auction.mod
             {
                 sttngs.resetsettings();
 
-                recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
 
 
             }
             if (GUI.Button(recto.setload, "Load"))
             {
                 sttngs.loadsettings(helpf.ownaucpath,helpf.deleteTime);
-                recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+
+                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
             }
             if (GUI.Button(recto.setsave, "Save"))
             {
@@ -157,7 +160,11 @@ namespace Auction.mod
             if (sttngs.rowscalestring != "") { sttngs.rowscale = (float)Convert.ToDouble(sttngs.rowscalestring) / 10f; } else { sttngs.rowscale = 1.0f; }
             if (sttngs.rowscale > 2f) { sttngs.rowscale = 2f; sttngs.rowscalestring = "20"; }
             if (sttngs.rowscale < 0.5f) { sttngs.rowscale = .5f; }
-            if (!rowcopy.Equals(sttngs.rowscalestring)) { recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin); }
+            if (!rowcopy.Equals(sttngs.rowscalestring))
+            {
+                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+            }
 
             //round wts
 

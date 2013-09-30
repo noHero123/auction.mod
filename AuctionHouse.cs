@@ -64,8 +64,9 @@ namespace Auction.mod
 
                 this.buySortModeCopy = this.buySortMode; 
                 buyOfferListFiltered.Sort(Auction.getComparison(buySortMode));
+                buyOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
             }
-            buyOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
+            
             return new List<Auction>(buyOfferListFiltered);
         }
 
@@ -81,8 +82,9 @@ namespace Auction.mod
 
                 this.sellSortModeCopy = this.sellSortMode;
                 sellOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
+                sellOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
             }
-            sellOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
+            
             return new List<Auction>(sellOfferListFiltered);
         }
 
@@ -129,7 +131,7 @@ namespace Auction.mod
             {
                 fullBuyOfferList.Insert(0, a);
 
-                if (!buyOfferFilter.isFiltered(a))
+                if (!buyOfferFilter.isFiltered(a) && !this.spamFilter.isFilteredBySpamFilter(a))
                 {
                     buyOfferListFiltered.Insert(0, a);
                     newBuyOffers = true;
@@ -139,7 +141,7 @@ namespace Auction.mod
             {
                 fullSellOfferList.Insert(0, a);
 
-                if (!sellOfferFilter.isFiltered(a))
+                if (!sellOfferFilter.isFiltered(a) && !this.spamFilter.isFilteredBySpamFilter(a))
                 {
                     sellOfferListFiltered.Insert(0, a);
                     newSellOffers = true;

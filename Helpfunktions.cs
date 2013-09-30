@@ -48,6 +48,7 @@ namespace Auction.mod
         public FieldInfo showBuyinfo;
         public FieldInfo showSellinfo;
 
+        public bool bothmenue = false;
         public bool chatisshown = false;
         public bool canLoadWTSmsg = false;
         public bool canLoadWTBmsg = false;

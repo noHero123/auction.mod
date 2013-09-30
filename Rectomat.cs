@@ -15,18 +15,11 @@ namespace Auction.mod
         public Rect genbutton;
         public Rect settingsbutton;
 
+        private float buttonlength=10;
         private float BOTTOM_MARGIN_EXTRA = (float)Screen.height * 0.047f;
         private Vector4 margins;
-       public Rect screenRect;
-       public Rect outerRect;
-       public Rect innerBGRect;
-       public Rect innerRect;
-       public Rect buttonLeftRect;
-       public Rect buttonRightRect;
-       public Rect wtsbuttonrect;
-       public Rect wtbbuttonrect;
-       public Rect updatebuttonrect;
-       public Rect fillbuttonrect;
+       public Rect screenRect,outerRect,innerBGRect,innerRect,buttonLeftRect,buttonRightRect,wtsbuttonrect;
+       public Rect wtbbuttonrect,bothbuttonrect,updatebuttonrect,fillbuttonrect;
         //filterrects
        public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
        public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2;
@@ -112,9 +105,11 @@ namespace Auction.mod
             this.buttonLeftRect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
             this.buttonRightRect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.48f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
 
-            this.wtsbuttonrect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-            this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
-            this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+           this.buttonlength=this.innerRect.width * 0.10f;
+           this.wtsbuttonrect = new Rect(this.innerRect.x + buttonlength/3.33f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.bothbuttonrect = new Rect(wtbbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
             this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
 
             num = (float)Screen.height / (float)Screen.width * 0.16f * rowscale;//0.16
@@ -193,7 +188,56 @@ namespace Auction.mod
             calcguirects();
        }
 
-       private void calcguirects()
+       public void setupPositionsboth(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
+       {
+
+
+           // set rects for menus
+           this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.485f, (float)Screen.height * 0.57f);
+           if (!chatisshown) { this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.485f, (float)Screen.height * 0.80f); }
+           this.filtermenurect = new Rect(screenRect.xMax + (float)Screen.width * 0.01f, screenRect.y, (float)Screen.width * 0.37f, (float)Screen.height * 0.57f);
+           if (!chatisshown) { this.filtermenurect = new Rect(screenRect.xMax + (float)Screen.width * 0.01f, screenRect.y, (float)Screen.width * 0.37f, (float)Screen.height * 0.80f); }
+
+           this.margins = new Vector4(12f, 12f, 12f, 12f + this.BOTTOM_MARGIN_EXTRA);
+           this.outerRect = this.screenRect;
+           this.innerBGRect = new Rect(this.outerRect.x + this.margins.x, this.outerRect.y + this.margins.y, this.outerRect.width - (this.margins.x + this.margins.z), this.outerRect.height - (this.margins.y + this.margins.w));
+           float num = 0.005f * (float)Screen.width;
+           this.innerRect = new Rect(this.innerBGRect.x + num, this.innerBGRect.y + num, this.innerBGRect.width - 2f * num, this.innerBGRect.height - 2f * num);
+           float num2 = this.BOTTOM_MARGIN_EXTRA - 0.01f * (float)Screen.height;
+           this.buttonLeftRect = new Rect(this.innerRect.x + this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
+           this.buttonRightRect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.48f, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.45f, num2);
+
+           this.wtsbuttonrect = new Rect(this.innerRect.x + buttonlength / 3.33f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.bothbuttonrect = new Rect(wtbbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+
+           num = (float)Screen.height / (float)Screen.width * 0.16f * rowscale;//0.16
+           //this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);
+           this.costIconSize = this.fieldHeight;
+           this.costIconWidth = this.fieldHeight / 1.1f;
+           this.costIconHeight = this.costIconWidth * 72f / 73f;
+           this.cardHeight = this.fieldHeight * 0.72f;
+           this.cardWidth = this.cardHeight * 100f / 75f;
+           this.labelX = this.cardWidth * 1.45f;
+           this.labelsWidth = this.innerRect.width - this.labelX - 2 * this.costIconSize - this.scrollBarSize - this.costIconWidth;
+           this.labelsWidth = this.labelsWidth / 2.5f;
+           this.maxCharsName = (int)(this.labelsWidth / 12f);
+           this.maxCharsRK = (int)(this.labelsWidth / 10f);
+
+           float sbiconwidth = (filtermenurect.width - 2 * num2 - 6f * 4f) / 6f;
+           float sbiconhight = costIconHeight;
+           //float chatheight = chatLogStyle.CalcHeight(new GUIContent("JScrollg"), 1000);
+           //float texthight = chatheight + 2;//(filtermenurect.height - 3 * sbiconhight-7*4-2*num2)/3;
+           GUI.skin = cardListPopupSkin;
+           float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("Jg"), 1000);
+           this.sbnetworklabel = new Rect(filtermenurect.x + 4, filtermenurect.yMax - smalltexthight - 4, filtermenurect.width, smalltexthight);
+           
+           calcguirects();
+       }
+
+       public void calcguirects()
        {
            float offX = 0;
            position = new Rect(this.outerRect.x + offX, this.outerRect.y, this.outerRect.width, this.outerRect.height);
