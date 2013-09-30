@@ -62,7 +62,7 @@ namespace Auction.mod
                 buyOfferListFiltered.RemoveAll (buyOfferFilter.isFiltered);
                 buyOfferFilter.filtersChanged = false;
 
-                this.buySortModeCopy = this.buySortMode; 
+                this.buySortModeCopy = this.buySortMode;
                 buyOfferListFiltered.Sort(Auction.getComparison(buySortMode));
                 buyOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);
             }
@@ -79,7 +79,6 @@ namespace Auction.mod
                 sellOfferListFiltered.Clear(); sellOfferListFiltered.AddRange(fullSellOfferList);
                 sellOfferListFiltered.RemoveAll (sellOfferFilter.isFiltered);
                 sellOfferFilter.filtersChanged = false;
-
                 this.sellSortModeCopy = this.sellSortMode;
                 sellOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
                 sellOfferListFiltered.RemoveAll(spamFilter.isFilteredBySpamFilter);

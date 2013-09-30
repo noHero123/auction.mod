@@ -128,9 +128,11 @@ namespace Auction.mod
                 srchsvr.setsettings(true, true);
                 ah.setSellSortMode(srchsvr.sortmode);
                 this.drawAHlist(true);
+
                 srchsvr.setsettings(true, false);
-                ah.setSellSortMode(srchsvr.sortmode);
+                ah.setBuySortMode(srchsvr.sortmode);
                 this.drawAHlist(false);
+
                 if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message); }
                 return;
             }
@@ -873,7 +875,7 @@ namespace Auction.mod
 
                     //lstfltrs.sortlist(alists.ahlist);
                     srchsvr.setsettings(true, false);
-                    ah.setSellSortMode(srchsvr.sortmode);
+                    ah.setBuySortMode(srchsvr.sortmode);
                 }
 
 
@@ -1006,7 +1008,7 @@ namespace Auction.mod
                         srchsvr.sortmode = 3;
                         ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
+                        srchsvr.savesettings(true, true);
                     }
                 }
                 else
@@ -1018,7 +1020,7 @@ namespace Auction.mod
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
                         ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
-                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
+                        srchsvr.savesettings(true, false);
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
@@ -1381,7 +1383,7 @@ namespace Auction.mod
 
                         //lstfltrs.sortlist(alists.ahlist);
                         srchsvr.setsettings(true, false);
-                        ah.setSellSortMode(srchsvr.sortmode);
+                        ah.setBuySortMode(srchsvr.sortmode);
                         helpf.bothmenue = false;
                     }
 
