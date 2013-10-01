@@ -59,8 +59,17 @@ namespace Auction.mod
                     timesTheSameAuctionHasBeenPosted.Insert(0, a.time);
                     if (timesTheSameAuctionHasBeenPosted.Count > 2)
                     {
-                        //Only keep the last 2 entrys
-                        timesTheSameAuctionHasBeenPosted.RemoveAt(2);
+                        //Only keep the last entry, and the one that is "nearest" to the spamTime
+                        if (timesTheSameAuctionHasBeenPosted[0].Subtract(timesTheSameAuctionHasBeenPosted[2]) > this.spamTime)
+                        {
+                            if (timesTheSameAuctionHasBeenPosted[0].Subtract(timesTheSameAuctionHasBeenPosted[1]) > this.spamTime)
+                                timesTheSameAuctionHasBeenPosted.RemoveAt(2);
+                            else
+                                timesTheSameAuctionHasBeenPosted.RemoveAt(1);
+
+                        }
+                        else { timesTheSameAuctionHasBeenPosted.RemoveAt(1); } // the newest - the oldest < spamtime -> the 2. newest is < spamtime too, so delete it
+                        
                     }
                 }
                 else

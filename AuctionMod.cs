@@ -208,6 +208,7 @@ namespace Auction.mod
 
         public AuctionMod()
         {
+            DateTime itze= DateTime.Now;
             helpf = Helpfunktions.Instance;
             sttngs = Settings.Instance;
             srchsvr = Searchsettings.Instance;
@@ -256,6 +257,7 @@ namespace Auction.mod
                 App.Communicator.addListener(this);
             }
             catch { }
+            Console.WriteLine("### not an Auction House loaded in "+(DateTime.Now.Subtract(itze)).TotalMilliseconds + " ms ###");
         }
 
         public static string GetName()
@@ -273,18 +275,18 @@ namespace Auction.mod
             try
             {
                 return new MethodDefinition[] {
-                    scrollsTypes["ChatRooms"].Methods.GetMethod("SetRoomInfo", new Type[] {typeof(RoomInfoMessage)}),
                     scrollsTypes["ChatUI"].Methods.GetMethod("Initiate")[0],
                     scrollsTypes["ChatUI"].Methods.GetMethod("Show", new Type[]{typeof(bool)}),
-                    scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
+                    scrollsTypes["ChatRooms"].Methods.GetMethod("SetRoomInfo", new Type[] {typeof(RoomInfoMessage)}),
                     scrollsTypes["ChatRooms"].Methods.GetMethod("ChatMessage", new Type[]{typeof(RoomChatMessageMessage)}),
-                   scrollsTypes["ArenaChat"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
-                   scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
-                   scrollsTypes["Store"].Methods.GetMethod("Start")[0],
+                    scrollsTypes["ArenaChat"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
+                    scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
+                    scrollsTypes["Store"].Methods.GetMethod("Start")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
-                     scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
-                     scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
-                     scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
+                    scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
+                    scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
+                    scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
+                    scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
                 };
