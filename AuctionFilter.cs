@@ -64,6 +64,7 @@ namespace Auction.mod
 
         public bool isFilteredByAmountFilter(Auction a)
         {
+            if (!helpf.cardNameToNumberOwned.ContainsKey(a.card.getName())) Console.WriteLine("#key is not in " + a.card.getName());
             int anz = helpf.cardNameToNumberOwned[a.card.getName()];
             if (amountFilter == 1 && anz == 0 ) return true;
             if (amountFilter == 2 && anz <= 3) return true;

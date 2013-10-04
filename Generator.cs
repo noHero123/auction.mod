@@ -85,11 +85,13 @@ namespace Auction.mod
             orgicardsPlayer.AddRange(((LibraryViewMessage)msg).cards);
             List<string> checklist = new List<string>();
             helpf.cardNameToNumberOwned.Clear();
+            Console.WriteLine("add cards to cardnametonumberowned");
             foreach (Auction ai in this.fullBuyOwnList) //fullbuyownlist == all cards in game
             {
                 if (!helpf.cardNameToNumberOwned.ContainsKey(ai.card.getName()))
                 {
                     helpf.cardNameToNumberOwned.Add(ai.card.getName(), 0);
+                    Console.WriteLine(ai.card.getName());
                 }
             }
 
@@ -128,6 +130,7 @@ namespace Auction.mod
             mssgprsr.searchscrollsnicks.Clear();
             prcs.wtbpricelist1.Clear();
             this.fullBuyOwnList.Clear();
+            Console.WriteLine("add cards to fullbuyownList");
             for (int j = 0; j < helpf.cardnames.Length; j++)
             {
                 prcs.wtbpricelist1.Add(helpf.cardnames[j].ToLower(), "");
@@ -140,6 +143,9 @@ namespace Auction.mod
                 //ai.seller = "me";
                 Auction ai = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now, Auction.OfferType.BUY, card,"");
                 this.fullBuyOwnList.Add(ai);
+
+                Console.WriteLine(ai.card.getName());
+
                 nickelement nele;
                 nele.nick = helpf.cardnames[j];
                 nele.cardname = helpf.cardnames[j];
