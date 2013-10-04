@@ -390,7 +390,7 @@ namespace Auction.mod
 
                         for (int i = 0; i < prcs.wtspricelist1.Count; i++)
                         {
-                            KeyValuePair<string, string> item = prcs.wtspricelist1.ElementAt(i);
+                            KeyValuePair<int, string> item = prcs.wtspricelist1.ElementAt(i);
                             prcs.wtspricelist1[item.Key] = "";
 
                         }
@@ -404,8 +404,7 @@ namespace Auction.mod
                         {
                             if (w == "" || w == " ") continue;
                             //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            string cardname = helpf.cardidsToCardnames[Convert.ToInt32(w.Split(' ')[0])];
-                            prcs.wtspricelist1[cardname] = w.Split(' ')[1];
+                            prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                         }
                         generatewtxmsg(generator.getAllOwnSellOffers());
 
@@ -420,7 +419,7 @@ namespace Auction.mod
                     {
                         for (int i = 0; i < prcs.wtbpricelist1.Count; i++)
                         {
-                            KeyValuePair<string, string> item = prcs.wtbpricelist1.ElementAt(i);
+                            KeyValuePair<int, string> item = prcs.wtbpricelist1.ElementAt(i);
                             prcs.wtbpricelist1[item.Key] = "";
 
                         }
@@ -431,8 +430,7 @@ namespace Auction.mod
                         {
                             if (w == "" || w == " ") continue;
                             //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            string cardname = helpf.cardidsToCardnames[Convert.ToInt32(w.Split(' ')[0])];
-                            prcs.wtbpricelist1[cardname] = w.Split(' ')[1];
+                            prcs.wtbpricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                         }
                         generatewtxmsg(generator.getAllOwnBuyOffers());
                     }
@@ -514,9 +512,9 @@ namespace Auction.mod
                         }
                         string name = current.card.getName();
 
-                        string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
+                        string txt = helpf.cardIDtoimageid(current.card.getType()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + ") "+name ;
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.card.getType()] + ") " + name;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -563,11 +561,11 @@ namespace Auction.mod
                         {
                             if (helpf.wtsmenue)
                             {
-                                prcs.wtspricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, prcs.wtspricelist1[current.card.getName().ToLower()], helpf.chatLogStyle), @"[^0-9]", "");
+                                prcs.wtspricelist1[current.card.getType()] = Regex.Replace(GUI.TextField(position11, prcs.wtspricelist1[current.card.getType()], helpf.chatLogStyle), @"[^0-9]", "");
                             }
                             else
                             {
-                                prcs.wtbpricelist1[current.card.getName().ToLower()] = Regex.Replace(GUI.TextField(position11, prcs.wtbpricelist1[current.card.getName().ToLower()], helpf.chatLogStyle), @"[^0-9]", "");
+                                prcs.wtbpricelist1[current.card.getType()] = Regex.Replace(GUI.TextField(position11, prcs.wtbpricelist1[current.card.getType()], helpf.chatLogStyle), @"[^0-9]", "");
                             }
                         }
                         helpf.chatLogStyle.alignment = TextAnchor.MiddleLeft;
@@ -602,7 +600,7 @@ namespace Auction.mod
                                 int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
                                 if (index >= 0)
                                 {
-                                    prcs.PriceChecker(index, true, current.card.getName());
+                                    prcs.PriceChecker(index, true, current.card.getType());
                                 }
                             }
                         }
@@ -614,7 +612,7 @@ namespace Auction.mod
                                 int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
                                 if (index >= 0)
                                 {
-                                    prcs.PriceChecker(index, false, current.card.getName());
+                                    prcs.PriceChecker(index, false, current.card.getType());
                                 }
                             }
                         }
@@ -686,7 +684,7 @@ namespace Auction.mod
                             int price = 0;
                             //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
                             price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
-                            prcs.wtspricelist1[c.card.getName().ToLower()] = price.ToString();
+                            prcs.wtspricelist1[c.card.getType()] = price.ToString();
 
                         }
                     }
@@ -699,7 +697,7 @@ namespace Auction.mod
                             int price = 0;
                             //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
                             price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
-                            prcs.wtbpricelist1[c.card.getName().ToLower()] = price.ToString();
+                            prcs.wtbpricelist1[c.card.getType()] = price.ToString();
 
                         }
                     }
@@ -712,7 +710,7 @@ namespace Auction.mod
                     {
                         for (int i = 0; i < prcs.wtspricelist1.Count; i++)
                         {
-                            KeyValuePair<string, string> item = prcs.wtspricelist1.ElementAt(i);
+                            KeyValuePair<int, string> item = prcs.wtspricelist1.ElementAt(i);
                             prcs.wtspricelist1[item.Key] = "";
 
                         }
@@ -722,7 +720,7 @@ namespace Auction.mod
                     {
                         for (int i = 0; i < prcs.wtbpricelist1.Count; i++)
                         {
-                            KeyValuePair<string, string> item = prcs.wtbpricelist1.ElementAt(i);
+                            KeyValuePair<int, string> item = prcs.wtbpricelist1.ElementAt(i);
                             prcs.wtbpricelist1[item.Key] = "";
 
                         }
@@ -794,10 +792,10 @@ namespace Auction.mod
             {
                 if (helpf.wtsmenue)
                 {
-                    if (prcs.wtspricelist1[liste[i].card.getName().ToLower()] != "")
+                    if (prcs.wtspricelist1[liste[i].card.getType()] != "")
                     {
-                        
-                        string price = prcs.wtspricelist1[liste[i].card.getName().ToLower()];
+
+                        string price = prcs.wtspricelist1[liste[i].card.getType()];
                         //ai.priceinint = ;
                         Auction ai = new Auction("", DateTime.Now, Auction.OfferType.SELL, liste[i].card, "", Convert.ToInt32(price));
                         postlist.Add(ai);
@@ -807,9 +805,9 @@ namespace Auction.mod
                 }
                 else
                 {
-                    if (prcs.wtbpricelist1[liste[i].card.getName().ToLower()] != "")
+                    if (prcs.wtbpricelist1[liste[i].card.getType()] != "")
                     {
-                        string price = prcs.wtbpricelist1[liste[i].card.getName().ToLower()];
+                        string price = prcs.wtbpricelist1[liste[i].card.getType()];
                         Auction ai = new Auction("", DateTime.Now, Auction.OfferType.SELL, liste[i].card, "", Convert.ToInt32(price));
                         postlist.Add(ai);
                         //msg = msg + liste[i].card.getName() + " " + this.wtbpricelist1[liste[i].card.getName().ToLower()] + ";";

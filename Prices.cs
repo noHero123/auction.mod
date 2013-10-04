@@ -41,8 +41,8 @@ namespace Auction.mod
         //public int wtbroundmode = 0;
         //public int takewtsgenint = 2;
         //public int takewtbgenint = 0;
-        public Dictionary<string, string> wtspricelist1 = new Dictionary<string, string>();
-        public Dictionary<string, string> wtbpricelist1 = new Dictionary<string, string>();
+        public Dictionary<int, string> wtspricelist1 = new Dictionary<int, string>();
+        public Dictionary<int, string> wtbpricelist1 = new Dictionary<int, string>();
         Helpfunktions helpf;
         Settings sttngs;
 
@@ -175,7 +175,7 @@ namespace Auction.mod
             return price;
         }
 
-        public void PriceChecker(int index, bool SPtarget, string SPretindex)
+        public void PriceChecker(int index, bool SPtarget, int SPretindex)
         {
 
             
@@ -186,7 +186,7 @@ namespace Auction.mod
 
 
 
-                    wtspricelist1[SPretindex.ToLower()] = price.ToString();
+                    wtspricelist1[SPretindex] = price.ToString();
 
                 }
                 else
@@ -196,7 +196,7 @@ namespace Auction.mod
                     price = pricerounder(index, SPtarget);
 
 
-                    wtbpricelist1[SPretindex.ToLower()] = price.ToString();
+                    wtbpricelist1[SPretindex] = price.ToString();
 
 
                 }

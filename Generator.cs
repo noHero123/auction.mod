@@ -84,35 +84,35 @@ namespace Auction.mod
             this.fullSellOwnList.Clear();
             orgicardsPlayer.AddRange(((LibraryViewMessage)msg).cards);
             List<string> checklist = new List<string>();
-            helpf.cardNameToNumberOwned.Clear();
-            Console.WriteLine("add cards to cardnametonumberowned");
+            helpf.cardIDToNumberOwned.Clear();
+            Console.WriteLine("add cards to cardIDToNumberOwned");
             foreach (Auction ai in this.fullBuyOwnList) //fullbuyownlist == all cards in game
             {
-                if (!helpf.cardNameToNumberOwned.ContainsKey(ai.card.getName()))
+                if (!helpf.cardIDToNumberOwned.ContainsKey(ai.card.getType()))
                 {
-                    helpf.cardNameToNumberOwned.Add(ai.card.getName(), 0);
-                    Console.WriteLine(ai.card.getName());
+                    helpf.cardIDToNumberOwned.Add(ai.card.getType(), 0);
                 }
             }
 
             foreach (Card c in orgicardsPlayer)
             {
-                if (c.tradable && !(checklist.Contains(c.getName())))
+                if (c.tradable && !(checklist.Contains(helpf.cardidsToCardnames[c.getType()])))
                 {
                     Auction ai = new Auction(App.MyProfile.ProfileInfo.name,DateTime.Now,Auction.OfferType.SELL,c,"");
                     this.fullSellOwnList.Add(ai);
-                    checklist.Add(c.getName());
+                    checklist.Add(helpf.cardidsToCardnames[c.getType()]);
                 }
 
 
-                helpf.cardNameToNumberOwned[c.getName()] = helpf.cardNameToNumberOwned[c.getName()] + 1;
+                helpf.cardIDToNumberOwned[c.getType()] = helpf.cardIDToNumberOwned[c.getType()] + 1;
             }
+
             this.fullSellOwnList.Sort(delegate(Auction p1, Auction p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
 
             prcs.wtspricelist1.Clear();
             for (int i = 0; i < fullSellOwnList.Count; i++)
             {
-                prcs.wtspricelist1.Add(fullSellOwnList[i].card.getName().ToLower(), "");
+                prcs.wtspricelist1.Add(fullSellOwnList[i].card.getType(), "");
 
             }
 
@@ -125,6 +125,7 @@ namespace Auction.mod
         {
             // get all available cards, save them!
             helpf.setarrays(msg);
+
             prcs.resetarrays(helpf.cardids.Length);
             if (helpf.nicks) helpf.readnicksfromfile();
             mssgprsr.searchscrollsnicks.Clear();
@@ -133,7 +134,7 @@ namespace Auction.mod
             Console.WriteLine("add cards to fullbuyownList");
             for (int j = 0; j < helpf.cardnames.Length; j++)
             {
-                prcs.wtbpricelist1.Add(helpf.cardnames[j].ToLower(), "");
+                prcs.wtbpricelist1.Add(helpf.cardids[j], "");
                 CardType type = CardTypeManager.getInstance().get(helpf.cardids[j]);
                 Card card = new Card(helpf.cardids[j], type, true);
                 //aucitem ai = new aucitem();
@@ -143,9 +144,6 @@ namespace Auction.mod
                 //ai.seller = "me";
                 Auction ai = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now, Auction.OfferType.BUY, card,"");
                 this.fullBuyOwnList.Add(ai);
-
-                Console.WriteLine(ai.card.getName());
-
                 nickelement nele;
                 nele.nick = helpf.cardnames[j];
                 nele.cardname = helpf.cardnames[j];

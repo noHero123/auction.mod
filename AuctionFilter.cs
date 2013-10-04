@@ -64,8 +64,8 @@ namespace Auction.mod
 
         public bool isFilteredByAmountFilter(Auction a)
         {
-            if (!helpf.cardNameToNumberOwned.ContainsKey(a.card.getName())) Console.WriteLine("#key is not in " + a.card.getName());
-            int anz = helpf.cardNameToNumberOwned[a.card.getName()];
+            //if (!helpf.cardIDToNumberOwned.ContainsKey(a.card.getType())) Console.WriteLine("#key is not in " + a.card.getName());
+            int anz = helpf.cardIDToNumberOwned[a.card.getType()];
             if (amountFilter == 1 && anz == 0 ) return true;
             if (amountFilter == 2 && anz <= 3) return true;
             if (amountFilter == 3 && anz >= 3) return true;
@@ -109,11 +109,11 @@ namespace Auction.mod
         public bool isBeyondPriceRange(Auction a) {
             if (this.dontshowScrollsWithNoPrice && a.price == 0) return true;
             if (a.price == 0) return false;
-            if (takeWtbFromGen && prcs.wtbpricelist1[a.card.getName().ToLower()] != "")
-            { if (a.price > Convert.ToInt32(prcs.wtbpricelist1[a.card.getName().ToLower()])) return true; }
-            
-            if (takeWtsFromGen && prcs.wtspricelist1[a.card.getName().ToLower()] != "")
-            { if (a.price < Convert.ToInt32(prcs.wtspricelist1[a.card.getName().ToLower()])) return true; }
+            if (takeWtbFromGen && prcs.wtbpricelist1[a.card.getType()] != "")
+            { if (a.price > Convert.ToInt32(prcs.wtbpricelist1[a.card.getType()])) return true; }
+
+            if (takeWtsFromGen && prcs.wtspricelist1[a.card.getType()] != "")
+            { if (a.price < Convert.ToInt32(prcs.wtspricelist1[a.card.getType()])) return true; }
 
             if (priceLowerBound >= 0 && a.price >0 && priceUpperBound >= 0) {
                 return a.price < priceLowerBound || priceUpperBound < a.price;

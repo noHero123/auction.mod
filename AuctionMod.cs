@@ -78,7 +78,7 @@ namespace Auction.mod
 
             if (msg is LibraryViewMessage)
             {
-                if (!(((LibraryViewMessage)msg).profileId == "test"))
+                if ((((LibraryViewMessage)msg).profileId == App.MyProfile.ProfileInfo.id))
                 {
                     generator.setowncards(msg);
                 }

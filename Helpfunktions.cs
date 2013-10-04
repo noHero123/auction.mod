@@ -68,10 +68,10 @@ namespace Auction.mod
 
         public Dictionary<string, int> cardnamesToIndex = new Dictionary<string, int>();
         public Dictionary<int, int> cardidsToIndex = new Dictionary<int, int>();
-        public Dictionary<string, int> cardnamesToImgidDic = new Dictionary<string, int>();
+        public Dictionary<int, int> cardIDToImgidDic = new Dictionary<int, int>();
         public Dictionary<int, string> cardidsToCardnames = new Dictionary<int, string>();
         public Dictionary<string, int> cardnamesToID = new Dictionary<string, int>();
-        public Dictionary<string, int> cardNameToNumberOwned = new Dictionary<string, int>();
+        public Dictionary<int, int> cardIDToNumberOwned = new Dictionary<int, int>();
 
         public Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
         public GUISkin cardListPopupSkin;
@@ -96,10 +96,10 @@ namespace Auction.mod
             if (cardidsToIndex.TryGetValue(id, out ret)) return ret;
             return -1;
         }
-        public int cardnametoimageid(string name)
+        public int cardIDtoimageid(int id)
         {
             int ret;
-            if (cardnamesToImgidDic.TryGetValue(name, out ret)) return ret;
+            if (cardIDToImgidDic.TryGetValue(id, out ret)) return ret;
             return -1;
         }
 
@@ -130,6 +130,9 @@ namespace Auction.mod
 
         public void setarrays(Message msg)
         {
+            
+           
+            /*
             JsonReader jsonReader = new JsonReader();
             Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(msg.getRawText());
             Dictionary<string, object>[] d = (Dictionary<string, object>[])dictionary["cardTypes"];
@@ -137,13 +140,30 @@ namespace Auction.mod
             this.cardnames = new string[d.GetLength(0)];
             this.cardImageid = new int[d.GetLength(0)];
             this.cardType = new string[d.GetLength(0)];
+             */
+
+            CardTypesMessage cmsg = (CardTypesMessage)msg;
+            this.cardids = new int[cmsg.cardTypes.Length];
+            this.cardnames = new string[cmsg.cardTypes.Length];
+            this.cardImageid = new int[cmsg.cardTypes.Length];
+            this.cardType = new string[cmsg.cardTypes.Length];
+            int i = 0;
+            foreach (CardType c in cmsg.cardTypes)
+            {
+                this.cardids[i] = c.id;
+                this.cardnames[i] = c.name.ToLower();
+                this.cardImageid[i] = c.cardImage;
+                this.cardType[i] = c.kind.ToString();
+                i++;
+            }
+            /*
             for (int i = 0; i < d.GetLength(0); i++)
             {
                 this.cardids[i] = Convert.ToInt32(d[i]["id"]);
                 this.cardnames[i] = d[i]["name"].ToString().ToLower();
                 this.cardImageid[i] = Convert.ToInt32(d[i]["cardImage"]);
                 this.cardType[i] = d[i]["kind"].ToString();
-            }
+            }*/
             generatedictionarys();
         }
 
@@ -180,14 +200,14 @@ namespace Auction.mod
         {
             this.cardidsToIndex.Clear();
             this.cardnamesToIndex.Clear();
-            this.cardnamesToImgidDic.Clear();
+            this.cardIDToImgidDic.Clear();
             this.cardidsToCardnames.Clear();
             this.cardnamesToID.Clear();
             for (int i = 0; i < cardids.Length; i++)
             {
                 this.cardidsToIndex.Add(this.cardids[i], i);
                 this.cardnamesToIndex.Add(cardnames[i], i);
-                this.cardnamesToImgidDic.Add(cardnames[i], cardImageid[i]);
+                this.cardIDToImgidDic.Add(cardids[i], cardImageid[i]);
                 this.cardidsToCardnames.Add(cardids[i], cardnames[i]);
                 this.cardnamesToID.Add(cardnames[i], cardids[i]);
 

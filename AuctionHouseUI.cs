@@ -133,7 +133,7 @@ namespace Auction.mod
                 ah.setBuySortMode(srchsvr.sortmode);
                 this.drawAHlist(false);
 
-                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message,tradeitem.card.getType()); }
                 return;
             }
 
@@ -613,9 +613,9 @@ namespace Auction.mod
                         }
                         string name = current.card.getName();
 
-                        string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
+                        string txt = helpf.cardIDtoimageid(current.card.getType()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + ") "+ name ;
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.card.getType()] + ") " + name;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -935,7 +935,7 @@ namespace Auction.mod
 
                 }
 
-                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType()); }
 
 
 
@@ -1129,9 +1129,9 @@ namespace Auction.mod
                         }
                         string name = current.card.getName();
 
-                        string txt = helpf.cardnametoimageid(name.ToLower()).ToString();
+                        string txt = helpf.cardIDtoimageid(current.card.getType()).ToString();
                         Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
-                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardNameToNumberOwned[current.card.getName()] + ") " + name;
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.card.getType()] + ") " + name;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
                         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                         Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
@@ -1442,7 +1442,7 @@ namespace Auction.mod
 
 
 
-        private void starttrading(string name, string cname, int price, bool wts, string orgmsg)
+        private void starttrading(string name, string cname, int price, bool wts, string orgmsg, int cid)
         {
             // asks the user if he wants to trade
             GUI.skin = helpf.cardListPopupSkin;
@@ -1452,7 +1452,7 @@ namespace Auction.mod
 
             string text = "sell";
             if (wts) text = "buy";
-            int anzcard = helpf.cardNameToNumberOwned[cname];
+            int anzcard = helpf.cardIDToNumberOwned[cid];
             string message = "You want to " + text + "\r\n" + cname + " for " + price + " Gold" + "\r\nYou own this card " + anzcard + " times\r\n\r\nOriginal Message:";
             GUI.Label(recto.tbmessage, message);
             GUI.skin.label.wordWrap = true;
