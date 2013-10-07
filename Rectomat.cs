@@ -20,6 +20,7 @@ namespace Auction.mod
         private Vector4 margins;
        public Rect screenRect,outerRect,innerBGRect,innerRect,buttonLeftRect,buttonRightRect,wtsbuttonrect;
        public Rect wtbbuttonrect,bothbuttonrect,updatebuttonrect,fillbuttonrect;
+       public float goldlength;
         //filterrects
        public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
        public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2;
@@ -125,6 +126,10 @@ namespace Auction.mod
             this.maxCharsName = (int)(this.labelsWidth / 12f);
             this.maxCharsRK = (int)(this.labelsWidth / 10f);
 
+            Vector2 vector = GUI.skin.label.CalcSize(new GUIContent("000000g"));
+            goldlength = vector.x;
+
+
             float sbiconwidth = (filtermenurect.width - 2 * num2 - 6f * 4f) / 6f;
             float sbiconhight = costIconHeight;
             float chatheight = chatLogStyle.CalcHeight(new GUIContent("JScrollg"), 1000);
@@ -184,6 +189,9 @@ namespace Auction.mod
 
             this.tbmessage = new Rect(this.tradingbox.x, this.tradingbox.y, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f) / 2f);
             this.tbmessagescroll = new Rect(this.tradingbox.x, this.tbmessage.yMax, this.tradingbox.width, (this.tradingbox.height - (float)Screen.height * 0.05f) / 2f);
+
+            GUI.skin =  Helpfunktions.Instance.cardListPopupBigLabelSkin;
+
 
             calcguirects();
        }

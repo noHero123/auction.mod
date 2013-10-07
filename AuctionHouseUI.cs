@@ -683,11 +683,12 @@ namespace Auction.mod
 
                         //draw gold cost
                         float nextx = position11.xMax + recto.costIconWidth;
-                        string gold = current.price + " G";
-                        if (current.price == 0) gold = "? G";
+                        string gold = current.price + "g";
+                        if (current.price == 0) gold = "?";
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
-                        vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
+
+                        //Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.goldlength, recto.cardHeight);
                         Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth / 2f, recto.cardHeight);
                         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                         GUI.Label(position12, gold);
@@ -1199,11 +1200,12 @@ namespace Auction.mod
 
                         //draw gold cost
                         float nextx = position11.xMax + recto.costIconWidth;
-                        string gold = current.price + " G";
-                        if (current.price == 0) gold = "? G";
+                        string gold = current.price + "g";
+                        if (current.price == 0) gold = "?";
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
-                        vector = GUI.skin.label.CalcSize(new GUIContent(gold));
+                        //vector = GUI.skin.label.CalcSize(new GUIContent(gold));
                         //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
+                        //Rect position12 = new Rect(position7.xMax-recto.goldlength-2f, position8.yMin, recto.goldlength, recto.cardHeight);
                         Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth / 2f, recto.cardHeight);
                         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                         GUI.Label(position12, gold);
@@ -1453,7 +1455,7 @@ namespace Auction.mod
             string text = "sell";
             if (wts) text = "buy";
             int anzcard = helpf.cardIDToNumberOwned[cid];
-            string message = "You want to " + text + "\r\n" + cname + " for " + price + " Gold" + "\r\nYou own this card " + anzcard + " times\r\n\r\nOriginal Message:";
+            string message = "You want to " + text + "\r\n" + cname + " for " + price + "g" + "\r\nYou own this card " + anzcard + " times\r\n\r\nOriginal Message:";
             GUI.Label(recto.tbmessage, message);
             GUI.skin.label.wordWrap = true;
             float msghigh = GUI.skin.label.CalcHeight(new GUIContent(orgmsg), recto.tbmessage.width - 30f);
