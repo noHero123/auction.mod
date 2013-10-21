@@ -142,7 +142,8 @@ namespace Auction.mod
                 //ai.price = "";
                 //ai.priceinint = helpf.allcardsavailable.Count;
                 //ai.seller = "me";
-                Auction ai = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now, Auction.OfferType.BUY, card,"");
+                Auction ai = new Auction(" ", DateTime.Now, Auction.OfferType.BUY, card,"");
+                if (App.MyProfile.ProfileInfo.name != null) { ai = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now, Auction.OfferType.BUY, card,""); }
                 this.fullBuyOwnList.Add(ai);
                 nickelement nele;
                 nele.nick = helpf.cardnames[j];
