@@ -1,0 +1,1036 @@
+Initialize engine version: 4.2.0f4 (38efbd14869d)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.2723]
+    Renderer: NVIDIA GeForce GTX 560 Ti  
+    Vendor:   NVIDIA
+    VRAM:     978 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 DF24=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Braintree.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Braintree.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ICSharpCode.SharpZipLib.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ICSharpCode.SharpZipLib.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Ionic.Zip.Reduced.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Ionic.Zip.Reduced.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\JsonFx.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\JsonFx.dll into Unity Child Domain
+- Completed reload, in  0.042 seconds
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1680x1050 60Hz; virtual: 1680x1050 at 0,0
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ScrollsModLoader.dll (this message is harmless)
+ModLoader version: 4
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Mono.Security.dll (this message is harmless)
+------------------------------
+ModLoader Hooks:
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+------------------------------
+Weaved Assembly
+Write back patched bytecode...
+Platform specific patches...
+------------------------------
+ModLoader Hooks:
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+------------------------------
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.Xml.dll (this message is harmless)
+Initialize engine version: 4.2.0f4 (38efbd14869d)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.2723]
+    Renderer: NVIDIA GeForce GTX 560 Ti  
+    Vendor:   NVIDIA
+    VRAM:     978 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 DF24=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Braintree.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Braintree.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ICSharpCode.SharpZipLib.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ICSharpCode.SharpZipLib.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Ionic.Zip.Reduced.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Ionic.Zip.Reduced.dll into Unity Child Domain
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\JsonFx.dll (this message is harmless)
+Loading C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\JsonFx.dll into Unity Child Domain
+- Completed reload, in  0.048 seconds
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1680x1050 60Hz; virtual: 1680x1050 at 0,0
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\ScrollsModLoader.dll (this message is harmless)
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.dll (this message is harmless)
+ModLoader version: 4
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\Mono.Security.dll (this message is harmless)
+------------------------------
+ModLoader Hooks:
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+System.Void Login::PopupOk(System.String)
+System.Void Popups::OnGUI()
+System.Void SettingsMenu::Init()
+System.Void SettingsMenu::OnGUI()
+System.Void SettingsMenu::OnDestroy()
+System.Void SceneLoader::loadScene(System.String)
+System.Boolean LobbyMenu::isSceneJumpValid(System.String)
+System.Void LobbyMenu::drawHeaderButtons()
+GUIPositioner2 LobbyMenu::getButtonPositioner(MockupCalc,UnityEngine.Vector2[],System.Single)
+------------------------------
+Platform assembly: C:\Users\Thele\AppData\Local\Mojang\Scrolls\game\Scrolls_Data\Managed\System.Xml.dll (this message is harmless)
+10/21/2013 3:03:20 PM :: C:/Users/Thele/AppData/LocalLow/Mojang/Scrolls/server_ip.txt
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:20 PM :: 7 calling connect! 107.21.58.31:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:20 PM :: Setting resolution: Width: 1280, Height: 720, Fullscreen: False
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+ModInstancesCount changes from -1 to 0
+ModOrder:
+ModInstances:
+Hooks:
+10/21/2013 3:03:20 PM :: Read 117 b: {"version":"0.110.1","assetURL":"http://download.scrolls.com/asse... from 107.21.58.31:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:20 PM :: FROM SERVER (ServerInfo){"version":"0.110.1","assetURL":"http://download.scrolls.com/assets/","roles":"LOOKUP,RESOURCE","msg":"ServerInfo"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:20 PM :: Sending > LobbyLookup
+{
+	"msg" : "LobbyLookup"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:21 PM :: Read 56 b: {"ip":"54.208.22.193","port":8081,"msg":"LobbyLookup"}
+
+... from 107.21.58.31:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:21 PM :: FROM SERVER (LobbyLookup)
+
+{"ip":"54.208.22.193","port":8081,"msg":"LobbyLookup"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:21 PM :: 6 calling connect! 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:21 PM :: Read 132 b: {"version":"0.110.1","assetURL":"http://download.scrolls.com/asse... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:21 PM :: FROM SERVER (ServerInfo){"version":"0.110.1","assetURL":"http://download.scrolls.com/assets/","roles":"LOBBY,RESOURCE,LOOKUP,GRAPHITE","msg":"ServerInfo"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:29 PM :: Read 37 b: {"time":1382360614943,"msg":"Ping"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:33 PM :: Sending > FirstConnect
+{
+	"authHash" : "0868709c6497e77b1b663bf25b178f8bbfc5e9083273d34d6b007d47a7265632",
+	"accessToken" : {
+		"accessToken" : "da85dd86a0de4b8980f4be47f3e4ce93",
+		"clientToken" : "845528e087b49adc7c15aa3de86c98126d8bb9d2",
+		"user" : {
+			"id" : "58b410c9add04262b6f651d24de28621"
+		},
+		"selectedProfile" : {
+			"id" : "123",
+			"name" : "xxx"
+		}
+	},
+	"msg" : "FirstConnect"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 2904 b: {"cardTypes":[{"id":1,"name":"Gravelock Elder","description":"Oth... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 2904 b: ER":0,"ENERGY":0,"GROWTH":0}}],"targetArea":"FORWARD","passiveRul... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 1452 b: decreased by 2.","flavor":"FOLLOW THE JARL FOR THE KIN!","subType... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: TILE","available":true},{"id":24,"name":"Catapult of Goo","descri... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: e":501,"targetArea":"UNDEFINED","available":true},{"id":35,"name"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 2904 b: nimationPreviewImage":839,"animationPreviewInfo":"61.15,106.3,0.2... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 1452 b: ILE","available":true,"sound":"action_pushback"},{"id":49,"name":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 1452 b: :"45.55,95.8,0.25","animationBundle":113,"available":true},{"id":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: ,"ORDER":0,"ENERGY":0,"GROWTH":0}}],"targetArea":"FORWARD","avail... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 2904 b:  all friendly units are healed by 1.","flavor":"Refreshing!","sub... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: playName":"Ranged attack","description":"This unit does not take ... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: Machine Priest","description":"Instead of attacking, Machine Prie... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 2904 b: omes poisoned for 3 rounds.","flavor":"Try not to breathe.","subT... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: subTypesStr":"","kind":"SPELL","rarity":1,"hp":0,"ap":0,"ac":0,"c... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:34 PM :: Read 4356 b: ostEnergy":0,"set":3,"rulesList":["Bloodboil"],"cardImage":569,"a... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: ecay":0,"costOrder":0,"costGrowth":1,"costEnergy":0,"set":2,"rule... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: ,"ORDER":0,"ENERGY":0,"GROWTH":0}}],"targetArea":"FORWARD","avail... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 4356 b: cardImage":607,"available":true},{"id":125,"name":"Crossbowman","... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: ":0,"ENERGY":0,"GROWTH":0}}],"targetArea":"FORWARD","available":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: ge.","flavor":"Strap it on, then stand back.","subTypesStr":"","k... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: Image":739,"targetArea":"TILE","available":true},{"id":143,"name"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: ":"76.7,80.45,0.25","animationBundle":257,"abilities":[{"id":"Mov... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: r":0,"costGrowth":0,"costEnergy":4,"set":2,"rulesList":["DrawScro... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: ther unit, that unit is returned to its owner's hand.","flavor":"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 16384 b: rowth":0,"costEnergy":0,"set":3,"rulesList":["AttackForward","Mov... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 16384 b: ","Move","DrawScrolls2OnDeath"],"cardImage":816,"animationPreview... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 4984 b: . throwing.","subTypesStr":"Human,Tribesman","kind":"CREATURE","r... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 4356 b: to its Caller.","subTypesStr":"","kind":"ENCHANTMENT","rarity":1,... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: r deals damage to an idol, that idol is dealt an additional 5 dam... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 4356 b: t"],"cardImage":923,"targetArea":"UNDEFINED","available":true},{"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: subtype, gain Curse 2.","flavor":"A cruel legacy.","subTypesStr":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: on":"When Cannonetta deals damage, half of that damage (rounded d... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b:  into play, two damage is dealt to a random opponent idol. Beetle... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2904 b: "BODY","filename":"body_5.png","set":"MALE_1"},{"id":13,"type":"C... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 1452 b: gs_4.png","set":"FEMALE_1"},{"id":75,"type":"COMMON","part":"LEG"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 4356 b: ,"type":"STORE","part":"LEG","filename":"legs_20.png","set":"MALE... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 2596 b: png","set":"FEMALE_1"},{"id":146,"type":"STORE","part":"ARM_BACK"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (AvatarTypes)
+
+{"types":[{"id":1,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_1.png","set":"MALE_1"},{"id":2,"type":"UNLOCKABLE","part":"ARM_BACK","filename":"back_arm_2.png","set":"MALE_1"},{"id":3,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_3.png","set":"MALE_1"},{"id":4,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_4.png","set":"MALE_1"},{"id":5,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_5.png","set":"MALE_1"},{"id":6,"type":"UNLOCKABLE","part":"ARM_BACK","filename":"back_arm_6.png","set":"MALE_1"},{"id":7,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_7.png","set":"MALE_1"},{"id":8,"type":"COMMON","part":"BODY","filename":"body_1.png","set":"MALE_1"},{"id":9,"type":"COMMON","part":"BODY","filename":"body_2.png","set":"MALE_1"},{"id":10,"type":"COMMON","part":"BODY","filename":"body_3.png","set":"MALE_1"},{"id":11,"type":"COMMON","part":"BODY","filename":"body_4.png","set":"MALE_1"},{"id":12,"type":"UNLOCKABLE","part":"BODY","filename":"body_5.png","set":"MALE_1"},{"id":13,"type":"COMMON","part":"BODY","filename":"body_6.png","set":"MALE_1"},{"id":15,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_1.png","set":"MALE_1"},{"id":16,"type":"UNLOCKABLE","part":"ARM_FRONT","filename":"front_arm_2.png","set":"MALE_1"},{"id":17,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_3.png","set":"MALE_1"},{"id":18,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_4.png","set":"MALE_1"},{"id":19,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_5.png","set":"MALE_1"},{"id":20,"type":"UNLOCKABLE","part":"ARM_FRONT","filename":"front_arm_6.png","set":"MALE_1"},{"id":21,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_7.png","set":"MALE_1"},{"id":22,"type":"COMMON","part":"HEAD","filename":"head_1.png","set":"MALE_1"},{"id":23,"type":"COMMON","part":"HEAD","filename":"head_2.png","set":"MALE_1"},{"id":24,"type":"COMMON","part":"HEAD","filename":"head_3.png","set":"MALE_1"},{"id":25,"type":"COMMON","part":"HEAD","filename":"head_4.png","set":"MALE_1"},{"id":26,"type":"COMMON","part":"HEAD","filename":"head_5.png","set":"MALE_1"},{"id":27,"type":"COMMON","part":"HEAD","filename":"head_6.png","set":"MALE_1"},{"id":28,"type":"COMMON","part":"HEAD","filename":"head_7.png","set":"MALE_1"},{"id":29,"type":"UNLOCKABLE","part":"HEAD","filename":"head_8.png","set":"MALE_1"},{"id":30,"type":"COMMON","part":"HEAD","filename":"head_9.png","set":"MALE_1"},{"id":31,"type":"UNLOCKABLE","part":"HEAD","filename":"head_10.png","set":"MALE_1"},{"id":32,"type":"COMMON","part":"HEAD","filename":"head_11.png","set":"MALE_1"},{"id":33,"type":"COMMON","part":"HEAD","filename":"head_12.png","set":"MALE_1"},{"id":34,"type":"UNLOCKABLE","part":"HEAD","filename":"head_13.png","set":"MALE_1"},{"id":35,"type":"COMMON","part":"HEAD","filename":"head_14.png","set":"MALE_1"},{"id":36,"type":"UNLOCKABLE","part":"HEAD","filename":"head_15.png","set":"MALE_1"},{"id":37,"type":"COMMON","part":"HEAD","filename":"head_16.png","set":"MALE_1"},{"id":38,"type":"UNLOCKABLE","part":"HEAD","filename":"head_17.png","set":"MALE_1"},{"id":39,"type":"COMMON","part":"LEG","filename":"legs_1.png","set":"MALE_1"},{"id":40,"type":"COMMON","part":"LEG","filename":"legs_2.png","set":"MALE_1"},{"id":41,"type":"COMMON","part":"LEG","filename":"legs_3.png","set":"MALE_1"},{"id":68,"type":"COMMON","part":"BODY","filename":"body_7.png","set":"FEMALE_1"},{"id":69,"type":"COMMON","part":"BODY","filename":"body_8.png","set":"FEMALE_1"},{"id":70,"type":"COMMON","part":"HEAD","filename":"head_18.png","set":"FEMALE_1"},{"id":71,"type":"COMMON","part":"HEAD","filename":"head_19.png","set":"FEMALE_1"},{"id":72,"type":"COMMON","part":"HEAD","filename":"head_20.png","set":"FEMALE_1"},{"id":73,"type":"COMMON","part":"HEAD","filename":"head_21.png","set":"FEMALE_1"},{"id":74,"type":"COMMON","part":"LEG","filename":"legs_4.png","set":"FEMALE_1"},{"id":75,"type":"COMMON","part":"LEG","filename":"legs_5.png","set":"FEMALE_1"},{"id":76,"type":"COMMON","part":"LEG","filename":"legs_6.png","set":"FEMALE_1"},{"id":77,"type":"COMMON","part":"LEG","filename":"legs_7.png","set":"FEMALE_1"},{"id":78,"type":"STORE","part":"ARM_BACK","filename":"back_arm_18.png","set":"MALE_1"},{"id":79,"type":"STORE","part":"ARM_BACK","filename":"back_arm_19.png","set":"MALE_1"},{"id":80,"type":"STORE","part":"ARM_BACK","filename":"back_arm_20.png","set":"MALE_1"},{"id":81,"type":"STORE","part":"ARM_BACK","filename":"back_arm_21.png","set":"MALE_1"},{"id":82,"type":"STORE","part":"BODY","filename":"body_18.png","set":"MALE_1"},{"id":83,"type":"STORE","part":"BODY","filename":"body_19.png","set":"MALE_1"},{"id":84,"type":"STORE","part":"BODY","filename":"body_20.png","set":"MALE_1"},{"id":85,"type":"STORE","part":"BODY","filename":"body_21.png","set":"MALE_1"},{"id":86,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_18.png","set":"MALE_1"},{"id":87,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_19.png","set":"MALE_1"},{"id":88,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_20.png","set":"MALE_1"},{"id":89,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_21.png","set":"MALE_1"},{"id":90,"type":"STORE","part":"LEG","filename":"legs_18.png","set":"MALE_1"},{"id":91,"type":"STORE","part":"LEG","filename":"legs_19.png","set":"MALE_1"},{"id":92,"type":"STORE","part":"LEG","filename":"legs_20.png","set":"MALE_1"},{"id":93,"type":"STORE","part":"LEG","filename":"legs_21.png","set":"MALE_1"},{"id":94,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_1.png","set":"FEMALE_1"},{"id":95,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_2.png","set":"FEMALE_1"},{"id":96,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_3.png","set":"FEMALE_1"},{"id":97,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_4.png","set":"FEMALE_1"},{"id":98,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_5.png","set":"FEMALE_1"},{"id":99,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_6.png","set":"FEMALE_1"},{"id":100,"type":"COMMON","part":"ARM_BACK","filename":"back_arm_7.png","set":"FEMALE_1"},{"id":101,"type":"COMMON","part":"BODY","filename":"body_1.png","set":"FEMALE_1"},{"id":102,"type":"COMMON","part":"BODY","filename":"body_2.png","set":"FEMALE_1"},{"id":103,"type":"COMMON","part":"BODY","filename":"body_3.png","set":"FEMALE_1"},{"id":104,"type":"COMMON","part":"BODY","filename":"body_4.png","set":"FEMALE_1"},{"id":105,"type":"COMMON","part":"BODY","filename":"body_5.png","set":"FEMALE_1"},{"id":106,"type":"COMMON","part":"BODY","filename":"body_6.png","set":"FEMALE_1"},{"id":107,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_1.png","set":"FEMALE_1"},{"id":108,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_2.png","set":"FEMALE_1"},{"id":109,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_3.png","set":"FEMALE_1"},{"id":110,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_4.png","set":"FEMALE_1"},{"id":111,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_5.png","set":"FEMALE_1"},{"id":112,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_6.png","set":"FEMALE_1"},{"id":113,"type":"COMMON","part":"ARM_FRONT","filename":"front_arm_7.png","set":"FEMALE_1"},{"id":114,"type":"COMMON","part":"HEAD","filename":"head_1.png","set":"FEMALE_1"},{"id":115,"type":"COMMON","part":"HEAD","filename":"head_10.png","set":"FEMALE_1"},{"id":116,"type":"COMMON","part":"HEAD","filename":"head_11.png","set":"FEMALE_1"},{"id":117,"type":"COMMON","part":"HEAD","filename":"head_12.png","set":"FEMALE_1"},{"id":118,"type":"COMMON","part":"HEAD","filename":"head_13.png","set":"FEMALE_1"},{"id":119,"type":"COMMON","part":"HEAD","filename":"head_14.png","set":"FEMALE_1"},{"id":120,"type":"COMMON","part":"HEAD","filename":"head_15.png","set":"FEMALE_1"},{"id":121,"type":"COMMON","part":"HEAD","filename":"head_16.png","set":"FEMALE_1"},{"id":122,"type":"COMMON","part":"HEAD","filename":"head_17.png","set":"FEMALE_1"},{"id":123,"type":"COMMON","part":"HEAD","filename":"head_2.png","set":"FEMALE_1"},{"id":124,"type":"COMMON","part":"HEAD","filename":"head_3.png","set":"FEMALE_1"},{"id":125,"type":"COMMON","part":"HEAD","filename":"head_4.png","set":"FEMALE_1"},{"id":126,"type":"COMMON","part":"HEAD","filename":"head_5.png","set":"FEMALE_1"},{"id":127,"type":"COMMON","part":"HEAD","filename":"head_6.png","set":"FEMALE_1"},{"id":128,"type":"COMMON","part":"HEAD","filename":"head_7.png","set":"FEMALE_1"},{"id":129,"type":"COMMON","part":"HEAD","filename":"head_8.png","set":"FEMALE_1"},{"id":130,"type":"COMMON","part":"HEAD","filename":"head_9.png","set":"FEMALE_1"},{"id":131,"type":"COMMON","part":"LEG","filename":"legs_1.png","set":"FEMALE_1"},{"id":132,"type":"COMMON","part":"LEG","filename":"legs_2.png","set":"FEMALE_1"},{"id":133,"type":"COMMON","part":"LEG","filename":"legs_3.png","set":"FEMALE_1"},{"id":134,"type":"STORE","part":"HEAD","filename":"head_18.png","set":"MALE_1"},{"id":135,"type":"STORE","part":"HEAD","filename":"head_19.png","set":"MALE_1"},{"id":136,"type":"STORE","part":"HEAD","filename":"head_20.png","set":"MALE_1"},{"id":137,"type":"STORE","part":"HEAD","filename":"head_21.png","set":"MALE_1"},{"id":138,"type":"COMMON","part":"LEG","filename":"legs_4.png","set":"MALE_1"},{"id":139,"type":"COMMON","part":"LEG","filename":"legs_5.png","set":"MALE_1"},{"id":140,"type":"COMMON","part":"LEG","filename":"legs_6.png","set":"MALE_1"},{"id":141,"type":"STORE","part":"ARM_BACK","filename":"back_arm_9.png","set":"FEMALE_1"},{"id":144,"type":"STORE","part":"ARM_BACK","filename":"back_arm_10.png","set":"FEMALE_1"},{"id":145,"type":"STORE","part":"ARM_BACK","filename":"back_arm_11.png","set":"FEMALE_1"},{"id":146,"type":"STORE","part":"ARM_BACK","filename":"back_arm_12.png","set":"FEMALE_1"},{"id":147,"type":"STORE","part":"BODY","filename":"body_10.png","set":"FEMALE_1"},{"id":148,"type":"STORE","part":"BODY","filename":"body_11.png","set":"FEMALE_1"},{"id":149,"type":"STORE","part":"BODY","filename":"body_12.png","set":"FEMALE_1"},{"id":150,"type":"STORE","part":"BODY","filename":"body_13.png","set":"FEMALE_1"},{"id":151,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_9.png","set":"FEMALE_1"},{"id":152,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_10.png","set":"FEMALE_1"},{"id":153,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_11.png","set":"FEMALE_1"},{"id":154,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_12.png","set":"FEMALE_1"},{"id":155,"type":"STORE","part":"HEAD","filename":"head_23.png","set":"FEMALE_1"},{"id":156,"type":"STORE","part":"HEAD","filename":"head_24.png","set":"FEMALE_1"},{"id":157,"type":"STORE","part":"HEAD","filename":"head_25.png","set":"FEMALE_1"},{"id":158,"type":"STORE","part":"HEAD","filename":"head_26.png","set":"FEMALE_1"},{"id":159,"type":"STORE","part":"HEAD","filename":"head_27.png","set":"FEMALE_1"},{"id":160,"type":"STORE","part":"HEAD","filename":"head_28.png","set":"FEMALE_1"},{"id":161,"type":"STORE","part":"HEAD","filename":"head_29.png","set":"FEMALE_1"},{"id":162,"type":"STORE","part":"LEG","filename":"legs_9.png","set":"FEMALE_1"},{"id":163,"type":"STORE","part":"LEG","filename":"legs_10.png","set":"FEMALE_1"},{"id":164,"type":"STORE","part":"LEG","filename":"legs_11.png","set":"FEMALE_1"},{"id":165,"type":"STORE","part":"LEG","filename":"legs_12.png","set":"FEMALE_1"},{"id":166,"type":"STORE","part":"HEAD","filename":"head_23.png","set":"MALE_1"},{"id":167,"type":"STORE","part":"HEAD","filename":"head_24.png","set":"MALE_1"},{"id":168,"type":"STORE","part":"BODY","filename":"body_23.png","set":"MALE_1"},{"id":169,"type":"STORE","part":"BODY","filename":"body_24.png","set":"MALE_1"},{"id":170,"type":"STORE","part":"LEG","filename":"legs_23.png","set":"MALE_1"},{"id":171,"type":"STORE","part":"LEG","filename":"legs_24.png","set":"MALE_1"},{"id":172,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_23.png","set":"MALE_1"},{"id":173,"type":"STORE","part":"ARM_FRONT","filename":"front_arm_24.png","set":"MALE_1"},{"id":174,"type":"STORE","part":"ARM_BACK","filename":"back_arm_24.png","set":"MALE_1"},{"id":193,"type":"STORE","part":"ARM_BACK","filename":"back_arm_23.png","set":"MALE_1"}],"msg":"AvatarTypes"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (Ok)
+
+{"op":"FirstConnect","msg":"Ok"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Sending > JoinLobby
+{
+	"msg" : "JoinLobby"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 362 b: {"profile":{"id":"894cb62d9bca4791bfa77d0659f2c7d8","userUuid":"5... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (ProfileInfo)
+
+{"profile":{"id":"123","userUuid":"321","name":"xxx","adminRole":"None","userType":"Beta"},"msg":"ProfileInfo"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: Read 964 b: {"friends":[{"profile":{"id":"328a4fa5558e4f1ebff4774cc5b77e98","... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (GetFriends)
+
+{"friends":[{"profile":{"id":"328a4fa5558e4f1ebff4774cc5b77e98","userUuid":"719f9613bc1448e49a1e0bf424c305e3","name":"purplecatinahat","adminRole":"None","userType":"Beta"}},{"profile":{"id":"32071e2951b04cae8ba9bcbf0693eb58","userUuid":"72f026ef05b0407b853eba9235bf96d3","name":"darthginge","adminRole":"None","userType":"Beta"}},{"profile":{"id":"4fc0498644d448d4bb5916831e371a8f","userUuid":"d6e83ca36ba54b27812310e4afdc80e0","name":"Nebukadnezar","adminRole":"None","userType":"Beta"},"onlineState":"GAME"},{"profile":{"id":"6491ac0055f646d79ddac981f23a2286","userUuid":"f0268b30c2bf4720a6f13972191787db","name":"Red_Inferno","adminRole":"None","userType":"Beta"}},{"profile":{"id":"b415326658fd4cf3b23616015b355e14","userUuid":"f7a45269b4374009a059980a12e4676a","name":"Blubberbub","adminRole":"None","userType":"Beta"}}],"msg":"GetFriends"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (GetFriendRequests)
+
+{"requests":[],"msg":"GetFriendRequests"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (GetBlockedPersons)
+
+{"blocked":[],"msg":"GetBlockedPersons"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:35 PM :: FROM SERVER (Ok)
+
+{"op":"JoinLobby","msg":"Ok"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Sending > RoomEnterFree
+{
+	"roomName" : "General",
+	"msg" : "RoomEnterFree"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Sending > RoomsList
+{
+	"msg" : "RoomsList"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Sending > DeckList
+{
+	"msg" : "DeckList"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_HomeScreen
+UnloadTime: 0.863727 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 26 unused Assets to reduce memory usage. Loaded Objects now: 624.
+Total: 23.397665 ms (FindLiveObjects: 0.021790 ms CreateObjectMapping: 0.019346 ms MarkObjects: 22.525208 ms  DeleteObjects: 0.293403 ms)
+
+10/21/2013 3:03:36 PM :: Sending > OverallStats
+{
+	"msg" : "OverallStats"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Read 2948 b: {"roomName":"general-2","msg":"RoomEnter"}
+
+{"roomName":"general-... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Sending > GetTwitterFeed
+{
+	"msg" : "GetTwitterFeed"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: FROM SERVER (RoomEnter)
+
+{"roomName":"general-2","msg":"RoomEnter"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: Read 1367 b: 45506944bd","name":"Unijk","acceptChallenges":true,"acceptTrades"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:36 PM :: FROM SERVER (RoomInfo)
+
+{"roomName":"general-2","reset":true,"updated":[{"id":"c6a04cd156b546c1a8a64032793316a2","name":"Akiryu","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"4c85bc39542647f48992120394753098","name":"ChocolateWaffle","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"d599c6d80d4f42c68ca461820f5c6f46","name":"Electric_Yeti","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"9562bd608feb4b3683c8b0b3cf972244","name":"enhorning","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"6581ba17417f49cd8fc42f84f9dde549","name":"Equila","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"9b044540f14244fa9f8779a16d21b478","name":"Frostbrynger","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"bcf7d68a1dd54106996ed020176a4b9d","name":"Gazhkull","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"eef0c75fc48d44f990a32272edcc4a88","name":"Heppoko13","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"9e81530b2457482eb18be3802e36469c","name":"JBence","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"64b5419d5eb149b0a1ed5e591936cb1d","name":"Joepster","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"f08040e5b3cf4782a2ea274fcf01ebb5","name":"L3uku","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"19c01b902aa145a4a44bff1feaf903db","name":"Mojojoe","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"19ed05d0d2be498e97e3e11137643398","name":"nudemuffins","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"3e6d555bcd96451794c8620c55f5f464","name":"Ocean","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"2c7b2e08ceef46bebd0a8d38af421981","name":"papaslum","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"5ce108f645934d1185c48a76ae5a734f","name":"pigu","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"21dbc86b88b14847824f1dc03ba747aa","name":"Sefirosu","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"bc9c91d65f304ced9669a00f92b72313","name":"Snufflecat","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"8c1fff50046340068306f1596599762e","name":"Sockal","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"7db9cd40fc60423b98fa3130892e78c4","name":"Starlight","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"900149859d324ffb8b1a22616599f4d5","name":"Stratis","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"123","name":"xxx","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"fe3ab8deb3e94d28b79146a4ef5a7b75","name":"Uluu","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"49c92d2bf2a5488e91433945506944bd","name":"Unijk","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"5fa4427e922c4c488e71b67396255434","name":"Vathfer","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"4c07c441b58246dfa4e36fdd73aa92b0","name":"Voeter","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"d78f1c1fccc342409509f1f1ec916938","name":"wieti","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"92e93496ffc64c3caf8ce12092edc26d","name":"xtrinta","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"1d5317ea88e940e586c592ee8f8bf8e8","name":"Zakytor","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"2a4b3d70123f4a86a9db08a19245bfc4","name":"Zurupari","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"},{"id":"8a6ff1f3543540bd8ccbffaa5eeba1b2","name":"Zyria","acceptChallenges":true,"acceptTrades":true,"adminRole":"None"}],"msg":"RoomInfo"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: FROM SERVER (RoomChatMessage)
+
+{"roomName":"general-2","from":"Scrolls","text":"You have joined \"general-2\"","msg":"RoomChatMessage"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: FROM SERVER (RoomsList)
+
+{"rooms":[{"room":{"name":"General","autoIncrement":true},"numberOfUsers":0},{"room":{"name":"Trading","autoIncrement":true},"numberOfUsers":0},{"room":{"name":"Decks","autoIncrement":false},"numberOfUsers":0},{"room":{"name":"Strategy","autoIncrement":false},"numberOfUsers":2}],"msg":"RoomsList"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 2401 b: {"decks":[{"name":"lol?","resources":"GROWTH,DECAY,ENERGY,ORDER",... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: AssetLoader: Server reported card image bundle version: 19. Saved version: 19
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: FROM SERVER (DeckList)
+
+{"decks":[{"name":"lol?","resources":"GROWTH,DECAY,ENERGY,ORDER","valid":true,"updated":"53 minutes ago","timestamp":1382357435000},{"name":"Tiny Feet Preconstructed","resources":"ORDER,GROWTH","valid":true,"updated":"2 hours ago","timestamp":1382352821000},{"name":"Machine Doom Preconstructed","resources":"ENERGY,DECAY","valid":true,"updated":"2 hours ago","timestamp":1382352817000},{"name":"pestilence","resources":"ENERGY","valid":true,"updated":"3 weeks ago","timestamp":1380636758000},{"name":"virtym","resources":"GROWTH,ORDER","valid":true,"updated":"1 month ago","timestamp":1378467947000},{"name":"decaytest","resources":"DECAY,ORDER,GROWTH","valid":true,"updated":"1 month ago","timestamp":1378464797000},{"name":"decay shenanigans","resources":"DECAY,GROWTH","valid":true,"updated":"2 months ago","timestamp":1377674641000},{"name":"Decay Preconstructed","resources":"DECAY","valid":true,"updated":"2 months ago","timestamp":1377515807000},{"name":"go drawtest","resources":"GROWTH,ORDER,ENERGY","valid":true,"updated":"3 months ago","timestamp":1374142463000},{"name":"added2","resources":"GROWTH","valid":true,"updated":"3 months ago","timestamp":1373353889000},{"name":"artrox","resources":"ORDER","valid":true,"updated":"3 months ago","timestamp":1373353884000},{"name":"go draw","resources":"GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1372428892000},{"name":"scum","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1372416504000},{"name":"icecream","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1372416330000},{"name":"locked in","resources":"ENERGY,GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1371735268000},{"name":"zrave","resources":"GROWTH,ENERGY","valid":true,"updated":"4 months ago","timestamp":1371730396000},{"name":"Order Preconstructed","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1371554739000},{"name":"Energy Preconstructed","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1371554733000},{"name":"rank39","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371205252000},{"name":"added3","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371125951000},{"name":"Growth Preconstructed","resources":"GROWTH","valid":true,"updated":"5 months ago","timestamp":1370375833000}],"msg":"DeckList"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 3613 b: {"serverName":"Lobby 1","loginsLast24h":4399,"totalCards":1745249... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: FROM SERVER (OverallStats)
+
+{"serverName":"Lobby 1","loginsLast24h":4399,"totalCards":17452497,"totalGoldRewarded":949075496,"totalSoldCards":2498821,"topRanked":[{"name":"Kritical","rating":2255},{"name":"aischarm","rating":2250},{"name":"Chamion","rating":2223},{"name":"nickdean16","rating":2211},{"name":"AncientSlumber","rating":2188},{"name":"Mickin","rating":2174},{"name":"Peteos","rating":2165},{"name":"Iwantanickplease","rating":2156},{"name":"Kodosoa","rating":2149},{"name":"Yugi","rating":2147},{"name":"Slin","rating":2142},{"name":"ojisan","rating":2141},{"name":"Caim","rating":2135},{"name":"xdebex","rating":2129},{"name":"Fir","rating":2128},{"name":"snylack","rating":2127},{"name":"Manchy","rating":2115},{"name":"Nixx","rating":2110},{"name":"BrTarolg","rating":2105},{"name":"Spiritedaway","rating":2100},{"name":"Badyuyu","rating":2094},{"name":"PrintingPress","rating":2089},{"name":"PewQ","rating":2087},{"name":"Milithium","rating":2082},{"name":"Seto","rating":2082},{"name":"MisterBurkes","rating":2081},{"name":"VirginSlayer","rating":2072},{"name":"martyj13","rating":2071},{"name":"midoringo","rating":2065},{"name":"Gigaduckman","rating":2064},{"name":"Darkblade","rating":2063},{"name":"Khymera","rating":2053},{"name":"Zurrior","rating":2052},{"name":"Krangth","rating":2051},{"name":"Jugan","rating":2051},{"name":"Kritikal","rating":2048},{"name":"Atmaz","rating":2048},{"name":"Zrave","rating":2047},{"name":"masterphreak11","rating":2047},{"name":"Incognitodies","rating":2045},{"name":"Anoval","rating":2044},{"name":"Nibenon","rating":2042},{"name":"Flayer","rating":2041},{"name":"shipshajen","rating":2040},{"name":"TorNis","rating":2040},{"name":"Rotzbengel53","rating":2036},{"name":"obamia","rating":2035},{"name":"PhoEater","rating":2034},{"name":"Prozac","rating":2034},{"name":"Nimchen","rating":2031},{"name":"neuralyzer","rating":2028},{"name":"Zegai","rating":2028},{"name":"NerfWinperial","rating":2027},{"name":"godlikeng","rating":2022},{"name":"Gradefor","rating":2021},{"name":"QuincyJones","rating":2020},{"name":"_antirad_","rating":2017},{"name":"Quaex","rating":2013},{"name":"Vortexx","rating":2012},{"name":"Jouletopy","rating":2010},{"name":"King_of_Diamonds","rating":2009},{"name":"Ketonur","rating":2007},{"name":"Mahlzeitcompany","rating":2006},{"name":"Bosslu","rating":2003},{"name":"Nrp123","rating":2002},{"name":"Nanalalaka","rating":2002},{"name":"MajorPAIN","rating":1999},{"name":"Illusi0n","rating":1998},{"name":"Ghost_Bomb","rating":1997},{"name":"Equila","rating":1997},{"name":"God_Among_Men","rating":1996},{"name":"deitystrife","rating":1996},{"name":"Gaulan","rating":1996},{"name":"Morwenna","rating":1994},{"name":"11point5ft","rating":1992},{"name":"Marwin","rating":1991},{"name":"Napalm","rating":1989},{"name":"Blitzklinge","rating":1988},{"name":"Metaphex","rating":1983},{"name":"AfterStar","rating":1982},{"name":"Blinky","rating":1981},{"name":"CheeseTactics","rating":1980},{"name":"o_0","rating":1978},{"name":"DapperDummy","rating":1977},{"name":"Velo_Draconis","rating":1974},{"name":"TreksQQ","rating":1974},{"name":"Cordain","rating":1973},{"name":"horsemedic","rating":1972},{"name":"Qwisatz_Haderach","rating":1971},{"name":"Sezu","rating":1969},{"name":"futboleddy_","rating":1969},{"name":"Ragnire","rating":1968},{"name":"SomeGuyWithAName","rating":1968},{"name":"nyaa","rating":1967},{"name":"JoyfulRogue","rating":1966},{"name":"Top8Gamer","rating":1964},{"name":"bazzan","rating":1964},{"name":"Ambrosia","rating":1963},{"name":"Demmiremmi","rating":1963},{"name":"Norboat","rating":1963}],"nrOfProfiles":738,"msg":"OverallStats"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 2904 b: {"feed":"{\"statuses\":[{\"metadata\":{\"result_type\":\"recent\"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 1452 b: ch on the live server! #scrolls\",\"source\":\"web\",\"truncated\... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 1452 b: https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 4356 b: ":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 2904 b: ype\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"M... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 1452 b: O MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 2904 b: er_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/32558372... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 8712 b: \"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Wed Oct... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: Read 633 b: Bfrom%3Akrisjelbring%2BOR%2Bfrom%3Amollstam%2BOR%2Bfrom%3Axlson%2... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:37 PM :: FROM SERVER (GetTwitterFeed)
+
+{"feed":"{\"statuses\":[{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 11:02:04 +0000 2013\",\"id\":392244390854270978,\"id_str\":\"392244390854270978\",\"text\":\"\\\"I basically quit magic for [#scrolls ]\\\"\\n-DrAkula\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":325583724,\"id_str\":\"325583724\",\"name\":\"Henrik Pettersson\",\"screen_name\":\"carnalizer\",\"location\":\"Stockholm\",\"description\":\"ME DRAW SCROLLS FO MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq )\",\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"expanded_url\":\"http:\\/\\/carnalizer.blogspot.com\\/\",\"display_url\":\"carnalizer.blogspot.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/n14flUM8Hq\",\"expanded_url\":\"http:\\/\\/shieldbreaker.net\\/\",\"display_url\":\"shieldbreaker.net\",\"indices\":[54,76]}]}},\"protected\":false,\"followers_count\":80814,\"friends_count\":276,\"listed_count\":928,\"created_at\":\"Tue Jun 28 14:54:09 +0000 2011\",\"favourites_count\":90,\"utc_offset\":-7200,\"time_zone\":\"Greenland\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":6286,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"000000\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/325583724\\/1353618781\",\"profile_link_color\":\"6E636C\",\"profile_sidebar_border_color\":\"737575\",\"profile_sidebar_fill_color\":\"AAAAAD\",\"profile_text_color\":\"D9D5D9\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":4,\"favorite_count\":3,\"favorited\":false,\"retweeted\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 09:57:30 +0000 2013\",\"id\":392228139243298816,\"id_str\":\"392228139243298816\",\"text\":\"Playing my first Judgement match on the live server! #scrolls\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":325583724,\"id_str\":\"325583724\",\"name\":\"Henrik Pettersson\",\"screen_name\":\"carnalizer\",\"location\":\"Stockholm\",\"description\":\"ME DRAW SCROLLS FO MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq )\",\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"expanded_url\":\"http:\\/\\/carnalizer.blogspot.com\\/\",\"display_url\":\"carnalizer.blogspot.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/n14flUM8Hq\",\"expanded_url\":\"http:\\/\\/shieldbreaker.net\\/\",\"display_url\":\"shieldbreaker.net\",\"indices\":[54,76]}]}},\"protected\":false,\"followers_count\":80814,\"friends_count\":276,\"listed_count\":928,\"created_at\":\"Tue Jun 28 14:54:09 +0000 2011\",\"favourites_count\":90,\"utc_offset\":-7200,\"time_zone\":\"Greenland\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":6286,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"000000\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/325583724\\/1353618781\",\"profile_link_color\":\"6E636C\",\"profile_sidebar_border_color\":\"737575\",\"profile_sidebar_fill_color\":\"AAAAAD\",\"profile_text_color\":\"D9D5D9\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":3,\"favorite_count\":2,\"favorited\":false,\"retweeted\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 09:57:12 +0000 2013\",\"id\":392228065960415232,\"id_str\":\"392228065960415232\",\"text\":\"#Scrolls has been updated to beta 110, including new \\\"Judgement\\\" format, spectate mode, and 44 new scrolls. https:\\/\\/t.co\\/xsMUS4255G\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":479041531,\"id_str\":\"479041531\",\"name\":\"M\\u00e5ns Olson\",\"screen_name\":\"MansOlson\",\"location\":\"Stockholm\",\"description\":\"Game developer at Mojang, working on Scrolls.\",\"url\":null,\"entities\":{\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":28750,\"friends_count\":220,\"listed_count\":186,\"created_at\":\"Mon Jan 30 23:19:24 +0000 2012\",\"favourites_count\":54,\"utc_offset\":7200,\"time_zone\":\"Amsterdam\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":1870,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\/\\/abs.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_image_url_https\":\"https:\\/\\/abs.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_images\\/3344728600\\/5985fabbe7cfd91a3b4224e234abf724_normal.png\",\"profile_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/3344728600\\/5985fabbe7cfd91a3b4224e234abf724_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/479041531\\/1353438360\",\"profile_link_color\":\"0084B4\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"default_profile\":true,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":22,\"favorite_count\":15,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 09:50:45 +0000 2013\",\"id\":392226443037392896,\"id_str\":\"392226443037392896\",\"text\":\"We just released #Scrolls with judgement and spectate mode! https:\\/\\/t.co\\/6XjvriwFkJ\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":16952295,\"id_str\":\"16952295\",\"name\":\"jonkagstrom\",\"screen_name\":\"jonkagstrom\",\"location\":\"Stockholm\",\"description\":\"Game developer at Mojang. Creator of http:\\/\\/t.co\\/EXSUGxOo (text classification api).\",\"url\":\"http:\\/\\/t.co\\/lNmUesnPqW\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/lNmUesnPqW\",\"expanded_url\":\"http:\\/\\/www.jonkagstrom.com\",\"display_url\":\"jonkagstrom.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/EXSUGxOo\",\"expanded_url\":\"http:\\/\\/www.uclassify.com\",\"display_url\":\"uclassify.com\",\"indices\":[37,57]}]}},\"protected\":false,\"followers_count\":93405,\"friends_count\":213,\"listed_count\":816,\"created_at\":\"Fri Oct 24 16:50:09 +0000 2008\",\"favourites_count\":1,\"utc_offset\":null,\"time_zone\":null,\"geo_enabled\":false,\"verified\":false,\"statuses_count\":1674,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"1A1B1F\",\"profile_background_image_url\":\"http:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_image_url_https\":\"https:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_images\\/1795256239\\/jon_mojavatar_normal.png\",\"profile_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/1795256239\\/jon_mojavatar_normal.png\",\"profile_link_color\":\"2FC2EF\",\"profile_sidebar_border_color\":\"181A1E\",\"profile_sidebar_fill_color\":\"252429\",\"profile_text_color\":\"666666\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":11,\"favorite_count\":5,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 08:14:03 +0000 2013\",\"id\":392202107610099712,\"id_str\":\"392202107610099712\",\"text\":\"Server update in 20 minutes... Time for some Judgement. https:\\/\\/t.co\\/XG6NJfzlGe #Scrolls\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":211105430,\"id_str\":\"211105430\",\"name\":\"Jakob Porser\",\"screen_name\":\"JahKob\",\"location\":\"Sweden\",\"description\":\"Mojang co founder. Currently making the game Scrolls. Check out http:\\/\\/t.co\\/C3YBRqsdaR\",\"url\":null,\"entities\":{\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/C3YBRqsdaR\",\"expanded_url\":\"http:\\/\\/Scrolls.com\",\"display_url\":\"Scrolls.com\",\"indices\":[64,86]}]}},\"protected\":false,\"followers_count\":133647,\"friends_count\":51,\"listed_count\":1953,\"created_at\":\"Tue Nov 02 10:09:09 +0000 2010\",\"favourites_count\":2,\"utc_offset\":3600,\"time_zone\":\"London\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":2436,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\/\\/abs.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_image_url_https\":\"https:\\/\\/abs.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_images\\/1187224627\\/Jakob_Porser_Square_normal.png\",\"profile_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/1187224627\\/Jakob_Porser_Square_normal.png\",\"profile_link_color\":\"0084B4\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"default_profile\":true,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":7,\"favorite_count\":5,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Mon Oct 21 06:43:35 +0000 2013\",\"id\":392179341217366017,\"id_str\":\"392179341217366017\",\"text\":\"Good morning, sinners. It's Judgement Week. #Scrolls\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":325583724,\"id_str\":\"325583724\",\"name\":\"Henrik Pettersson\",\"screen_name\":\"carnalizer\",\"location\":\"Stockholm\",\"description\":\"ME DRAW SCROLLS FO MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq )\",\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"expanded_url\":\"http:\\/\\/carnalizer.blogspot.com\\/\",\"display_url\":\"carnalizer.blogspot.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/n14flUM8Hq\",\"expanded_url\":\"http:\\/\\/shieldbreaker.net\\/\",\"display_url\":\"shieldbreaker.net\",\"indices\":[54,76]}]}},\"protected\":false,\"followers_count\":80814,\"friends_count\":276,\"listed_count\":928,\"created_at\":\"Tue Jun 28 14:54:09 +0000 2011\",\"favourites_count\":90,\"utc_offset\":-7200,\"time_zone\":\"Greenland\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":6286,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"000000\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/325583724\\/1353618781\",\"profile_link_color\":\"6E636C\",\"profile_sidebar_border_color\":\"737575\",\"profile_sidebar_fill_color\":\"AAAAAD\",\"profile_text_color\":\"D9D5D9\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":6,\"favorite_count\":4,\"favorited\":false,\"retweeted\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Sun Oct 20 17:42:57 +0000 2013\",\"id\":391982887987589120,\"id_str\":\"391982887987589120\",\"text\":\"Thought playing the #Scrolls Poison trial with a Poison deck was a good idea. And what do you know, 87 rounds later I won!\",\"source\":\"\\u003ca href=\\\"http:\\/\\/itunes.apple.com\\/us\\/app\\/twitter\\/id409789998?mt=12\\\" rel=\\\"nofollow\\\"\\u003eTwitter for Mac\\u003c\\/a\\u003e\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":109344609,\"id_str\":\"109344609\",\"name\":\"Kristoffer Jelbring\",\"screen_name\":\"KrisJelbring\",\"location\":\"Stockholm, Sweden\",\"description\":\"Code ninja and music nerd. System developer at Mojang.\",\"url\":null,\"entities\":{\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":74256,\"friends_count\":120,\"listed_count\":597,\"created_at\":\"Thu Jan 28 19:11:21 +0000 2010\",\"favourites_count\":17,\"utc_offset\":7200,\"time_zone\":\"Stockholm\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":2650,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"1A1B1F\",\"profile_background_image_url\":\"http:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_image_url_https\":\"https:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/1796311820\\/mojav_kris_crop_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/1796311820\\/mojav_kris_crop_normal.png\",\"profile_link_color\":\"2FC2EF\",\"profile_sidebar_border_color\":\"181A1E\",\"profile_sidebar_fill_color\":\"252429\",\"profile_text_color\":\"666666\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":2,\"favorite_count\":0,\"favorited\":false,\"retweeted\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Wed Oct 16 20:57:11 +0000 2013\",\"id\":390582215353970688,\"id_str\":\"390582215353970688\",\"text\":\"Gratz MacDog225 for making the top 100 in #scrolls! Tuned in right at the end of that game. :) http:\\/\\/t.co\\/TAH1jZ83Ax\",\"source\":\"web\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":325583724,\"id_str\":\"325583724\",\"name\":\"Henrik Pettersson\",\"screen_name\":\"carnalizer\",\"location\":\"Stockholm\",\"description\":\"ME DRAW SCROLLS FO MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq )\",\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"expanded_url\":\"http:\\/\\/carnalizer.blogspot.com\\/\",\"display_url\":\"carnalizer.blogspot.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/n14flUM8Hq\",\"expanded_url\":\"http:\\/\\/shieldbreaker.net\\/\",\"display_url\":\"shieldbreaker.net\",\"indices\":[54,76]}]}},\"protected\":false,\"followers_count\":80814,\"friends_count\":276,\"listed_count\":928,\"created_at\":\"Tue Jun 28 14:54:09 +0000 2011\",\"favourites_count\":90,\"utc_offset\":-7200,\"time_zone\":\"Greenland\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":6286,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"000000\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/325583724\\/1353618781\",\"profile_link_color\":\"6E636C\",\"profile_sidebar_border_color\":\"737575\",\"profile_sidebar_fill_color\":\"AAAAAD\",\"profile_text_color\":\"D9D5D9\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":2,\"favorite_count\":0,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Wed Oct 16 19:50:28 +0000 2013\",\"id\":390565425962287104,\"id_str\":\"390565425962287104\",\"text\":\"I've finally started winning ranked matches again in #Scrolls! Those extra Solemn Giants and Metal Wonders did all the difference.\",\"source\":\"\\u003ca href=\\\"http:\\/\\/itunes.apple.com\\/us\\/app\\/twitter\\/id409789998?mt=12\\\" rel=\\\"nofollow\\\"\\u003eTwitter for Mac\\u003c\\/a\\u003e\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":109344609,\"id_str\":\"109344609\",\"name\":\"Kristoffer Jelbring\",\"screen_name\":\"KrisJelbring\",\"location\":\"Stockholm, Sweden\",\"description\":\"Code ninja and music nerd. System developer at Mojang.\",\"url\":null,\"entities\":{\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":74256,\"friends_count\":120,\"listed_count\":597,\"created_at\":\"Thu Jan 28 19:11:21 +0000 2010\",\"favourites_count\":17,\"utc_offset\":7200,\"time_zone\":\"Stockholm\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":2650,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"1A1B1F\",\"profile_background_image_url\":\"http:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_image_url_https\":\"https:\\/\\/abs.twimg.com\\/images\\/themes\\/theme9\\/bg.gif\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/1796311820\\/mojav_kris_crop_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/1796311820\\/mojav_kris_crop_normal.png\",\"profile_link_color\":\"2FC2EF\",\"profile_sidebar_border_color\":\"181A1E\",\"profile_sidebar_fill_color\":\"252429\",\"profile_text_color\":\"666666\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":0,\"favorite_count\":3,\"favorited\":false,\"retweeted\":false,\"lang\":\"en\"},{\"metadata\":{\"result_type\":\"recent\",\"iso_language_code\":\"en\"},\"created_at\":\"Tue Oct 15 17:25:09 +0000 2013\",\"id\":390166466072674304,\"id_str\":\"390166466072674304\",\"text\":\"Was recorded in #scrolls pres by @JahKob. Later in that game I had a CD 31 Eager Scryer. Go Mystic Altar + Fleetness! http:\\/\\/t.co\\/cGQZEYO0EC\",\"source\":\"\\u003ca href=\\\"https:\\/\\/mobile.twitter.com\\\" rel=\\\"nofollow\\\"\\u003eMobile Web (M5)\\u003c\\/a\\u003e\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":325583724,\"id_str\":\"325583724\",\"name\":\"Henrik Pettersson\",\"screen_name\":\"carnalizer\",\"location\":\"Stockholm\",\"description\":\"ME DRAW SCROLLS FO MOJANG!!! ( plug for my free TTMG: http:\\/\\/t.co\\/n14flUM8Hq )\",\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/oWuBM656h7\",\"expanded_url\":\"http:\\/\\/carnalizer.blogspot.com\\/\",\"display_url\":\"carnalizer.blogspot.com\",\"indices\":[0,22]}]},\"description\":{\"urls\":[{\"url\":\"http:\\/\\/t.co\\/n14flUM8Hq\",\"expanded_url\":\"http:\\/\\/shieldbreaker.net\\/\",\"display_url\":\"shieldbreaker.net\",\"indices\":[54,76]}]}},\"protected\":false,\"followers_count\":80814,\"friends_count\":276,\"listed_count\":928,\"created_at\":\"Tue Jun 28 14:54:09 +0000 2011\",\"favourites_count\":90,\"utc_offset\":-7200,\"time_zone\":\"Greenland\",\"geo_enabled\":false,\"verified\":false,\"statuses_count\":6286,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"000000\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_background_images\\/369699196\\/pretto_bg3.jpg\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/378800000627283991\\/ffacdcd54793b0a2113ae6723e07e803_normal.png\",\"profile_banner_url\":\"https:\\/\\/pbs.twimg.com\\/profile_banners\\/325583724\\/1353618781\",\"profile_link_color\":\"6E636C\",\"profile_sidebar_border_color\":\"737575\",\"profile_sidebar_fill_color\":\"AAAAAD\",\"profile_text_color\":\"D9D5D9\",\"profile_use_background_image\":true,\"default_profile\":false,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":2,\"favorite_count\":0,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"}],\"search_metadata\":{\"completed_in\":0.06,\"max_id\":392244390854270978,\"max_id_str\":\"392244390854270978\",\"next_results\":\"?max_id=390166466072674303&q=%23Scrolls%2Bfrom%3Ajahkob%2BOR%2Bfrom%3Anotch%2BOR%2Bfrom%3Acarnalizer%2BOR%2Bfrom%3Amansolson%2BOR%2Bfrom%3Acarlmanneh%2BOR%2Bfrom%3Ajnkboy%2BOR%2Bfrom%3Abomuboi%2BOR%2Bfrom%3Ajonkagstrom%2BOR%2Bfrom%3Apoipoichen%2BOR%2Bfrom%3Abopogamel%2BOR%2Bfrom%3Akrisjelbring%2BOR%2Bfrom%3Amollstam%2BOR%2Bfrom%3Axlson%2BOR%2Bfrom%3Adanfrisk%2B-filter%3Aretweets%2B-filter%3Areplies&count=10\",\"query\":\"%23Scrolls%2Bfrom%3Ajahkob%2BOR%2Bfrom%3Anotch%2BOR%2Bfrom%3Acarnalizer%2BOR%2Bfrom%3Amansolson%2BOR%2Bfrom%3Acarlmanneh%2BOR%2Bfrom%3Ajnkboy%2BOR%2Bfrom%3Abomuboi%2BOR%2Bfrom%3Ajonkagstrom%2BOR%2Bfrom%3Apoipoichen%2BOR%2Bfrom%3Abopogamel%2BOR%2Bfrom%3Akrisjelbring%2BOR%2Bfrom%3Amollstam%2BOR%2Bfrom%3Axlson%2BOR%2Bfrom%3Adanfrisk%2B-filter%3Aretweets%2B-filter%3Areplies\",\"refresh_url\":\"?since_id=392244390854270978&q=%23Scrolls%2Bfrom%3Ajahkob%2BOR%2Bfrom%3Anotch%2BOR%2Bfrom%3Acarnalizer%2BOR%2Bfrom%3Amansolson%2BOR%2Bfrom%3Acarlmanneh%2BOR%2Bfrom%3Ajnkboy%2BOR%2Bfrom%3Abomuboi%2BOR%2Bfrom%3Ajonkagstrom%2BOR%2Bfrom%3Apoipoichen%2BOR%2Bfrom%3Abopogamel%2BOR%2Bfrom%3Akrisjelbring%2BOR%2Bfrom%3Amollstam%2BOR%2Bfrom%3Axlson%2BOR%2Bfrom%3Adanfrisk%2B-filter%3Aretweets%2B-filter%3Areplies\",\"count\":10,\"since_id\":0,\"since_id_str\":\"0\"}}","msg":"GetTwitterFeed"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_Mods
+10/21/2013 3:03:39 PM :: Loading scene: _Mods
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+Level '_Mods' (-1) couldn't be loaded because it has not been added to the build settings.
+To add a level to the build settings use the menu File->Build Settings...
+ 
+(Filename:  Line: 288)
+
+UnloadTime: 0.353466 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 77 unused Assets to reduce memory usage. Loaded Objects now: 853.
+Total: 20.941349 ms (FindLiveObjects: 0.025003 ms CreateObjectMapping: 0.023117 ms MarkObjects: 20.135660 ms  DeleteObjects: 0.296546 ms)
+
+10/21/2013 3:03:39 PM :: Sending > SpectateGetPermission
+{
+	"permission" : "DISALLOW",
+	"msg" : "SpectateGetPermission"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:39 PM :: Read 57 b: {"permission":"DISALLOW","msg":"SpectateGetPermission"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:39 PM :: FROM SERVER (SpectateGetPermission)
+
+{"permission":"DISALLOW","msg":"SpectateGetPermission"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:39 PM :: Read 37 b: {"time":1382360624950,"msg":"Ping"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_CraftingView
+10/21/2013 3:03:42 PM :: Loading scene: _CraftingView
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+UnloadTime: 2.270260 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 353 unused Assets to reduce memory usage. Loaded Objects now: 700.
+Total: 28.542034 ms (FindLiveObjects: 0.041136 ms CreateObjectMapping: 0.065371 ms MarkObjects: 27.502239 ms  DeleteObjects: 0.348927 ms)
+
+UnloadTime: 0.481206 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 643.
+Total: 26.923325 ms (FindLiveObjects: 0.032057 ms CreateObjectMapping: 0.017530 ms MarkObjects: 26.325691 ms  DeleteObjects: 0.021022 ms)
+
+10/21/2013 3:03:42 PM :: Sending > DeckList
+{
+	"msg" : "DeckList"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:42 PM :: Scheduling tracks for time: 23.668
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+Init done!
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:42 PM :: Read 1452 b: {"cards":[{"id":1846458,"typeId":114,"tradable":false,"isToken":f... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:42 PM :: Read 2904 b: false,"isToken":false,"level":0},{"id":1846479,"typeId":40,"trada... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 1452 b: 96771,"typeId":49,"tradable":true,"isToken":false,"level":0},{"id... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: d":2124840,"typeId":58,"tradable":true,"isToken":false,"level":0}... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: ":0},{"id":6710608,"typeId":97,"tradable":true,"isToken":false,"l... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: oken":false,"level":0},{"id":7118459,"typeId":141,"tradable":true... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 1452 b: ":true,"isToken":false,"level":0},{"id":7516162,"typeId":24,"trad... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 1452 b: e":true,"isToken":false,"level":0},{"id":7866596,"typeId":149,"tr... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: able":true,"isToken":false,"level":0},{"id":7959133,"typeId":43,"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: ypeId":50,"tradable":true,"isToken":false,"level":0},{"id":975209... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: 85898,"typeId":25,"tradable":true,"isToken":false,"level":0},{"id... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: d":39,"tradable":true,"isToken":false,"level":0},{"id":17089045,"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: :179,"tradable":true,"isToken":false,"level":0},{"id":18080913,"t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: se,"level":0},{"id":18082172,"typeId":90,"tradable":true,"isToken... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 4356 b: peId":239,"tradable":true,"isToken":false,"level":0},{"id":180854... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 1452 b: en":false,"level":0},{"id":18088251,"typeId":173,"tradable":true,... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: 71,"typeId":196,"tradable":true,"isToken":false,"level":0},{"id":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 1452 b: 8099793,"typeId":162,"tradable":true,"isToken":false,"level":0},{... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Read 2904 b: "isToken":false,"level":0},{"id":18101641,"typeId":3,"tradable":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_DeckBuilderView
+UnloadTime: 1.779485 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 992 unused Assets to reduce memory usage. Loaded Objects now: 890.
+Total: 25.863552 ms (FindLiveObjects: 0.082692 ms CreateObjectMapping: 0.143244 ms MarkObjects: 22.680466 ms  DeleteObjects: 2.517708 ms)
+
+10/21/2013 3:03:43 PM :: Read 10206 b: rue,"isToken":false,"level":0},{"id":19434872,"typeId":218,"trada... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Sending > DeckList
+{
+	"msg" : "DeckList"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: Scheduling tracks for time: 24.9053333333333
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+Init done!
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:43 PM :: FROM SERVER (DeckList)
+
+{"decks":[{"name":"lol?","resources":"GROWTH,DECAY,ENERGY,ORDER","valid":true,"updated":"53 minutes ago","timestamp":1382357435000},{"name":"Tiny Feet Preconstructed","resources":"ORDER,GROWTH","valid":true,"updated":"2 hours ago","timestamp":1382352821000},{"name":"Machine Doom Preconstructed","resources":"ENERGY,DECAY","valid":true,"updated":"2 hours ago","timestamp":1382352817000},{"name":"pestilence","resources":"ENERGY","valid":true,"updated":"3 weeks ago","timestamp":1380636758000},{"name":"virtym","resources":"GROWTH,ORDER","valid":true,"updated":"1 month ago","timestamp":1378467947000},{"name":"decaytest","resources":"DECAY,ORDER,GROWTH","valid":true,"updated":"1 month ago","timestamp":1378464797000},{"name":"decay shenanigans","resources":"DECAY,GROWTH","valid":true,"updated":"2 months ago","timestamp":1377674641000},{"name":"Decay Preconstructed","resources":"DECAY","valid":true,"updated":"2 months ago","timestamp":1377515807000},{"name":"go drawtest","resources":"GROWTH,ORDER,ENERGY","valid":true,"updated":"3 months ago","timestamp":1374142463000},{"name":"added2","resources":"GROWTH","valid":true,"updated":"3 months ago","timestamp":1373353889000},{"name":"artrox","resources":"ORDER","valid":true,"updated":"3 months ago","timestamp":1373353884000},{"name":"go draw","resources":"GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1372428892000},{"name":"scum","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1372416504000},{"name":"icecream","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1372416330000},{"name":"locked in","resources":"ENERGY,GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1371735268000},{"name":"zrave","resources":"GROWTH,ENERGY","valid":true,"updated":"4 months ago","timestamp":1371730396000},{"name":"Order Preconstructed","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1371554739000},{"name":"Energy Preconstructed","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1371554733000},{"name":"rank39","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371205252000},{"name":"added3","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371125951000},{"name":"Growth Preconstructed","resources":"GROWTH","valid":true,"updated":"5 months ago","timestamp":1370375833000}],"msg":"DeckList"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 13068 b: {"cards":[{"id":1846458,"typeId":114,"tradable":false,"isToken":f... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: oken":false,"level":0},{"id":7118459,"typeId":141,"tradable":true... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: ":true,"isToken":false,"level":0},{"id":7516162,"typeId":24,"trad... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: 4,"tradable":true,"isToken":false,"level":0},{"id":9294766,"typeI... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: ypeId":50,"tradable":true,"isToken":false,"level":0},{"id":975209... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 1452 b: 85898,"typeId":25,"tradable":true,"isToken":false,"level":0},{"id... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 1452 b: oken":false,"level":0},{"id":16980187,"typeId":70,"tradable":true... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: d":39,"tradable":true,"isToken":false,"level":0},{"id":17089045,"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: :179,"tradable":true,"isToken":false,"level":0},{"id":18080913,"t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: se,"level":0},{"id":18082172,"typeId":90,"tradable":true,"isToken... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: peId":239,"tradable":true,"isToken":false,"level":0},{"id":180854... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: typeId":137,"tradable":true,"isToken":false,"level":0},{"id":1808... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: sToken":false,"level":0},{"id":18098567,"typeId":174,"tradable":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: "isToken":false,"level":0},{"id":18101641,"typeId":3,"tradable":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 2904 b: d":20958423,"typeId":90,"tradable":true,"isToken":false,"level":0... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 4356 b: ":20958469,"typeId":57,"tradable":true,"isToken":false,"level":0}... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 1452 b: ted":"2 months ago","timestamp":1377515807000},{"name":"go drawte... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: Read 42 b: stamp":1370375833000}],"msg":"DeckList"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:44 PM :: FROM SERVER (DeckList)
+
+{"decks":[{"name":"lol?","resources":"GROWTH,DECAY,ENERGY,ORDER","valid":true,"updated":"53 minutes ago","timestamp":1382357435000},{"name":"Tiny Feet Preconstructed","resources":"ORDER,GROWTH","valid":true,"updated":"2 hours ago","timestamp":1382352821000},{"name":"Machine Doom Preconstructed","resources":"ENERGY,DECAY","valid":true,"updated":"2 hours ago","timestamp":1382352817000},{"name":"pestilence","resources":"ENERGY","valid":true,"updated":"3 weeks ago","timestamp":1380636758000},{"name":"virtym","resources":"GROWTH,ORDER","valid":true,"updated":"1 month ago","timestamp":1378467947000},{"name":"decaytest","resources":"DECAY,ORDER,GROWTH","valid":true,"updated":"1 month ago","timestamp":1378464797000},{"name":"decay shenanigans","resources":"DECAY,GROWTH","valid":true,"updated":"2 months ago","timestamp":1377674641000},{"name":"Decay Preconstructed","resources":"DECAY","valid":true,"updated":"2 months ago","timestamp":1377515807000},{"name":"go drawtest","resources":"GROWTH,ORDER,ENERGY","valid":true,"updated":"3 months ago","timestamp":1374142463000},{"name":"added2","resources":"GROWTH","valid":true,"updated":"3 months ago","timestamp":1373353889000},{"name":"artrox","resources":"ORDER","valid":true,"updated":"3 months ago","timestamp":1373353884000},{"name":"go draw","resources":"GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1372428892000},{"name":"scum","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1372416504000},{"name":"icecream","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1372416330000},{"name":"locked in","resources":"ENERGY,GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1371735268000},{"name":"zrave","resources":"GROWTH,ENERGY","valid":true,"updated":"4 months ago","timestamp":1371730396000},{"name":"Order Preconstructed","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1371554739000},{"name":"Energy Preconstructed","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1371554733000},{"name":"rank39","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371205252000},{"name":"added3","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371125951000},{"name":"Growth Preconstructed","resources":"GROWTH","valid":true,"updated":"5 months ago","timestamp":1370375833000}],"msg":"DeckList"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_Lobby
+UnloadTime: 5.114616 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 1072 unused Assets to reduce memory usage. Loaded Objects now: 1032.
+Total: 29.596218 ms (FindLiveObjects: 0.075638 ms CreateObjectMapping: 0.182774 ms MarkObjects: 25.849722 ms  DeleteObjects: 3.016584 ms)
+
+10/21/2013 3:03:46 PM :: Sending > DeckListLimited
+{
+	"msg" : "DeckListLimited"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: Read 38 b: {"decks":[],"msg":"DeckListLimited"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: FROM SERVER (DeckListLimited)
+
+{"decks":[],"msg":"DeckListLimited"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: Sending > GetInformationLimited
+{
+	"collectionSize" : 0,
+	"cardsPerRow" : 0,
+	"priceGold" : 0,
+	"priceShards" : 0,
+	"hasInProgressLimited" : false,
+	"msg" : "GetInformationLimited"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: Read 132 b: {"collectionSize":45,"cardsPerRow":4,"priceGold":1000,"priceShard... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: FROM SERVER (GetInformationLimited)
+
+{"collectionSize":45,"cardsPerRow":4,"priceGold":1000,"priceShards":150,"hasInProgressLimited":true,"msg":"GetInformationLimited"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_Limited
+UnloadTime: 0.868615 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 59 unused Assets to reduce memory usage. Loaded Objects now: 992.
+Total: 24.616606 ms (FindLiveObjects: 0.035339 ms CreateObjectMapping: 0.054825 ms MarkObjects: 23.967571 ms  DeleteObjects: 0.130952 ms)
+
+Init done!
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:46 PM :: Sending > GetCollectionLimited
+{
+	"msg" : "GetCollectionLimited"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:47 PM :: Read 3215 b: {"cards":[{"id":20942060,"typeId":36,"tradable":true,"isToken":fa... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:47 PM :: FROM SERVER (GetCollectionLimited)
+
+{"cards":[{"id":20942060,"typeId":36,"tradable":true,"isToken":false,"level":0},{"id":20942061,"typeId":37,"tradable":true,"isToken":false,"level":0},{"id":20942081,"typeId":41,"tradable":true,"isToken":false,"level":0},{"id":20942097,"typeId":44,"tradable":true,"isToken":false,"level":0},{"id":20942105,"typeId":45,"tradable":true,"isToken":false,"level":0},{"id":20942120,"typeId":49,"tradable":true,"isToken":false,"level":0},{"id":20942122,"typeId":50,"tradable":true,"isToken":false,"level":0},{"id":20942123,"typeId":50,"tradable":true,"isToken":false,"level":0},{"id":20942143,"typeId":54,"tradable":true,"isToken":false,"level":0},{"id":20942148,"typeId":55,"tradable":true,"isToken":false,"level":0},{"id":20942182,"typeId":62,"tradable":true,"isToken":false,"level":0},{"id":20942183,"typeId":62,"tradable":true,"isToken":false,"level":0},{"id":20942207,"typeId":67,"tradable":true,"isToken":false,"level":0},{"id":20942209,"typeId":67,"tradable":true,"isToken":false,"level":0},{"id":20942217,"typeId":69,"tradable":true,"isToken":false,"level":0},{"id":20942243,"typeId":75,"tradable":true,"isToken":false,"level":0},{"id":20942287,"typeId":84,"tradable":true,"isToken":false,"level":0},{"id":20942300,"typeId":86,"tradable":true,"isToken":false,"level":0},{"id":20942311,"typeId":89,"tradable":true,"isToken":false,"level":0},{"id":20942315,"typeId":89,"tradable":true,"isToken":false,"level":0},{"id":20942326,"typeId":92,"tradable":true,"isToken":false,"level":0},{"id":20942359,"typeId":98,"tradable":true,"isToken":false,"level":0},{"id":20942391,"typeId":105,"tradable":true,"isToken":false,"level":0},{"id":20942411,"typeId":110,"tradable":true,"isToken":false,"level":0},{"id":20942457,"typeId":119,"tradable":true,"isToken":false,"level":0},{"id":20942471,"typeId":122,"tradable":true,"isToken":false,"level":0},{"id":20942486,"typeId":125,"tradable":true,"isToken":false,"level":0},{"id":20942487,"typeId":125,"tradable":true,"isToken":false,"level":0},{"id":20942508,"typeId":129,"tradable":true,"isToken":false,"level":0},{"id":20942509,"typeId":129,"tradable":true,"isToken":false,"level":0},{"id":20942596,"typeId":150,"tradable":true,"isToken":false,"level":0},{"id":20942631,"typeId":157,"tradable":true,"isToken":false,"level":0},{"id":20942638,"typeId":158,"tradable":true,"isToken":false,"level":0},{"id":20942664,"typeId":163,"tradable":true,"isToken":false,"level":0},{"id":20942666,"typeId":164,"tradable":true,"isToken":false,"level":0},{"id":20942787,"typeId":189,"tradable":true,"isToken":false,"level":0},{"id":20942896,"typeId":211,"tradable":true,"isToken":false,"level":0},{"id":20942940,"typeId":219,"tradable":true,"isToken":false,"level":0},{"id":20942942,"typeId":221,"tradable":true,"isToken":false,"level":0},{"id":20942978,"typeId":228,"tradable":true,"isToken":false,"level":0},{"id":20942979,"typeId":228,"tradable":true,"isToken":false,"level":0},{"id":20943024,"typeId":237,"tradable":true,"isToken":false,"level":0},{"id":20943025,"typeId":237,"tradable":true,"isToken":false,"level":0},{"id":20943131,"typeId":259,"tradable":true,"isToken":false,"level":0},{"id":20943132,"typeId":259,"tradable":true,"isToken":false,"level":0}],"msg":"GetCollectionLimited"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+_DeckBuilderView
+UnloadTime: 0.589669 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 1 / Dirty serialized files: 0)
+
+Unloading 117 unused Assets to reduce memory usage. Loaded Objects now: 1018.
+Total: 28.440556 ms (FindLiveObjects: 0.048539 ms CreateObjectMapping: 0.066698 ms MarkObjects: 27.389654 ms  DeleteObjects: 0.413390 ms)
+
+10/21/2013 3:03:48 PM :: Sending > DeckList
+{
+	"msg" : "DeckList"
+}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:48 PM :: Scheduling tracks for time: 29.2786666666667
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+Init done!
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:48 PM :: Read 1452 b: {"cards":[{"id":1846458,"typeId":114,"tradable":false,"isToken":f... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:48 PM :: Read 1452 b: false,"isToken":false,"level":0},{"id":1846479,"typeId":40,"trada... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:48 PM :: Read 8712 b: peId":17,"tradable":false,"isToken":false,"level":0},{"id":184650... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 1452 b: false,"level":0},{"id":6875173,"typeId":75,"tradable":true,"isTok... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 1452 b: oken":false,"level":0},{"id":7118459,"typeId":141,"tradable":true... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 1452 b: ,"isToken":false,"level":0},{"id":7424328,"typeId":82,"tradable":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 2904 b: ":true,"isToken":false,"level":0},{"id":7516162,"typeId":24,"trad... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 2904 b: able":true,"isToken":false,"level":0},{"id":7959133,"typeId":43,"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 1452 b: eId":148,"tradable":true,"isToken":false,"level":0},{"id":9612508... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 1452 b: ypeId":50,"tradable":true,"isToken":false,"level":0},{"id":975209... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 4356 b: ":10176742,"typeId":151,"tradable":true,"isToken":false,"level":0... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 2904 b: oken":false,"level":0},{"id":16980187,"typeId":70,"tradable":true... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:49 PM :: Read 2904 b: se,"level":0},{"id":17691415,"typeId":215,"tradable":true,"isToke... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 4356 b: e,"level":0},{"id":18080933,"typeId":198,"tradable":true,"isToken... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1452 b: ":175,"tradable":true,"isToken":false,"level":0},{"id":18082742,"... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 4356 b: false,"level":0},{"id":18083365,"typeId":174,"tradable":true,"isT... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 2904 b: typeId":137,"tradable":true,"isToken":false,"level":0},{"id":1808... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1452 b: 71,"typeId":196,"tradable":true,"isToken":false,"level":0},{"id":... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 2904 b: sToken":false,"level":0},{"id":18098567,"typeId":174,"tradable":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1452 b: "isToken":false,"level":0},{"id":18101641,"typeId":3,"tradable":t... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 2904 b: 8101960,"typeId":177,"tradable":true,"isToken":false,"level":0},{... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1452 b: d":20958423,"typeId":90,"tradable":true,"isToken":false,"level":0... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1452 b: ue,"isToken":false,"level":0},{"id":20958444,"typeId":27,"tradabl... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 4356 b: ":20958469,"typeId":57,"tradable":true,"isToken":false,"level":0}... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: Read 1531 b: ted":"2 months ago","timestamp":1377515807000},{"name":"go drawte... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:50 PM :: FROM SERVER (DeckList)
+
+{"decks":[{"name":"lol?","resources":"GROWTH,DECAY,ENERGY,ORDER","valid":true,"updated":"53 minutes ago","timestamp":1382357435000},{"name":"Tiny Feet Preconstructed","resources":"ORDER,GROWTH","valid":true,"updated":"2 hours ago","timestamp":1382352821000},{"name":"Machine Doom Preconstructed","resources":"ENERGY,DECAY","valid":true,"updated":"2 hours ago","timestamp":1382352817000},{"name":"pestilence","resources":"ENERGY","valid":true,"updated":"3 weeks ago","timestamp":1380636758000},{"name":"virtym","resources":"GROWTH,ORDER","valid":true,"updated":"1 month ago","timestamp":1378467947000},{"name":"decaytest","resources":"DECAY,ORDER,GROWTH","valid":true,"updated":"1 month ago","timestamp":1378464797000},{"name":"decay shenanigans","resources":"DECAY,GROWTH","valid":true,"updated":"2 months ago","timestamp":1377674641000},{"name":"Decay Preconstructed","resources":"DECAY","valid":true,"updated":"2 months ago","timestamp":1377515807000},{"name":"go drawtest","resources":"GROWTH,ORDER,ENERGY","valid":true,"updated":"3 months ago","timestamp":1374142463000},{"name":"added2","resources":"GROWTH","valid":true,"updated":"3 months ago","timestamp":1373353889000},{"name":"artrox","resources":"ORDER","valid":true,"updated":"3 months ago","timestamp":1373353884000},{"name":"go draw","resources":"GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1372428892000},{"name":"scum","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1372416504000},{"name":"icecream","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1372416330000},{"name":"locked in","resources":"ENERGY,GROWTH,ORDER","valid":true,"updated":"4 months ago","timestamp":1371735268000},{"name":"zrave","resources":"GROWTH,ENERGY","valid":true,"updated":"4 months ago","timestamp":1371730396000},{"name":"Order Preconstructed","resources":"ORDER","valid":true,"updated":"4 months ago","timestamp":1371554739000},{"name":"Energy Preconstructed","resources":"ENERGY","valid":true,"updated":"4 months ago","timestamp":1371554733000},{"name":"rank39","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371205252000},{"name":"added3","resources":"GROWTH","valid":true,"updated":"4 months ago","timestamp":1371125951000},{"name":"Growth Preconstructed","resources":"GROWTH","valid":true,"updated":"5 months ago","timestamp":1370375833000}],"msg":"DeckList"}
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:03:59 PM :: Read 37 b: {"time":1382360644997,"msg":"Ping"}
+
+... from 54.208.22.193:8081
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:04:09 PM :: CLOSING SOCKET: 
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
+10/21/2013 3:04:09 PM :: CLOSING SOCKET: 
+ 
+(Filename: C:/BuildAgent/work/cac08d8a5e25d4cb/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
+
