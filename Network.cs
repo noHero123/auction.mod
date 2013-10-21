@@ -53,6 +53,10 @@ namespace Auction.mod
             this.joindate = DateTime.Now;
         }
 
+        public void onConnect(OnConnectData ocd)
+        {
+            //lol
+        }
 
 		public void handleMessage(Message msg) {
 			if (msg is WhisperMessage)
@@ -347,7 +351,7 @@ namespace Auction.mod
        private void senttosingleusr(string msg, string to)
         {
             WhisperMessage wmsg=new WhisperMessage(to, msg);
-            if (this.inbattle) App.Communicator.sendBattleRequest(wmsg);
+            if (this.inbattle) App.Communicator.sendRequest(wmsg);
             else
                 App.Communicator.sendRequest(wmsg);
         }

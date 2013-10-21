@@ -71,7 +71,11 @@ namespace Auction.mod
         SettingsUI setui;
         Generator generator;
 
-        
+        public void onConnect(OnConnectData ocd)
+        {
+        //lol
+        }
+
 
         public void handleMessage(Message msg)
         {
