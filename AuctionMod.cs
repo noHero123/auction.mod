@@ -477,6 +477,7 @@ namespace Auction.mod
 
                     if (LobbyMenu.drawButton(recto.settingsbutton, "Settings", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
+                        recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
                         setui.setbuttonpressed();
                         
                     }    
