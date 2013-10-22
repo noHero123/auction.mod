@@ -33,7 +33,7 @@ namespace Auction.mod
        public Rect setwtblabel1, setwtblabel2, setwtbbutton1, setwtbbutton2, setwtbbox;
        public Rect settakewtsgenlabel, settakewtsgenbutton, settakewtsgenlabel2, settakewtbgenlabel, settakewtbgenbutton, settakewtbgenlabel2;
        public Rect setwtsahlabel, setwtsahbutton, setwtsahlabel2, setwtsahlabel3, setwtsahlabel4, setwtbahlabel, setwtbahbutton, setwtbahlabel2, setwtbahlabel3, setwtbahlabel4, setwtsahbutton2, setwtbahbutton2;
-
+       public Rect scrollpostbutton, scrollpostlabel1, scrollpostlabel2;
        public float fieldHeight;
        public float scrollBarSize = 20f;
        public float costIconSize,costIconWidth,costIconHeight,cardHeight,cardWidth, labelsWidth, labelX;
@@ -368,6 +368,13 @@ namespace Auction.mod
             this.setwtblabel2 = new Rect(setwtbbutton1.xMax + 4, setwtbbox.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
             this.setwtbbutton2 = new Rect(setwtblabel2.xMax + 4, setwtbbox.y, lenfactor * vector2.x, texthight);
+           //scrollpost-day
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("Version of ScrollsPost-Price: "));
+            this.scrollpostlabel1 = new Rect(setowncardsanzbox.x, setwtbbox.yMax + 4, lenfactor * vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("30-days"));
+            this.scrollpostbutton = new Rect(scrollpostlabel1.xMax, setwtbbox.yMax + 4, lenfactor * vector2.x, texthight);
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" (restart needed to take effect)"));
+            this.scrollpostlabel2 = new Rect(scrollpostbutton.xMax, setwtbbox.yMax + 4, lenfactor * vector2.x, texthight);
 
 
         }

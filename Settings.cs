@@ -8,6 +8,10 @@ namespace Auction.mod
 	public enum ScrollsPostPriceType {
 		LOWER, SUGGESTED, UPPER
 	}
+    public enum ScrollsPostDayType
+    {
+        one, three, seven, fourteen, thirty, hour
+    }
 
    public class Settings
     {
@@ -40,6 +44,7 @@ namespace Auction.mod
         public bool wtbroundup = false;
         public int wtbroundmode = 0;
         public bool roundwtb = false;
+        public ScrollsPostDayType scrollspostday = 0;
 		public ScrollsPostPriceType wtsGeneratorPriceType = ScrollsPostPriceType.UPPER, wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
 		public ScrollsPostPriceType wtsAHpriceType = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType = ScrollsPostPriceType.SUGGESTED, wtsAHpriceType2 = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
 
@@ -128,6 +133,10 @@ namespace Auction.mod
                 {
 					wtbAHpriceType2 = (ScrollsPostPriceType)Convert.ToInt32(value);
                 }
+                if (setting.Equals("scrollpostday"))
+                {
+                    scrollspostday = (ScrollsPostDayType)Convert.ToInt32(value);
+                }
             }
 
         }
@@ -149,6 +158,7 @@ namespace Auction.mod
 			wtsGeneratorPriceType = ScrollsPostPriceType.SUGGESTED;
 			wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
 			wtsAHpriceType = wtsAHpriceType = wtsAHpriceType2 = wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
+            scrollspostday = ScrollsPostDayType.one;
         }
 
         public void savesettings(string ownaucpath)
@@ -170,6 +180,7 @@ namespace Auction.mod
 			text = text + "takeahs2 " + (int)wtsAHpriceType2 + ";";
 			text = text + "takeahb1 " + (int)wtbAHpriceType + ";";
 			text = text + "takeahb2 " + (int)wtbAHpriceType2 + ";";
+            text = text + "scrollpostday " + (int)scrollspostday + ";";
             System.IO.File.WriteAllText(ownaucpath + "settingsauc.txt", text);
         }
 

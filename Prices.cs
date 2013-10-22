@@ -209,7 +209,34 @@ namespace Auction.mod
             //WebClient wc = new WebClient(); // webclient has no timeout
             //string ressi= wc.DownloadString(new Uri("http://api.scrollspost.com/v1/price/1-day/" + search + ""));
 
-            WebRequest myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/1-day/");
+            WebRequest myWebRequest;
+            if (sttngs.scrollspostday == ScrollsPostDayType.thirty)
+            { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/30-days/"); }
+            else 
+            {
+                if (sttngs.scrollspostday == ScrollsPostDayType.fourteen)
+                { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/14-days/"); }
+                else
+                {
+                    if (sttngs.scrollspostday == ScrollsPostDayType.seven)
+                    { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/7-days/"); }
+                    else
+                    {
+                        if (sttngs.scrollspostday == ScrollsPostDayType.three)
+                        { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/3-days/"); }
+                        else
+                        {
+                            if (sttngs.scrollspostday == ScrollsPostDayType.hour)
+                            { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/1-hour/"); }
+                            else
+                            {
+                                myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/1-day/");
+                            }
+                        }
+                    }
+                }
+            }
+
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
             System.IO.Stream stream = myWebResponse.GetResponseStream();

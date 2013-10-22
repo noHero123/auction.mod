@@ -297,6 +297,24 @@ namespace Auction.mod
 				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
+            // which version of scrollpost price:
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            GUI.Label(recto.scrollpostlabel1, "Version of ScrollsPost-Price: ");
+            GUI.Label(recto.scrollpostlabel2, " (restart needed to take effect)");
+            if (GUI.Button(recto.scrollpostbutton, ""))
+            {
+                sttngs.scrollspostday = (ScrollsPostDayType)(((int)sttngs.scrollspostday + 1) % 6);
+            }
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            if (sttngs.scrollspostday == ScrollsPostDayType.one) { GUI.Label(recto.scrollpostbutton, "1-day"); }
+            if (sttngs.scrollspostday == ScrollsPostDayType.three) { GUI.Label(recto.scrollpostbutton, "3-days"); }
+            if (sttngs.scrollspostday == ScrollsPostDayType.seven) { GUI.Label(recto.scrollpostbutton, "7-days"); }
+            if (sttngs.scrollspostday == ScrollsPostDayType.fourteen) { GUI.Label(recto.scrollpostbutton, "14-days"); }
+            if (sttngs.scrollspostday == ScrollsPostDayType.thirty) { GUI.Label(recto.scrollpostbutton, "30-days"); }
+            if (sttngs.scrollspostday == ScrollsPostDayType.hour) { GUI.Label(recto.scrollpostbutton, "1-hour"); }
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+
 
             GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.color = Color.white;
