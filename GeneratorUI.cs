@@ -848,7 +848,7 @@ namespace Auction.mod
             if (msg != "")
             {
                 if (helpf.wtsmenue) { msg = "WTS " + msg; shortmsg = "aucs " + shortmsg; } else { msg = "WTB " + msg; shortmsg = "aucb " + shortmsg; }
-                msg = msg.Remove(msg.Length - 2);
+                if (msg.EndsWith(" ")) { msg = msg.Remove(msg.Length - 2); } else { msg = msg.Remove(msg.Length - 1); }
                 shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
             if (msg.Length < 512) systemCopyBufferProperty.SetValue(null, msg, null);
