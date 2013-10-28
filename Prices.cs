@@ -210,6 +210,8 @@ namespace Auction.mod
             //string ressi= wc.DownloadString(new Uri("http://api.scrollspost.com/v1/price/1-day/" + search + ""));
 
             WebRequest myWebRequest;
+            myWebRequest = WebRequest.Create("http://a.scrollsguide.com/prices");
+            /*
             if (sttngs.scrollspostday == ScrollsPostDayType.thirty)
             { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/30-days/"); }
             else 
@@ -236,7 +238,7 @@ namespace Auction.mod
                     }
                 }
             }
-
+            */
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
             System.IO.Stream stream = myWebResponse.GetResponseStream();
@@ -245,45 +247,41 @@ namespace Auction.mod
             //Console.WriteLine(ressi);
 
             JsonReader jsonReader = new JsonReader();
-            Dictionary<string, object>[] dictionary = (Dictionary<string, object>[])jsonReader.Read(ressi);
-            for (int i = 0; i < dictionary.GetLength(0); i++)
+            Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(ressi);
+            if ((string)(dictionary["msg"]) == "success")
             {
-                int id = Convert.ToInt32(dictionary[i]["card_id"]);
-                Dictionary<string, object> d = (Dictionary<string, object>)dictionary[i]["price"];
-                int lower = 0; int higher = 0; int sugger = 0;
-
-                int sug = (int)d["suggested"];
-                int high = (int)d["buy"];
-                int low = (int)d["sell"];
-                if (sug != 0)
+                Dictionary<string, object>[] d = (Dictionary<string, object>[])dictionary["data"];
+                for (int i = 0; i < d.GetLength(0); i++)
                 {
-                    lower = sug;
-                    higher = lower;
-                    sugger = sug;
-                }
-                if (high != 0)
-                {
-                    int value = high;
-                    if (value < lower || (value != 0 && lower == 0)) { lower = value; }
-                    if (value > higher || (value != 0 && higher == 0)) { higher = value; }
-                }
-                if (low != 0)
-                {
-                    int value = low;
-                    if (value < lower || (value != 0 && lower == 0)) { lower = value; }
-                    if (value > higher || (value != 0 && higher == 0)) { higher = value; }
-                }
+                    int id = Convert.ToInt32(d[i]["id"]);
 
+                    int lower = 0; int higher = 0; int sugger = 0;
+                    int high = (int)d[i]["buy"];
+                    int low = (int)d[i]["sell"];
+                    if (high != 0)
+                    {
+                        int value = high;
+                        lower = value;
+                        higher = value;
+                    }
+                    if (low != 0)
+                    {
+                        int value = low;
+                        if (value < lower || (value != 0 && lower == 0)) { lower = value; }
+                        if (value > higher || (value != 0 && higher == 0)) { higher = value; }
+                    }
+                    sugger = (lower + higher) / 2;
 
-                //int index = Array.FindIndex(cardids, element => element == id);
-                int index = helpf.cardidToArrayIndex(id);
-                if (index >= 0)
-                {
-                    lowerprice[index] = lower;
-                    upperprice[index] = higher;
-                    sugprice[index] = sugger;
+                    //int index = Array.FindIndex(cardids, element => element == id);
+                    int index = helpf.cardidToArrayIndex(id);
+                    if (index >= 0)
+                    {
+                        lowerprice[index] = lower;
+                        upperprice[index] = higher;
+                        sugprice[index] = sugger;
+                    }
+
                 }
-
             }
 
         }

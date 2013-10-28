@@ -136,7 +136,7 @@ namespace Auction.mod
 
             // show range
             GUI.skin = helpf.cardListPopupBigLabelSkin;
-            GUI.Label(recto.setsugrangelabel, "show ScrollsPost price as range");
+            GUI.Label(recto.setsugrangelabel, "show ScrollsGuide price as range");
             bool oowp = GUI.Button(recto.setsugrangebox, "");
             if (oowp) sttngs.showsugrange = !sttngs.showsugrange;
             if (sttngs.showsugrange)
@@ -180,7 +180,7 @@ namespace Auction.mod
                 GUI.DrawTexture(recto.setwtsbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
             GUI.skin = helpf.cardListPopupBigLabelSkin;
-            GUI.Label(recto.setwtslabel1, "round ScrollsPost prices in WTS-generator ");
+            GUI.Label(recto.setwtslabel1, "round ScrollsGuide prices in WTS-generator ");
             if (GUI.Button(recto.setwtsbutton1, ""))
             {
                 sttngs.wtsroundup = !sttngs.wtsroundup;
@@ -211,7 +211,7 @@ namespace Auction.mod
                 GUI.DrawTexture(recto.setwtbbox, ResourceManager.LoadTexture("Arena/scroll_browser_button_cb"));
             }
             GUI.skin = helpf.cardListPopupBigLabelSkin;
-            GUI.Label(recto.setwtblabel1, "round ScrollsPost prices in WTB-generator ");
+            GUI.Label(recto.setwtblabel1, "round ScrollsGuide prices in WTB-generator ");
             if (GUI.Button(recto.setwtbbutton1, ""))
             {
                 sttngs.wtbroundup = !sttngs.wtbroundup;
@@ -234,13 +234,13 @@ namespace Auction.mod
             {
 				sttngs.wtsGeneratorPriceType = nextScrollsPostPriceType(sttngs.wtsGeneratorPriceType);
             }
-            GUI.Label(recto.settakewtsgenlabel2, "ScrollsPost price");
+            GUI.Label(recto.settakewtsgenlabel2, "ScrollsGuide price");
             GUI.Label(recto.settakewtbgenlabel, "WTB-Generator takes ");
             if (GUI.Button(recto.settakewtbgenbutton, ""))
             {
 				sttngs.wtbGeneratorPriceType = nextScrollsPostPriceType(sttngs.wtbGeneratorPriceType);
             }
-            GUI.Label(recto.settakewtbgenlabel2, "ScrollsPost price");
+            GUI.Label(recto.settakewtbgenlabel2, "ScrollsGuide price");
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			GUI.Label(recto.settakewtsgenbutton, scrollsPostPriceTypeToString(sttngs.wtsGeneratorPriceType));
 			GUI.Label(recto.settakewtbgenbutton, scrollsPostPriceTypeToString(sttngs.wtbGeneratorPriceType));
@@ -258,7 +258,7 @@ namespace Auction.mod
                     sttngs.wtsAHpriceType2 = nextScrollsPostPriceType(sttngs.wtsAHpriceType2);
                 }
                 GUI.Label(recto.setwtsahlabel3, "and");
-                GUI.Label(recto.setwtsahlabel4, "ScrollsPost prices");
+                GUI.Label(recto.setwtsahlabel4, "ScrollsGuide prices");
                 GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
                 if (GUI.Button(recto.setwtbahbutton, ""))
                 {
@@ -269,7 +269,7 @@ namespace Auction.mod
                     sttngs.wtbAHpriceType2 = nextScrollsPostPriceType(sttngs.wtbAHpriceType2);
                 }
                 GUI.Label(recto.setwtbahlabel3, "and");
-                GUI.Label(recto.setwtbahlabel4, "ScrollsPost prices");
+                GUI.Label(recto.setwtbahlabel4, "ScrollsGuide prices");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 				GUI.Label(recto.setwtsahbutton, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType));
 				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
@@ -285,21 +285,22 @@ namespace Auction.mod
                 {
                     sttngs.wtsAHpriceType = nextScrollsPostPriceType(sttngs.wtsAHpriceType);
                 }
-                GUI.Label(recto.setwtsahlabel2, "ScrollsPost price");
+                GUI.Label(recto.setwtsahlabel2, "ScrollsGuide price");
                 GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
                 if (GUI.Button(recto.setwtbahbutton, ""))
                 {
                     sttngs.wtbAHpriceType = nextScrollsPostPriceType(sttngs.wtbAHpriceType);
                 }
-                GUI.Label(recto.setwtbahlabel2, "ScrollsPost price");
+                GUI.Label(recto.setwtbahlabel2, "ScrollsGuide price");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 				GUI.Label(recto.setwtsahbutton, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType));
 				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
             }
             // which version of scrollpost price:
+            /*
             GUI.skin = helpf.cardListPopupBigLabelSkin;
-            GUI.Label(recto.scrollpostlabel1, "Version of ScrollsPost-Price: ");
+            GUI.Label(recto.scrollpostlabel1, "Version of ScrollsGuide-Price: ");
             GUI.Label(recto.scrollpostlabel2, " (restart needed to take effect)");
             if (GUI.Button(recto.scrollpostbutton, ""))
             {
@@ -314,7 +315,7 @@ namespace Auction.mod
             if (sttngs.scrollspostday == ScrollsPostDayType.hour) { GUI.Label(recto.scrollpostbutton, "1-hour"); }
             GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
-
+            */
 
             GUI.skin = helpf.cardListPopupBigLabelSkin;
             GUI.color = Color.white;

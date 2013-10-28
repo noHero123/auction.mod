@@ -297,13 +297,13 @@ namespace Auction.mod
             this.setwtsahlabel = new Rect(setowncardsanzbox.x, setowncardsanzbox.yMax + 4, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.setwtsahbutton = new Rect(setwtsahlabel.xMax + 4, setwtsahlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost price"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsGuide price"));
             this.setwtsahlabel2 = new Rect(setwtsahbutton.xMax + 4, setwtsahlabel.y, lenfactor*vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent("and"));
             this.setwtsahlabel3 = new Rect(setwtsahbutton.xMax + 4, setwtsahlabel.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.setwtsahbutton2 = new Rect(setwtsahlabel3.xMax + 4, setwtsahlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost prices"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsGuide prices"));
             this.setwtsahlabel4 = new Rect(setwtsahbutton2.xMax + 4, setwtsahlabel.y, lenfactor * vector2.x, texthight);
 
 
@@ -312,16 +312,16 @@ namespace Auction.mod
             this.setwtbahlabel = new Rect(setowncardsanzbox.x, setwtsahlabel.yMax + 4, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.setwtbahbutton = new Rect(setwtsahlabel.xMax + 4, setwtbahlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost price"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsGuide price"));
             this.setwtbahlabel2 = new Rect(setwtsahbutton.xMax + 4, setwtbahlabel.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent("and"));
             this.setwtbahlabel3 = new Rect(setwtsahbutton.xMax + 4, setwtbahlabel.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.setwtbahbutton2 = new Rect(setwtbahlabel3.xMax + 4, setwtbahlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsPost prices"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent(" ScrollsGuide prices"));
             this.setwtbahlabel4 = new Rect(setwtbahbutton2.xMax + 4, setwtbahlabel.y, vector2.x, texthight);
 
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("show ScrollsPost price as range"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("show ScrollsGuide price as range"));
             this.setsugrangebox = new Rect(setowncardsanzbox.x, setwtbahlabel.yMax + 4, texthight, texthight);
             this.setsugrangelabel = new Rect(setsugrangebox.xMax + 4, setsugrangebox.y, lenfactor * vector2.x, texthight);
 
@@ -338,19 +338,19 @@ namespace Auction.mod
             this.settakewtsgenlabel = new Rect(setowncardsanzbox.x, setrowhightlabel.yMax + 4, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.settakewtsgenbutton = new Rect(settakewtsgenlabel.xMax + 4, settakewtsgenlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsPost price"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsGuide price"));
             this.settakewtsgenlabel2 = new Rect(settakewtsgenbutton.xMax + 4, settakewtsgenlabel.y, vector2.x, texthight);
 
             vector2 = GUI.skin.label.CalcSize(new GUIContent("WTB-Generator takes "));
             this.settakewtbgenlabel = new Rect(setowncardsanzbox.x, settakewtsgenlabel.yMax + 4, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" lower "));
             this.settakewtbgenbutton = new Rect(settakewtbgenlabel.xMax + 4, settakewtbgenlabel.y, lenfactor * vector2.x, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsPost price"));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("ScrollsGuide price"));
             this.settakewtbgenlabel2 = new Rect(settakewtbgenbutton.xMax + 4, settakewtbgenlabel.y, lenfactor * vector2.x, texthight);
 
             // rounding
             this.setwtsbox = new Rect(setowncardsanzbox.x, settakewtbgenlabel.yMax + 4, texthight, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTS-generator "));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsGuide prices in WTS-generator "));
             this.setwtslabel1 = new Rect(setwtsbox.xMax + 4, setwtsbox.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
             this.setwtsbutton1 = new Rect(setwtslabel1.xMax + 4, setwtsbox.y, lenfactor * vector2.x, texthight);
@@ -360,7 +360,7 @@ namespace Auction.mod
             this.setwtsbutton2 = new Rect(setwtslabel2.xMax + 4, setwtsbox.y, lenfactor * vector2.x, texthight);
             // rounding
             this.setwtbbox = new Rect(setowncardsanzbox.x, setwtsbox.yMax + 4, texthight, texthight);
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsPost prices in WTB-generator "));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("round ScrollsGuide prices in WTB-generator "));
             this.setwtblabel1 = new Rect(setwtbbox.xMax + 4, setwtbbox.y, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" down "));
             this.setwtbbutton1 = new Rect(setwtblabel1.xMax + 4, setwtbbox.y, lenfactor * vector2.x, texthight);
@@ -369,7 +369,7 @@ namespace Auction.mod
             vector2 = GUI.skin.label.CalcSize(new GUIContent(" 50 "));
             this.setwtbbutton2 = new Rect(setwtblabel2.xMax + 4, setwtbbox.y, lenfactor * vector2.x, texthight);
            //scrollpost-day
-            vector2 = GUI.skin.label.CalcSize(new GUIContent("Version of ScrollsPost-Price: "));
+            vector2 = GUI.skin.label.CalcSize(new GUIContent("Version of ScrollsGuide-Price: "));
             this.scrollpostlabel1 = new Rect(setowncardsanzbox.x, setwtbbox.yMax + 4, lenfactor * vector2.x, texthight);
             vector2 = GUI.skin.label.CalcSize(new GUIContent("30-days"));
             this.scrollpostbutton = new Rect(scrollpostlabel1.xMax, setwtbbox.yMax + 4, lenfactor * vector2.x, texthight);

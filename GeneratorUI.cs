@@ -594,7 +594,7 @@ namespace Auction.mod
                         // draw buy/sell button
                         if (helpf.wtsmenue)
                         {
-                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
+                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SG"))
                             {
                                 //int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
                                 int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
@@ -606,7 +606,7 @@ namespace Auction.mod
                         }
                         else
                         {
-                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SP"))
+                            if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "SG"))
                             {
                                 //int index = Array.FindIndex(helpf.cardnames, element => element.Equals(current.card.getName().ToLower()));
                                 int index = helpf.cardnameToArrayIndex(current.card.getName().ToLower());
