@@ -709,7 +709,7 @@ namespace Auction.mod
                             {
 								p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
                             }
-                            suggeprice = "SP: " + p1;
+                            suggeprice = "SG: " + p1;
                             if (sttngs.showsugrange)
                             {
                                 if (helpf.wtsmenue)
@@ -721,7 +721,7 @@ namespace Auction.mod
 									p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
                                 }
                             }
-                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SP: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                         }
                         GUI.skin = helpf.cardListPopupSkin;
                         Rect position14 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
@@ -1226,7 +1226,7 @@ namespace Auction.mod
                             {
                                 p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
                             }
-                            suggeprice = "SP: " + p1;
+                            suggeprice = "SG: " + p1;
                             if (sttngs.showsugrange)
                             {
                                 if (wtsmenue)
@@ -1238,7 +1238,7 @@ namespace Auction.mod
                                     p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
                                 }
                             }
-                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SP: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                         }
                         GUI.skin = helpf.cardListPopupSkin;
                         Rect position14 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
