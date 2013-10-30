@@ -8,15 +8,17 @@ using System.Text.RegularExpressions;
 
 namespace Auction.mod
 {
-    class AuctionHouseUI
+    class AuctionHouseUI 
     {
+
         Vector2 scrolll = new Vector2(0, 0);
         public bool wtsinah = true;//remembers which menupoint in ah was the last one
         private Auction tradeitem;
+        private Offer offeritem;
         private bool selectable=true;
         private bool clickableItems=false;
         private float opacity;
-        public Vector2 scrollPos , scrollPos2;
+        public Vector2 scrollPos, scrollPos2, scrollPos3,scrollPos4;
         Rectomat recto;
         Prices prcs;
         Cardviewer crdvwr;
@@ -25,11 +27,16 @@ namespace Auction.mod
         Settings sttngs;
         Helpfunktions helpf;
         AuctionHouse ah;
+        OfferHouse offers;
         List<Auction> ahlist;
         //ReadOnlyCollection<Auction> ahlist;
         bool bothstarttrading = false;
-
-        
+        Card clickedOfferCard=null;
+        int clickedOfferId = 0;
+        Auction.OfferType clickerdOfferType = Auction.OfferType.SELL;
+        private int OrOrAnd = 0;// in offermenu select price and no additonal card, "and" a additional card  or "or" an additional card
+        private string OfferPrice = "0";// in offermenu the offered price
+        private Card OfferCard = null;
 
         Texture2D growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
@@ -63,6 +70,7 @@ namespace Auction.mod
             this.ntwrk = Network.Instance;
             this.sttngs = Settings.Instance;
             this.ah = AuctionHouse.Instance;
+            this.offers = OfferHouse.Instance;
         }
 
         public void ahbuttonpressed()
@@ -122,9 +130,22 @@ namespace Auction.mod
         
         public void drawAH()
         {
+            if (helpf.ownoffermenu)
+            {
+                // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
+                if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.startaccepting(); }
+                
+                this.drawAHlist(true);
+                drawoffers();
+                if (helpf.showtradedialog) { this.startaccepting(); }
+                return;
+            }
+
             if (helpf.bothmenue)
             {
-
+                // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
+                if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message, tradeitem.card.getType()); }
+                
                 srchsvr.setsettings(true, true);
                 ah.setSellSortMode(srchsvr.sortmode);
                 this.drawAHlist(true);
@@ -136,7 +157,14 @@ namespace Auction.mod
                 if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message,tradeitem.card.getType()); }
                 return;
             }
+            // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
+            if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType()); }
+            //draw regular menu + searchmenu
+            this.drawAHandSearch();
+        }
 
+        private void drawAHandSearch()
+        {
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
             if (helpf.inauchouse)
             {
@@ -878,7 +906,8 @@ namespace Auction.mod
                     srchsvr.setsettings(true, false);
                     ah.setBuySortMode(srchsvr.sortmode);
                 }
-
+                GUI.skin.button.normal.textColor = Color.white;
+                GUI.skin.button.hover.textColor = Color.white;
 
                 //bothbutton
                 GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -887,7 +916,11 @@ namespace Auction.mod
                     helpf.bothmenue = true;
                     recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                 }
-
+                if (GUI.Button(recto.ownbuttonrect, "Own") && !helpf.showtradedialog)
+                {
+                    helpf.ownoffermenu = true;
+                    recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                }
 
 
                 GUI.skin.button.normal.textColor = Color.white;
@@ -984,45 +1017,58 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
                     if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 1;
-                    if (wtsmenue)
+                    if (helpf.bothmenue)
                     {
-                        ah.setSellSortMode(AuctionHouse.SortMode.CARD);
+                        if (wtsmenue)
+                        {
+                            ah.setSellSortMode(AuctionHouse.SortMode.CARD);
+                        }
+                        else
+                        {
+                            ah.setBuySortMode(AuctionHouse.SortMode.CARD);
+                        }
+                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
                     }
-                    else
-                    {
-                        ah.setBuySortMode(AuctionHouse.SortMode.CARD);
-                    }
-                    if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
 
                 }
                 float datelength = GUI.skin.button.CalcSize(new GUIContent("Date")).x;
                 float datebeginn = 0;
-                if (wtsmenue)
+                if (helpf.bothmenue)
                 {
-                    vec11 = GUI.skin.button.CalcSize(new GUIContent("Seller"));
+                    if (wtsmenue)
+                    {
+                        vec11 = GUI.skin.button.CalcSize(new GUIContent("Seller"));
 
-                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
-                    {
-                        if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                        if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                        srchsvr.sortmode = 3;
-                        ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
-                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-                        srchsvr.savesettings(true, true);
+                        if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
+                        {
+                            if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                            if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                            srchsvr.sortmode = 3;
+                            if (helpf.bothmenue)
+                            {
+                                ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
+                                //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                                srchsvr.savesettings(true, true);
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    vec11 = GUI.skin.button.CalcSize(new GUIContent("Buyer"));
-                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
+                    else
                     {
-                        if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                        if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                        srchsvr.sortmode = 3;
-                        ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
-                        srchsvr.savesettings(true, false);
-                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                        vec11 = GUI.skin.button.CalcSize(new GUIContent("Buyer"));
+                        if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
+                        {
+                            if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                            if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                            srchsvr.sortmode = 3;
+                            if (helpf.bothmenue)
+                            {
+                                ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
+
+                                srchsvr.savesettings(true, false);
+                            }
+                            //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                        }
                     }
                 }
                 datebeginn = recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
@@ -1032,15 +1078,19 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                     if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 2;
-                    if (wtsmenue)
+                    
+                    if (helpf.bothmenue)
                     {
-                        ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                        if (wtsmenue)
+                        {
+                            ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                        }
+                        else
+                        {
+                            ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
+                        }
+                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
                     }
-                    else
-                    {
-                        ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
-                    }
-                    if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                 }
                 vec11 = GUI.skin.button.CalcSize(new GUIContent("Date"));
@@ -1068,8 +1118,16 @@ namespace Auction.mod
                 Card card = null;
 
                 // set drawn cards
-                if (wtsmenue) this.ahlist = ah.getSellOffers();
-                else this.ahlist = ah.getBuyOffers();
+                if (helpf.ownoffermenu)
+                {
+                    this.ahlist = offers.getSellOffers();
+                }
+                else
+                {
+                    if (wtsmenue) this.ahlist = ah.getSellOffers();
+                    else this.ahlist = ah.getBuyOffers();
+                }
+
 
 
                 DateTime currenttime = DateTime.Now;
@@ -1117,11 +1175,14 @@ namespace Auction.mod
                     }
                     else
                     {
-                        if (clickableItems)
+                        if (helpf.ownoffermenu)
                         {
                             if (GUI.Button(position7, string.Empty))
                             {
                                 //this.callback.ItemClicked(this, current);
+                                this.clickedOfferCard = current.card;
+                                this.clickedOfferId = current.card.getType();
+                                this.clickerdOfferType = current.offer;
                             }
                         }
                         else
@@ -1275,20 +1336,35 @@ namespace Auction.mod
                             {
                                 if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
-
-                                    // start trading with seller
-                                    if (current.seller != App.MyProfile.ProfileInfo.name)
+                                    if (helpf.ownoffermenu)
                                     {
-                                        helpf.showtradedialog = true;
-                                        tradeitem = current;
-                                        this.bothstarttrading = wtsmenue;
+                                        this.clickedOfferCard = current.card;
+                                        this.clickedOfferId = current.card.getType();
+                                        this.clickerdOfferType = current.offer;
+                                    }
+                                    else
+                                    {
+                                        // start trading with seller
+                                        if (current.seller != App.MyProfile.ProfileInfo.name)
+                                        {
+                                            helpf.showtradedialog = true;
+                                            tradeitem = current;
+                                            this.bothstarttrading = wtsmenue;
+                                        }
                                     }
                                 }
                             }
                             else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
                             GUI.skin = helpf.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                            GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
+                            if (helpf.bothmenue)GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
+                            if (helpf.ownoffermenu)
+                            {
+                                if (current.offer == Auction.OfferType.SELL) { GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Sell"); }
+                                else { GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy"); }
+                            }
+                            
+                                
 
 
                         }
@@ -1298,13 +1374,21 @@ namespace Auction.mod
                             {
                                 if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
-
-                                    // start trading with seller
-                                    if (current.seller != App.MyProfile.ProfileInfo.name)
+                                    if (helpf.ownoffermenu)
                                     {
-                                        helpf.showtradedialog = true;
-                                        tradeitem = current;
-                                        this.bothstarttrading = wtsmenue;
+                                        this.clickedOfferCard = current.card;
+                                        this.clickedOfferId = current.card.getType();
+                                        this.clickerdOfferType = current.offer;
+                                    }
+                                    else
+                                    {
+                                        // start trading with seller
+                                        if (current.seller != App.MyProfile.ProfileInfo.name)
+                                        {
+                                            helpf.showtradedialog = true;
+                                            tradeitem = current;
+                                            this.bothstarttrading = wtsmenue;
+                                        }
                                     }
                                 }
                             }
@@ -1362,7 +1446,7 @@ namespace Auction.mod
                         srchsvr.setsettings(true, true);
                         ah.setSellSortMode(srchsvr.sortmode);
                         helpf.bothmenue = false;
-
+                        helpf.ownoffermenu = false;
                     }
                     GUI.skin.button.normal.textColor = Color.white;
                     GUI.skin.button.hover.textColor = Color.white;
@@ -1387,16 +1471,29 @@ namespace Auction.mod
                         srchsvr.setsettings(true, false);
                         ah.setBuySortMode(srchsvr.sortmode);
                         helpf.bothmenue = false;
+                        helpf.ownoffermenu = false;
                     }
-
                     GUI.skin.button.normal.textColor = Color.white;
                     GUI.skin.button.hover.textColor = Color.white;
-                    GUI.color = Color.white;
+
+                    GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    if (helpf.bothmenue) GUI.color = Color.white;
                     if (GUI.Button(recto.bothbuttonrect, "All") && !helpf.showtradedialog)
                     {
                         helpf.bothmenue = true;
+                        helpf.ownoffermenu = false;
                         recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                     }
+
+                    GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    if (helpf.ownoffermenu) GUI.color = Color.white;
+                    if (GUI.Button(recto.ownbuttonrect, "Own") && !helpf.showtradedialog)
+                    {
+                        helpf.bothmenue = false;
+                        helpf.ownoffermenu = true;
+                        recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                    }
+                    
                 }
 
 
@@ -1443,9 +1540,291 @@ namespace Auction.mod
         }
 
 
+        private void drawoffers()
+        {
+            //start, calculate guirects new
+            recto.innerRect.x = recto.innerRect.x + Screen.width * 0.495f;
+            recto.innerBGRect.x = recto.innerBGRect.x + Screen.width * 0.495f;
+            recto.outerRect.x = recto.outerRect.x + Screen.width * 0.495f;
+            recto.screenRect.x = recto.screenRect.x + Screen.width * 0.495f;
+            recto.filtermenurect.x = recto.filtermenurect.x + Screen.width * 0.495f;
+            recto.calcguirects();
+            // draw offers!
+            GUI.depth = 15;
+            this.opacity = 1f;
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
+
+            GUI.Box(recto.position, string.Empty);
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity * 0.3f);
+            GUI.Box(recto.position2, string.Empty);
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
+
+
+            //write your offer
+            string overwriting = "    ";
+            string whatppldo = "Want to sell ";
+            if (this.clickerdOfferType == Auction.OfferType.SELL) whatppldo = "Want to buy ";
+            if(clickedOfferCard!=null) overwriting=whatppldo +clickedOfferCard.getName() + " Offers"; //in german ueberschrift ;D
+            Vector2 vec11 = GUI.skin.button.CalcSize(new GUIContent(overwriting));
+            GUI.Box(new Rect(recto.innerRect.xMin + recto.labelX, recto.screenRect.yMin - 4, vec11.x, 20), string.Empty);
+            GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX, recto.screenRect.yMin - 4, vec11.x, 20), overwriting);
+
+            List<Offer> offlist = this.offers.getOffers(this.clickedOfferId,this.clickerdOfferType);
+            this.scrollPos3 = GUI.BeginScrollView(recto.position3, this.scrollPos3, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * offlist.Count));
+
+            Card card = null;
+            //Draw stuff
+            int num = 0;
+            float testy = this.scrollPos3.y;
+            foreach (Offer current in offlist)
+            {
+                
+                GUI.skin = helpf.cardListPopupGradientSkin;
+                //draw boxes
+                Rect position7 = recto.position7offers(num);
+
+                if (position7.yMax < testy || position7.y > testy + recto.position3.height)
+                {
+                    num++;
+                    GUI.color = Color.white;
+                }
+                else
+                {
+                    if (clickableItems)
+                    {
+                        if (GUI.Button(position7, string.Empty))
+                        {
+                            //this.callback.ItemClicked(this, current);
+                        }
+                    }
+                    else
+                    {
+                        GUI.Box(position7, string.Empty);
+                    }
+
+
+                    Texture texture=null;
+                        Vector2 vector;
+
+                    //draw seller name
+                    string sellername = current.seller;
+                    GUI.skin = helpf.cardListPopupBigLabelSkin;
+                    vector = GUI.skin.label.CalcSize(new GUIContent(sellername));
+                    
+                    Rect position8 = recto.position8offers(num);
+                    GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                    GUI.Label(position8, (vector.x >= position8.width) ? (sellername.Substring(0, Mathf.Min(sellername.Length, recto.maxCharsName)) + "...") : sellername);
+                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                    //draw timestamp
+                    GUI.skin = helpf.cardListPopupSkin;
+                    DateTime temptime = DateTime.Now;
+                    TimeSpan ts = temptime.Subtract(current.time);
+                    if (ts.TotalMinutes >= 1.0)
+                    {
+                        sellername = "" + ts.Minutes + " minutes ago";
+                    }
+                    else
+                    {
+                        //sellername = "" + ts.Seconds + " seconds ago"; // to mutch changing numbers XD
+                        if (ts.Seconds >= 40) { sellername = "40 seconds ago"; }
+                        else if (ts.Seconds >= 20) { sellername = "20 seconds ago"; }
+                        else if (ts.Seconds >= 10) { sellername = "10 seconds ago"; }
+                        else if (ts.Seconds >= 5) { sellername = "5 seconds ago"; }
+                        else sellername = "seconds ago";
+                    }
+                    Rect position9 = recto.position9offers(num);
+                    GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                    GUI.Label(position9, sellername);
+                    GUI.skin.label.alignment = TextAnchor.UpperLeft;
+
+
+                    //draw gold cost
+                    float nextx = position9.xMax + recto.costIconWidth;
+                    string gold = current.price + "g";
+                    if (current.price == 0) gold = "-";
+                    GUI.skin = helpf.cardListPopupBigLabelSkin;
+                    //vector = GUI.skin.label.CalcSize(new GUIContent(gold));
+                    //(this.fieldHeight-this.cardListPopupBigLabelSkin.label.fontSize)/2f
+                    //Rect position12 = new Rect(position7.xMax-recto.goldlength-2f, position8.yMin, recto.goldlength, recto.cardHeight);
+                    Rect position10 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth / 2f, recto.cardHeight);
+                    GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                    GUI.Label(position10, gold);
+                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+                    // draw suggested price
+                    string suggeprice = "total: " + current.calcprice+"g";
+                    GUI.skin = helpf.cardListPopupSkin;
+                    Rect position11 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
+                    GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                    GUI.Label(position11, suggeprice);
+                    GUI.skin.label.alignment = TextAnchor.UpperLeft;
+
+
+                    if (current.cardOffer != null)
+                    {
+
+                        string name = current.cardOffer.getName();
+
+                        string txt = helpf.cardIDtoimageid(current.cardOffer.getType()).ToString();
+                        texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.cardOffer.getType()] + ") " + name;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        vector = GUI.skin.label.CalcSize(new GUIContent(name));
+
+
+                        nextx = position10.xMax + recto.costIconWidth;
+                        //drawcardname
+                        Rect position12 = new Rect(nextx + 2f, position8.yMin, recto.labelsWidth, recto.cardHeight);
+
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(position12, (vector.x >= position12.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        GUI.skin = helpf.cardListPopupSkin;
+                        string text = current.cardOffer.getPieceKind().ToString();
+                        string str = text.Substring(0, 1) + text.Substring(1).ToLower();
+                        string text2 = string.Empty;
+                        int num2 = recto.maxCharsRK;
+                        if (current.cardOffer.level > 0)
+                        {
+                            string text3 = text2;
+                            text2 = string.Concat(new object[] { text3, "<color=#ddbb44>Tier ", current.cardOffer.level + 1, "</color>, " });
+                            num2 += "<color=#rrggbb></color>".Length;
+                        }
+                        text2 = text2 + current.cardOffer.getRarityString() + ", " + str;
+                        Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
+
+                        //draw cardsubstring
+                        Rect position13 = new Rect(nextx + 2f, position9.y, recto.labelsWidth, recto.fieldHeight);
+                        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                        GUI.Label(position13, (vector2.x >= position13.width) ? (text2.Substring(0, Mathf.Min(text2.Length, num2)) + "...") : text2);
+                        GUI.skin.label.alignment = TextAnchor.UpperLeft;
+
+
+                    }
+                    GUI.skin = helpf.cardListPopupLeftButtonSkin;
+                    if (!this.selectable)
+                    {
+                        GUI.enabled = false;
+                    }
+                    position10=recto.position10offers(num);
+                    if (GUI.Button(position10, string.Empty))
+                    {
+                        if (current.cardOffer!=null) card = current.cardOffer;
+                        App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_button_click");
+                    }
+                    if (!this.selectable)
+                    {
+                        GUI.enabled = true;
+                    }
+                    //draw picture
+                    if (texture != null)
+                    {
+                        GUI.DrawTexture(new Rect(position10.x + 4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
+                    }
+
+                    // draw buy/sell button
+                    GUI.skin = helpf.cardListPopupGradientSkin;
+                    if (this.clickerdOfferType == Auction.OfferType.SELL)
+                    {
+                        if (!helpf.showtradedialog)
+                        {
+                            if (GUI.Button(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
+                            {
+
+                                // start trading with seller
+                                if (current.seller != App.MyProfile.ProfileInfo.name)
+                                {
+                                    helpf.showtradedialog = true;
+                                    offeritem = current;
+                                    this.bothstarttrading = this.clickerdOfferType == Auction.OfferType.SELL;
+                                }
+                            }
+                        }
+                        else { GUI.Box(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Sell");
+
+
+                    }
+                    else
+                    {
+                        if (!helpf.showtradedialog)
+                        {
+                            if (GUI.Button(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
+                            {
+
+                                // start trading with seller
+                                if (current.seller != App.MyProfile.ProfileInfo.name)
+                                {
+                                    helpf.showtradedialog = true;
+                                    offeritem = current;
+                                    this.bothstarttrading = this.clickerdOfferType == Auction.OfferType.SELL;
+                                }
+                            }
+                        }
+                        else { GUI.Box(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(new Rect(position10.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
+                    }
+                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                    num++;
+                }
+            }
+
+
+
+
+
+            GUI.EndScrollView();
+            //end, calculate guirects new
+
+            // show clicked card
+            if (card != null)
+            {
+                //this.callback.ItemButtonClicked(this, card);
+                string clink = card.getName().ToLower();
+                //int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                int arrindex = helpf.cardnameToArrayIndex(clink);
+                if (arrindex >= 0)
+                {
+
+                    crdvwr.createcard(arrindex, helpf.cardids[arrindex]);
+                }
+
+            }
+
+
+            if (GUI.Button(recto.chancelbutton(), "Del"))
+            {
+                if (this.clickedOfferId != 0) { helpf.showtradedialog = true; helpf.deleteAuctionMenu = true; }
+            }
+
+            if (ntwrk.contonetwork)
+            {
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Label(recto.sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
+            }
+            recto.innerRect.x = recto.innerRect.x - Screen.width * 0.495f;
+            recto.innerBGRect.x = recto.innerBGRect.x - Screen.width * 0.495f;
+            recto.outerRect.x = recto.outerRect.x - Screen.width * 0.495f;
+            recto.screenRect.x = recto.screenRect.x - Screen.width * 0.495f;
+            recto.filtermenurect.x = recto.filtermenurect.x - Screen.width * 0.495f;
+            recto.calcguirects();
+        }
+
 
         private void starttrading(string name, string cname, int price, bool wts, string orgmsg, int cid)
         {
+            
+            if (helpf.makeOfferMenu)
+            {
+                this.offerMenu(wts,cname,cid,name);
+                return;
+            }
             // asks the user if he wants to trade
             GUI.skin = helpf.cardListPopupSkin;
             GUI.Box(recto.tradingbox, "");
@@ -1476,7 +1855,7 @@ namespace Auction.mod
             {
                 helpf.showtradedialog = false;
                 App.GameActionManager.TradeUser(helpf.globalusers[name]);
-                helpf.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + " Gold" + ". You own this card " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
+                helpf.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + "g " + ". You own this card " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
                 helpf.postmsgontrading = true;
             };
             if (GUI.Button(recto.tbwhisper, "Whisper"))
@@ -1485,6 +1864,315 @@ namespace Auction.mod
                 App.ArenaChat.ChatRooms.OpenWhisperRoom(name);
             };
             if (GUI.Button(recto.tbcancel, "Cancel")) { helpf.showtradedialog = false; };
+            if (GUI.Button(recto.tboffer, "Offer")) { helpf.makeOfferMenu = true; this.OrOrAnd = 0; this.OfferPrice = "0"; this.OfferCard = null; };
+        }
+
+        private void offerMenu(bool wts, string cname,int cid,string playername)
+        {
+            if (helpf.offerMenuSelectCardMenu)
+            {
+                this.ccardlist(!wts);// want to show the opposit prices in cardlist
+                return;
+            }
+
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.Box(recto.tradingbox, "");
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+
+            string text = "selling";
+            if (wts) { text = "buying"; }
+            int anzcard = helpf.cardIDToNumberOwned[cid];
+            int index = helpf.cardidToArrayIndex(cid);
+            string message = "You want to make an offer for " + text + " a " + cname + " (SG:" + prcs.getPrice(index, sttngs.wtbAHpriceType) + ")" + "\r\nYou own this card " + anzcard + " times.\r\n Your Messge:\r\n\r\n";
+            if (wts) message = "You want to make an offer for " + text + " a " + cname + " (SG:" + prcs.getPrice(index, sttngs.wtsAHpriceType) + ")" + "\r\nYou own this card " + anzcard + " times.\r\n Your Messge:\r\n\r\n";
+            string yourmessage1 = "WTS my " + cname + " for ";
+            if (wts) yourmessage1 = "WTB your " + cname + " for ";
+            GUI.Label(recto.tbmessage, message + yourmessage1);
+
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.Box(recto.tbpriceinput, string.Empty);
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            helpf.chatLogStyle.alignment = TextAnchor.MiddleCenter;
+            this.OfferPrice = Regex.Replace(GUI.TextField(recto.tbpriceinput, this.OfferPrice, helpf.chatLogStyle), @"[^0-9]", "");
+            helpf.chatLogStyle.alignment = TextAnchor.MiddleLeft;
+            if (this.OfferPrice == "") this.OfferPrice = "0";
+            if (Convert.ToInt32(this.OfferPrice) > 999999) this.OfferPrice = "999999";
+            if (GUI.Button(recto.tbororand, ""))
+            {
+                this.OrOrAnd = (this.OrOrAnd + 1) % 3;
+            }
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            if (this.OrOrAnd == 0) { GUI.Label(recto.tbororand, ""); }
+            if (this.OrOrAnd == 1) { GUI.Label(recto.tbororand, "and"); }
+            if (this.OrOrAnd == 2) { GUI.Label(recto.tbororand, "or"); }
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            if (this.OrOrAnd >= 1)
+            {
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Box(recto.tbcard, string.Empty);
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                if (GUI.Button(recto.tbcard, ""))
+                {
+                    helpf.offerMenuSelectCardMenu = true;
+                }
+
+                if (this.OfferCard != null)
+                {
+                    Texture texture = App.AssetLoader.LoadTexture2D(helpf.cardIDtoimageid(this.OfferCard.getType()).ToString());//current.getCardImage())
+                    if (texture != null)
+                    {
+                        GUI.DrawTexture(new Rect (recto.tbcard.x + 4f, recto.tbcard.y +4f, 2*recto.cardWidth, 2*recto.cardHeight), texture);
+                    }
+                }
+
+            }
+
+            if (GUI.Button(recto.tbok, "OK"))
+            {
+                string sendmessage = "WTS my " + cname + " for ";
+                if (wts) sendmessage = "WTB your " + cname + " for ";
+                if (this.OfferPrice != "0")
+                {
+                    sendmessage = sendmessage + this.OfferPrice + "g ";
+                    if (this.OrOrAnd == 1 && this.OfferCard != null) { sendmessage = sendmessage + "and " + this.OfferCard.getName(); }
+                    if (this.OrOrAnd == 2 && this.OfferCard != null) { sendmessage = sendmessage + "or " + this.OfferCard.getName(); }
+                }
+                else
+                {
+                    if (this.OrOrAnd == 1 && this.OfferCard != null) { sendmessage = sendmessage  + this.OfferCard.getName(); }
+                    if (this.OrOrAnd == 2 && this.OfferCard != null) { sendmessage = sendmessage  + this.OfferCard.getName(); }
+                }
+                WhisperMessage wmsg = new WhisperMessage(playername,sendmessage);
+                App.Communicator.sendRequest(wmsg);
+
+                helpf.makeOfferMenu = false; this.OrOrAnd = 0; this.OfferPrice = "0"; this.OfferCard = null;
+            };
+            if (GUI.Button(recto.tbcancel, "Cancel")) { helpf.makeOfferMenu = false; this.OrOrAnd = 0; this.OfferPrice = "0"; this.OfferCard = null; };
+        }
+
+        private void startaccepting()
+        {
+            if (helpf.deleteAuctionMenu)
+            {
+                this.deletingAuction();
+                return;
+            }
+            string name =offeritem.seller; string cname= offeritem.cardTarget.getName(); int price= offeritem.price;bool wts= this.bothstarttrading;
+            string orgmsg = offeritem.message; int cid = offeritem.cardTarget.getType(); int calcprice = offeritem.calcprice;
+            // asks the user if he wants to trade
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.Box(recto.tradingbox, "");
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+
+            string text = "buy a";
+            if (wts) text = "sell a";
+            int anzcard = helpf.cardIDToNumberOwned[cid];
+            string message = "You want to " + text + "\r\n" + cname + " for " + price + "g" + "\r\nYou own this card " + anzcard + " times\r\n\r\nOriginal Message:";
+            if (offeritem.cardOffer != null) message = "You want to " + text + "\r\n" + cname + " for " + price + "g and a " + offeritem.cardOffer.getName()+ "\r\n"+"(total: " + calcprice + "g)\r\n"+"You own " +cname+ " " + anzcard + " times\r\n\r\nOriginal Message:";
+            GUI.Label(recto.tbmessage, message);
+            GUI.skin.label.wordWrap = true;
+            float msghigh = GUI.skin.label.CalcHeight(new GUIContent(orgmsg), recto.tbmessage.width - 30f);
+            GUI.skin = helpf.cardListPopupSkin;
+            scrolll = GUI.BeginScrollView(recto.tbmessagescroll, scrolll, new Rect(0f, 0f, recto.tbmessagescroll.width - 20f, msghigh));
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+
+            GUI.Label(new Rect(5f, 5f, recto.tbmessagescroll.width - 30f, msghigh), orgmsg);
+
+            //Console.WriteLine(message);
+
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            GUI.EndScrollView();
+            GUI.skin.label.wordWrap = false;
+            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+
+            if (GUI.Button(recto.tbok, "OK"))
+            {
+                helpf.showtradedialog = false;
+                App.GameActionManager.TradeUser(helpf.globalusers[name]);
+                helpf.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + "g" + ". You own this card " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
+                if (offeritem != null) helpf.postmsgmsg = "You want to " + text + ": " + cname + " for " + price + "g and a " + offeritem.cardOffer.getName() + " " + "(total: " + calcprice + "g)." + " You own " + cname + " " + anzcard + " times. Original Message:" + "\r\n" + orgmsg;
+                helpf.postmsgontrading = true;
+            };
+            if (GUI.Button(recto.tbwhisper, "Whisper"))
+            {
+                helpf.showtradedialog = false;
+                App.ArenaChat.ChatRooms.OpenWhisperRoom(name);
+            };
+            if (GUI.Button(recto.tbcancel, "Cancel")) { helpf.showtradedialog = false; };
+        }
+
+        private void deletingAuction()
+        {
+
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.Box(recto.tradingbox, "");
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+
+            string text = "wtb";
+            if (this.clickerdOfferType == Auction.OfferType.SELL) text = "wts";
+            string message = "You realy want to delete your auction: " + text + " " + helpf.cardidsToCardnames[clickedOfferId]+"?";
+            GUI.Label(recto.tbmessage, message);
+            GUI.skin = helpf.cardListPopupLeftButtonSkin;
+
+            if (GUI.Button(recto.tbok, "Yes"))
+            {
+                this.offers.removeEntry(this.clickedOfferId, this.clickerdOfferType);
+                this.clickedOfferCard = null;
+                this.clickedOfferId = 0;
+                helpf.showtradedialog = false; helpf.deleteAuctionMenu = false;
+            };
+            if (GUI.Button(recto.tbcancel, "No")) { helpf.showtradedialog = false; helpf.deleteAuctionMenu = false; };
+
+        }
+
+        private void ccardlist(bool wtsmenue)//select card you want to offer
+        {
+            // dont know how to get a carlistpopup to work
+            GUI.skin = helpf.cardListPopupSkin;
+            GUI.Box(recto.tradingbox, "");
+            
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity * 0.3f);
+            Rect innerRect = new Rect(recto.tradingbox.x + 12f, recto.tradingbox.y + 12f, recto.tradingbox.width - 24f, recto.tbok.y - recto.tradingbox.yMin -12f);
+            GUI.Box(innerRect, string.Empty);
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
+            
+            List<Auction> offlist=null;
+
+            if (!wtsmenue) offlist = Generator.Instance.getOwnSellOffers(); // all cards YOU own ( the other user wants to buy
+            else offlist = Generator.Instance.getAllOwnBuyOffers(); // all cards available
+            this.scrollPos4 = GUI.BeginScrollView(innerRect, this.scrollPos4, new Rect(0f, 0f, innerRect.width - 20f, recto.fieldHeight * offlist.Count));
+            GUI.skin = helpf.cardListPopupBigLabelSkin;
+            Card card = null;
+            //Draw stuff
+            int num = 0;
+            float testy = this.scrollPos4.y;
+            foreach (Auction current in offlist)
+            {
+
+                GUI.skin = helpf.cardListPopupGradientSkin;
+                //draw boxes
+                Rect position7 = new Rect(recto.cardWidth + 10f, (float)num * recto.fieldHeight, innerRect.width - recto.scrollBarSize  - recto.costIconWidth - 12f, recto.fieldHeight);
+
+                if (position7.yMax < testy || position7.y > testy + innerRect.height)
+                {
+                    num++;
+                    GUI.color = Color.white;
+                }
+                else
+                {
+
+                        if (GUI.Button(position7, string.Empty))
+                        {
+                            card = current.card;
+                            //this.callback.ItemClicked(this, current);
+                        }
+
+
+
+                    Texture texture = null;
+                    Vector2 vector;
+                    string name = current.card.getName();
+
+                    string txt = helpf.cardIDtoimageid(current.card.getType()).ToString();
+                    texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
+
+                    GUI.skin = helpf.cardListPopupLeftButtonSkin;
+                    Rect position10 = recto.position10(num);
+                    if (GUI.Button(position10, string.Empty))
+                    {
+                        if (current.card != null) card = current.card;
+                        App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_button_click");
+                    }
+                    //draw picture
+                    if (texture != null)
+                    {
+                        GUI.DrawTexture(new Rect(position10.x + 4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
+                    }
+
+
+
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.card.getType()] + ") " + name;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        vector = GUI.skin.label.CalcSize(new GUIContent(name));
+
+
+                        float nextx = position10.xMax + 8f;
+                        //drawcardname
+                        Rect position12 = new Rect(nextx + 2f, (float)num * recto.fieldHeight - 3f + recto.fieldHeight * 0.01f, recto.labelsWidth, recto.cardHeight);
+
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(position12, (vector.x >= position12.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        GUI.skin = helpf.cardListPopupSkin;
+                        string text = current.card.getPieceKind().ToString();
+                        string str = text.Substring(0, 1) + text.Substring(1).ToLower();
+                        string text2 = string.Empty;
+                        int num2 = recto.maxCharsRK;
+                        if (current.card.level > 0)
+                        {
+                            string text3 = text2;
+                            text2 = string.Concat(new object[] { text3, "<color=#ddbb44>Tier ", current.card.level + 1, "</color>, " });
+                            num2 += "<color=#rrggbb></color>".Length;
+                        }
+                        text2 = text2 + current.card.getRarityString() + ", " + str;
+                        Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
+
+                        //draw cardsubstring
+                        Rect position13 = new Rect(nextx + 2f, (float)num * recto.fieldHeight - 3f + recto.fieldHeight * 0.57f, recto.labelsWidth, recto.fieldHeight);
+                        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+                        GUI.Label(position13, (vector2.x >= position13.width) ? (text2.Substring(0, Mathf.Min(text2.Length, num2)) + "...") : text2);
+                        GUI.skin.label.alignment = TextAnchor.UpperLeft;
+
+                        // draw suggested price
+                        //int index = Array.FindIndex(helpf.cardids, element => element == current.card.getType());
+                        int index = helpf.cardidToArrayIndex(current.card.getType());
+                        string suggeprice = "";
+                        if (index >= 0)
+                        {
+                            int p1 = 0, p2 = 0;
+                            if (wtsmenue)
+                            {
+                                p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
+                            }
+                            else
+                            {
+                                p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
+                            }
+                            suggeprice = "SG: " + p1;
+                            if (sttngs.showsugrange)
+                            {
+                                if (wtsmenue)
+                                {
+                                    p2 = prcs.getPrice(index, sttngs.wtsAHpriceType2);
+                                }
+                                else
+                                {
+                                    p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
+                                }
+                            }
+                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                        }
+                        nextx = position12.xMax + recto.costIconWidth;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        Rect position14 = new Rect(nextx + 2f, position12.y, recto.labelsWidth / 2f, recto.fieldHeight);
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(position14, suggeprice);
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                    
+
+                   
+                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                    num++;
+                }
+            }
+
+            GUI.EndScrollView();
+            this.OfferCard = card;
+            if (card != null) helpf.offerMenuSelectCardMenu = false;
         }
 
         private void RenderCost(Rect rect, Card card)
@@ -1500,7 +2188,8 @@ namespace Auction.mod
             }
         }
 
-
     
+
+
     }
 }

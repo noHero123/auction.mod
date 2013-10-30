@@ -65,6 +65,10 @@ namespace Auction.mod
         public string[] cardnames;
         public int[] cardImageid;
         public string[] cardType;
+        public bool ownoffermenu=false;
+        public bool makeOfferMenu = false;
+        public bool offerMenuSelectCardMenu = false;
+        public bool deleteAuctionMenu = false;
 
         public Dictionary<string, int> cardnamesToIndex = new Dictionary<string, int>();
         public Dictionary<int, int> cardidsToIndex = new Dictionary<int, int>();

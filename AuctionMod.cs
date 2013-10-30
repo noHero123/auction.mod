@@ -20,7 +20,7 @@ namespace Auction.mod
     using System;
     using UnityEngine;
 
-	public struct aucitem
+	/*public struct aucitem
 	{
 		public Card card;
 		public string seller;
@@ -29,7 +29,7 @@ namespace Auction.mod
 		public string time;
 		public DateTime dtime;
 		public string whole;
-	}
+	}*/
 
     public struct nickelement
     {
@@ -80,11 +80,41 @@ namespace Auction.mod
         public void handleMessage(Message msg)
         {
 
+            if (msg is WhisperMessage && OfferHouse.isOfferMessage(msg as WhisperMessage))
+            {
+               WhisperMessage wmsg=(WhisperMessage) msg;
+                string s=wmsg.text.ToLower();
+                if (s.StartsWith("auction update wts") || s.StartsWith("auction update wtb"))
+               {
+                   s.Replace("auction update ", "");
+                   List<Auction> la = mssgprsr.GetAuctionsFromMessage(s, wmsg.from, "whisper");
+                   foreach (Auction a in la) AuctionHouse.Instance.removeMessages(a.seller, a.offer, helpf.cardidsToCardnames[a.card.getType()]);
+                   AuctionHouse.Instance.addAuctions(la);
+               }
+               else
+               {
+                   if (s.StartsWith("auction ended wts") || s.StartsWith("auction ended wtb"))
+                   {
+                       s.Replace("auction ended ", "");
+                       List<Auction> la = mssgprsr.GetAuctionsFromMessage(s, wmsg.from, "whisper");
+                       foreach (Auction a in la) AuctionHouse.Instance.removeMessages(a.seller, a.offer, helpf.cardidsToCardnames[a.card.getType()]);
+                   }
+                   else
+                   {
+                       if ((msg as WhisperMessage).from != App.MyProfile.ProfileInfo.name)
+                       {
+                           OfferHouse.Instance.addOffers(mssgprsr.GetOffersFromWMessage(wmsg.text, wmsg.from));
+                       }
+                   }
+               }
+            }
+
             if (msg is LibraryViewMessage)
             {
                 if ((((LibraryViewMessage)msg).profileId == App.MyProfile.ProfileInfo.id))
                 {
                     generator.setowncards(msg);
+                    //this.playerLibrary.AddRange();
                 }
             }
 
@@ -315,6 +345,7 @@ namespace Auction.mod
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
                     if (hideNetworkMessages && Network.isNetworkCommand(wmsg)) return true;
+                    if (OfferHouse.isOfferMessage(wmsg)) return true;
                 }
             }
             
@@ -328,6 +359,7 @@ namespace Auction.mod
                     { // hides all whisper messages from auc-mod
 						return true;
                     }
+                    if (OfferHouse.isOfferMessage(wmsg)) return true;
                 }
                 if (msg is RoomChatMessageMessage)
                 {
@@ -447,7 +479,7 @@ namespace Auction.mod
                         //recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         //helpf.adjustskins(recto.fieldHeight);
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);// need  it to calc fieldhight even if bothmenue=true
-                        if (helpf.bothmenue && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if ((helpf.bothmenue || helpf.ownoffermenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
@@ -461,7 +493,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         ahui.ahbuttonpressed();
                         
@@ -471,7 +503,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue) recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         genui.genbuttonpressed();
                     }
 
@@ -503,6 +535,9 @@ namespace Auction.mod
                 helpf.generator = false;
                 helpf.settings = false;
                 helpf.showtradedialog = false;
+                helpf.makeOfferMenu = false;
+                helpf.offerMenuSelectCardMenu = false;
+                helpf.showtradedialog = false;
                 if (info.targetMethod.Equals("showSellMenu")) { this.deckchanged = false; }
 
             }
@@ -514,8 +549,11 @@ namespace Auction.mod
                 if (msg.from != "Scrolls")
                 {
                     //mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
-                    
                     AuctionHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
+                    if (msg.from == App.MyProfile.ProfileInfo.name)
+                    {
+                        OfferHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
+                    }
                 }
             }
 

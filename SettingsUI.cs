@@ -86,7 +86,7 @@ namespace Auction.mod
             {
                 sttngs.resetsettings();
 
-                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                 else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
 
 
@@ -95,7 +95,7 @@ namespace Auction.mod
             {
                 sttngs.loadsettings(helpf.ownaucpath,helpf.deleteTime);
 
-                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                 else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
             }
             if (GUI.Button(recto.setsave, "Save"))
@@ -162,7 +162,7 @@ namespace Auction.mod
             if (sttngs.rowscale < 0.5f) { sttngs.rowscale = .5f; }
             if (!rowcopy.Equals(sttngs.rowscalestring))
             {
-                if (helpf.bothmenue) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                 else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
             }
 

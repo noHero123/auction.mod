@@ -148,6 +148,14 @@ namespace Auction.mod
             }
         }
 
+        public void removeMessages(string seller, Auction.OfferType aot, string cname)
+        {
+            fullSellOfferList.RemoveAll(a => a.seller.Equals(seller)&& a.card.getType() == helpf.cardnamesToID[cname] && a.offer==aot);
+            sellOfferListFiltered.RemoveAll(a => a.seller.Equals(seller) && a.card.getType() == helpf.cardnamesToID[cname] && a.offer == aot);
+            fullBuyOfferList.RemoveAll(a => a.seller.Equals(seller) && a.card.getType() == helpf.cardnamesToID[cname] && a.offer == aot);
+            buyOfferListFiltered.RemoveAll(a => a.seller.Equals(seller) && a.card.getType() == helpf.cardnamesToID[cname] && a.offer == aot);
+        }
+
         public void removeSeller(string seller)
         {
             fullSellOfferList.RemoveAll(a => a.seller.Equals(seller));
