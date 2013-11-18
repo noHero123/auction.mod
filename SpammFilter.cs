@@ -74,7 +74,8 @@ namespace Auction.mod
                 }
                 else
                 {
-                    throw new ArgumentException("Can only add auctions to the spamfilter in a time-sorted manner");
+
+                        throw new ArgumentException("Can only add auctions to the spamfilter in a time-sorted manner");
                 }
             }
         }

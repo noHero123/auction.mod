@@ -160,6 +160,7 @@ this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, w
 
             if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return addingAuctions;
             bool wtxfound = false;
+            DateTime now1 = DateTime.Now;
 
             for (int i = 0; i < words.Length; i++)
             {
@@ -172,6 +173,7 @@ this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, w
                 //int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
                 int arrindex = this.searchscrollsnicks.FindIndex(element => word.Contains(element.nick.Split(' ')[0]));
                 int iadder = 0;
+                
                 if (arrindex >= 0) // wort in cardlist enthalten
                 {
                     //Console.WriteLine(word + " " + arrindex);
@@ -230,7 +232,8 @@ this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, w
                                 price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                             }
                         }
-                        addingAuctions.Add(new Auction(from, DateTime.Now, currentOfferType, c, msgg,price));
+                        now1=now1.AddMilliseconds(1);
+                        addingAuctions.Add(new Auction(from, now1, currentOfferType, c, msgg, price));
                         //additemtolist(c, from, price, wts, msgg);
                         i--;
 

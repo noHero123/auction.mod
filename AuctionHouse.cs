@@ -125,6 +125,7 @@ namespace Auction.mod
         }
         private void addAuction(Auction a)
         {
+            //Console.WriteLine("add auction with time" + a.time.ToLongTimeString() + a.time.Millisecond);
             spamFilter.addAuction(a);
             if (a.offer == Auction.OfferType.BUY)
             {

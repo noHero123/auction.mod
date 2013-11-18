@@ -321,6 +321,7 @@ namespace Auction.mod
                     scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
                     scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
                     scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
+                    scrollsTypes["GameSocket"].Methods.GetMethod("OnDestroy")[0],
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
                 };
@@ -417,7 +418,7 @@ namespace Auction.mod
 
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
-
+            if (info.target is GameSocket && info.targetMethod.Equals("OnDestroy")) { Console.WriteLine("##Closing window"); } 
             if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
 
             if (info.target is ChatUI && info.targetMethod.Equals("Show")) { helpf.chatisshown = (bool)info.arguments[0]; this.screenh = 0; }// so position will be calculatet new on next ongui

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using JsonFx.Json;
+using System.IO;
 
 namespace Auction.mod
 {
@@ -202,15 +203,53 @@ namespace Auction.mod
                 }
             
         }
+        /*
+        public void getDataFromGoogleDocs()
+        {
+            WebRequest myWebRequest;
+            myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/0AitxSHlIJ_wOdFRxM0lRcnlKZGdiaEsxcUFhcjJXMnc/od6/public/values?alt=json-in-script");
+            System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
+            myWebRequest.Timeout = 10000;
+            WebResponse myWebResponse = myWebRequest.GetResponse();
+            System.IO.Stream stream = myWebResponse.GetResponseStream();
+            System.IO.StreamReader reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
+            string ressi = reader.ReadToEnd();
+            Console.WriteLine(ressi);
+        }
 
+        public void postDataToGoogleDocs(string txt1)
+        {
+            txt1 = txt1.Replace(" ", "+");
+            byte[] bytes = Encoding.ASCII.GetBytes("entry.130333479="+txt1+"&draftResponse=%5B%5D%0D%0A&pageHistory=0");
+
+            HttpWebRequest webRequest = HttpWebRequest.Create("https://docs.google.com/forms/d/1EO25e5w_XMqXBha3-v18xOnME4AXMcGBU8J4sXLZm5E/formResponse") as HttpWebRequest;
+            System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
+            webRequest.ContentType = "application/x-www-form-urlencoded";
+            webRequest.Method = "POST";
+            webRequest.Referer = "https://docs.google.com/forms/d/1EO25e5w_XMqXBha3-v18xOnME4AXMcGBU8J4sXLZm5E/viewform";
+            webRequest.ContentLength = bytes.Length;
+            Stream requestStream = webRequest.GetRequestStream();
+            requestStream.Write(bytes, 0, bytes.Length);
+            requestStream.Close();
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            Stream receiveStream = response.GetResponseStream();
+            StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+            String data = readStream.ReadToEnd();
+            Console.WriteLine(data);
+            receiveStream.Close();
+            readStream.Close();
+            response.Close();
+        }
+        */
         public void totalpricecheck()//int[] cardids
         {
-
+            //postDataToGoogleDocs("hallo google"); // small test with saving data to a google spreadsheet
             //WebClient wc = new WebClient(); // webclient has no timeout
             //string ressi= wc.DownloadString(new Uri("http://api.scrollspost.com/v1/price/1-day/" + search + ""));
 
             WebRequest myWebRequest;
             myWebRequest = WebRequest.Create("http://a.scrollsguide.com/prices");
+           
             /*
             if (sttngs.scrollspostday == ScrollsPostDayType.thirty)
             { myWebRequest = WebRequest.Create("http://api.scrollspost.com/v1/prices/30-days/"); }
