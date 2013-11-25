@@ -70,6 +70,7 @@ namespace Auction.mod
         GeneratorUI genui;
         SettingsUI setui;
         Generator generator;
+        VersionCheck vc;
 
         public void onConnect(OnConnectData ocd)
         {
@@ -242,6 +243,7 @@ namespace Auction.mod
 
         public AuctionMod()
         {
+            vc = new VersionCheck();
             DateTime itze= DateTime.Now;
             helpf = Helpfunktions.Instance;
             sttngs = Settings.Instance;
