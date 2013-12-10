@@ -19,7 +19,7 @@ namespace Auction.mod
 
 
         public bool isFiltered(Auction a) {
-            return isBeyondPriceRange(a) || isFilteredByCardFilter(a) || isIgnoredSellerName(a) || isFilteredByAmountFilter(a) || isFilteredByRareFilter(a) || isFilteredByResourceFilter(a);
+            return isBeyondPriceRange(a) || isFilteredByCardFilter(a) || isIgnoredSellerName(a) || isFilteredByAmountFilter(a) || isFilteredByRareFilter(a) || isFilteredByResourceFilter(a) ||  isFilteredByTypeCount(a);
         }
 
         #region RarityFilter
@@ -148,16 +148,50 @@ namespace Auction.mod
         #region CardFilter
         CardFilter cardFilter = new CardFilter("");
         string cardFilterString = "";
+        Predicate<int> f=null;
         public void setCardFilter(string cardFilterString) {
             if (!this.cardFilterString.Equals (cardFilterString)) {
                 cardFilter = new CardFilter (cardFilterString);
                 this.cardFilterString = cardFilterString;
+
+                // amount filter
+                string s = (!(this.cardFilterString == "Search   ")) ? this.cardFilterString : string.Empty;
+                string[] array = CardFilter.SplitPairs(s);
+                string[] array2 = array;
+                this.f = null;
+                for (int i = 0; i < array2.Length; i++)
+                {
+                    string s2 = array2[i];
+                    string a;
+                    string countString;
+                    if (CardFilter.PairToKeyValue(s2, out a, out countString) && a == "#:")
+                    {
+                        this.f = CardFilter.CreateComparer(countString);
+                        break;
+                    }
+                }
+
+
+
                 filtersChanged = true;
             }
         }
+
         private bool isFilteredByCardFilter(Auction a) {
             return !cardFilter.isIncluded (a.card);
         }
+
+        private bool isFilteredByTypeCount(Auction a)
+        {
+            
+            if (f == null)
+            {
+                return false;
+            }
+
+            return !f(helpf.cardIDToNumberOwned[a.card.typeId]);
+        }
+
         #endregion
 
         public void resetFilters()
@@ -172,6 +206,7 @@ namespace Auction.mod
             this.dontshowScrollsWithNoPrice = false;
             takeWtbFromGen = false;
             takeWtsFromGen = false;
+            this.f = null;
 
             this.filtersChanged = true;
         }

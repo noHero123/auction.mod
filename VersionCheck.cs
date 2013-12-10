@@ -13,12 +13,14 @@ namespace Auction.mod
     {
 
 
-        bool getdata = false;
+        //bool getdata = false;
         int anzWarnings = 2;
         int warnings = 0;
         string currentversion = "1.0.0.1";// only change this and the  version-file in github 
-        // https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c#gid=0
         string newestversion = "0.0.0.0";// dont change this
+
+        // older version take the info from
+        // https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c#gid=0
 
         public VersionCheck()
         {
@@ -35,13 +37,15 @@ namespace Auction.mod
         public void workthread()
         {
             string s = getDataFromGoogleDocs();
-            readJsonfromGoogle(s);
+            //readJsonfromGoogle(s);
+            this.newestversion=s;
         }
 
             public string getDataFromGoogleDocs()
         {
             WebRequest myWebRequest;
-            myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c/od6/public/values?alt=json");
+            //myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c/od6/public/values?alt=json");
+            myWebRequest = WebRequest.Create("https://raw.github.com/noHero123/auction.mod/master/Version.txt");
             System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
@@ -52,7 +56,7 @@ namespace Auction.mod
         }
 
 
-            public void readJsonfromGoogle(string txt)
+            public void readJsonfromGoogle(string txt)// not needed anymore, but who knows? :D
             {
                 JsonReader jsonReader = new JsonReader();
                 Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(txt);
@@ -83,7 +87,7 @@ namespace Auction.mod
                     
                     if (this.currentversion != this.newestversion)
                     {
-                        RoomChatMessageMessage nrcmm = new RoomChatMessageMessage(rcmm.roomName, "your Auctionmod is outdated, please visit www.scrollsguide.com/forum and install a new version");
+                        RoomChatMessageMessage nrcmm = new RoomChatMessageMessage(rcmm.roomName, "your Auctionmod is outdated, please visit www.scrollsguide.com/forum and install a new version or check noHeros repository");
                         nrcmm.from = "Version Checker";
                         App.ArenaChat.handleMessage(nrcmm);
                     }
