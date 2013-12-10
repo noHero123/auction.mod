@@ -447,13 +447,20 @@ namespace Auction.mod
 		{
 			new GUIContent("   Type"),
 			new GUIContent("   Description"),
-			new GUIContent("   Rarity")
+			new GUIContent("   Rarity"),
+            new GUIContent("   # of Scrolls"),
+            new GUIContent("   Level"),
+            new GUIContent("   Set")
+            
 		};
            string[] array = new string[]
 		{
 			"t:",
 			"d:",
-			"r:"
+			"r:",
+            "#:",
+            "l:",
+            "s:"
 		};
            int num = DeckBuilder2.OnGUI_drawButtonList(this.pulldownSkin, searchbarRect, true, itemHeight, content, array, out this._searchDropdownBoundingRect);
            return (num < 0) ? null : array[num];

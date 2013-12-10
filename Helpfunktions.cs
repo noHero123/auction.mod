@@ -88,6 +88,11 @@ namespace Auction.mod
         public bool nicks = false;
         public List<nickelement> loadedscrollsnicks = new List<nickelement>();
 
+        public void setOwnAucPath(string s)
+        {
+            this.ownaucpath = s;
+        }
+
         public int cardnameToArrayIndex(string name)
         {
             int ret;

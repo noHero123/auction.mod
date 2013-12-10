@@ -246,6 +246,7 @@ namespace Auction.mod
             vc = new VersionCheck();
             DateTime itze= DateTime.Now;
             helpf = Helpfunktions.Instance;
+            helpf.setOwnAucPath(this.OwnFolder() + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar);
             sttngs = Settings.Instance;
             srchsvr = Searchsettings.Instance;
             crdvwr = Cardviewer.Instance;

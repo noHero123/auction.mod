@@ -16,7 +16,7 @@ namespace Auction.mod
         bool getdata = false;
         int anzWarnings = 2;
         int warnings = 0;
-        string currentversion = "1.0.0.0";// only change this and the google.spreadsheet at 
+        string currentversion = "1.0.0.1";// only change this and the  version-file in github 
         // https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c#gid=0
         string newestversion = "0.0.0.0";// dont change this
 
