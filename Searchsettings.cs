@@ -50,6 +50,8 @@ namespace Auction.mod
         public string sellersearchstring = "";
         public string pricesearchstring = "";
         public string pricesearchstring2 = "";
+        public string genpricesearchstring = "";
+        public string genpricesearchstring2 = "";
         public int sortmode = 0;
         public bool reverse = false;
         public string shortgeneratedwtsmessage = "";

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Auction.mod
 {
-    class GeneratorUI
+    class GeneratorUI : IOkCallback
     {
         private List<Auction> ahlist;
 
@@ -179,6 +179,22 @@ namespace Auction.mod
                     GUI.Label(recto.sbsellerlabelrect, "wts msg:");
                 }
                 else { GUI.Label(recto.sbsellerlabelrect, "wtb msg:"); }
+
+                // draw price filter
+
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                GUI.Label(recto.sbpricelabelrect, "<= Price <=");
+                GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Box(recto.sbpricerect, string.Empty);
+                GUI.Box(recto.sbpricerect2, string.Empty);
+                srchsvr.genpricesearchstring = Regex.Replace(GUI.TextField(recto.sbpricerect, srchsvr.genpricesearchstring, helpf.chatLogStyle), @"[^0-9]", "");
+                srchsvr.genpricesearchstring2 = Regex.Replace(GUI.TextField(recto.sbpricerect2, srchsvr.genpricesearchstring2, helpf.chatLogStyle), @"[^0-9]", "");
+                GUI.color = Color.white;
+
 
                 GUI.skin = helpf.cardListPopupSkin;
                 GUI.Box(recto.sbsellerrect, string.Empty);
@@ -676,6 +692,15 @@ namespace Auction.mod
                 GUI.color = Color.white;
                 if (GUI.Button(recto.fillbuttonrect, "Fill"))
                 {
+                    int lowerprice = -1;
+                    int upperprice = int.MaxValue;
+                    
+                    if (srchsvr.genpricesearchstring!="")
+                    lowerprice = Convert.ToInt32(srchsvr.genpricesearchstring);
+
+                    if (srchsvr.genpricesearchstring2 != "")
+                    upperprice = Convert.ToInt32(srchsvr.genpricesearchstring2);
+
                     if (helpf.wtsmenue)
                     {
                         foreach (Auction c in this.ahlist)
@@ -684,7 +709,10 @@ namespace Auction.mod
                             int price = 0;
                             //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
                             price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
-                            prcs.wtspricelist1[c.card.getType()] = price.ToString();
+                            if (lowerprice <= price && price <= upperprice)
+                            {
+                                prcs.wtspricelist1[c.card.getType()] = price.ToString();
+                            }
 
                         }
                     }
@@ -697,7 +725,10 @@ namespace Auction.mod
                             int price = 0;
                             //price = prcs.pricerounder(Array.FindIndex(helpf.cardids, element => element == c.card.getType()), helpf.wtsmenue);
                             price = prcs.pricerounder(helpf.cardidsToIndex[c.card.getType()], helpf.wtsmenue);
-                            prcs.wtbpricelist1[c.card.getType()] = price.ToString();
+                            if (lowerprice <= price && price <= upperprice)
+                            {
+                                prcs.wtbpricelist1[c.card.getType()] = price.ToString();
+                            }
 
                         }
                     }
@@ -782,6 +813,9 @@ namespace Auction.mod
             }
         }
 
+        public void PopupOk(string popupType)
+        {
+        }
 
         private void generatewtxmsg(List<Auction> liste)
         {
@@ -820,16 +854,31 @@ namespace Auction.mod
             postlist.Reverse();
             Dictionary<string, string> shortlist = new Dictionary<string, string>();
 
+            int priceToAdd = -1; // = -1 if no price have to be added, otherwise this has to be added to the message
+            bool messageWouldBeTooLong = false;
+
             for (int i = 0; i < postlist.Count; i++)
             {
                 Auction ai = postlist[i];
+
+                if (msg.Length + ai.card.getName().Length + 1 + ai.price.ToString().Length > 506)// check if the element and the price still fits in the chat-message
+                {
+                    if (priceToAdd > 0) { msg = msg.Substring(0,msg.Length-2)+ " " + ai.price + "g;"; }
+                    if (priceToAdd == 0) { msg = msg.Substring(0, msg.Length - 2) + ";"; }
+                    messageWouldBeTooLong = true;
+                    break;
+                }
+
                 if (i < postlist.Count - 1 && postlist[i + 1].price == ai.price)
                 {
                     msg = msg + ai.card.getName() + ", ";
                     shortmsg = shortmsg + ai.card.getType() + ",";
+                    priceToAdd = ai.price;
                 }
                 else
                 {
+                    priceToAdd = -1;
+
                     if (ai.price == 0)
                     {
                         msg = msg + ai.card.getName() + ";";
@@ -851,8 +900,12 @@ namespace Auction.mod
                 if (msg.EndsWith(" ")) { msg = msg.Remove(msg.Length - 2); } else { msg = msg.Remove(msg.Length - 1); }
                 shortmsg = shortmsg.Remove(shortmsg.Length - 1);
             }
+            if (messageWouldBeTooLong)
+            {
+                App.Popups.ShowOk(this, "msgToLongMessage", "Message to Long", "Your generated message is to long.\r\nThe message was shortened.", "OK");
+            }
             if (msg.Length < 512) systemCopyBufferProperty.SetValue(null, msg, null);
-            if (msg.Length >= 512) { msg = "msg to long"; }
+            if (msg.Length >= 512) { msg = "msg to long"; } // message cant be to long anymore :D
             if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
             if (helpf.wtsmenue) { srchsvr.generatedwtsmessage = msg; srchsvr.shortgeneratedwtsmessage = shortmsg; } else { srchsvr.generatedwtbmessage = msg; srchsvr.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
