@@ -902,10 +902,10 @@ namespace Auction.mod
             }
             if (messageWouldBeTooLong)
             {
-                App.Popups.ShowOk(this, "msgToLongMessage", "Message to Long", "Your generated message is to long.\r\nThe message was shortened.", "OK");
+                App.Popups.ShowOk(this, "msgToLongMessage", "Message too Long", "Your generated message is too long.\r\nThe message was shortened.", "OK");
             }
             if (msg.Length < 512) systemCopyBufferProperty.SetValue(null, msg, null);
-            if (msg.Length >= 512) { msg = "msg to long"; } // message cant be to long anymore :D
+            if (msg.Length >= 512) { msg = "msg too long"; } // message cant be to long anymore :D
             if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
             if (helpf.wtsmenue) { srchsvr.generatedwtsmessage = msg; srchsvr.shortgeneratedwtsmessage = shortmsg; } else { srchsvr.generatedwtbmessage = msg; srchsvr.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
