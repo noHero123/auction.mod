@@ -19,14 +19,18 @@ namespace Auction.mod
         private float BOTTOM_MARGIN_EXTRA = (float)Screen.height * 0.047f;
         private Vector4 margins;
        public Rect screenRect,outerRect,innerBGRect,innerRect,buttonLeftRect,buttonRightRect,wtsbuttonrect;
-       public Rect wtbbuttonrect, bothbuttonrect, ownbuttonrect, updatebuttonrect, fillbuttonrect;
+       public Rect wtbbuttonrect, bothbuttonrect, ownbuttonrect, auctionhousebuttonrect, createbuttonrect, updatebuttonrect, fillbuttonrect;
        public float goldlength;
         //filterrects
        public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
        public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2;
-       public Rect sbonlywithpricebox, sbonlywithpricelabelbox, tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll, sbtpfgen, sbtpfgenlabel, tboffer;
-       public Rect tbpriceinput, tbororand, tbcard;
-       public Rect sbclrearpricesbutton,sbnetworklabel,sbtimelabel,sbtimerect;
+       public Rect sbonlywithpricebox, sbonlywithpricelabelbox,  sbtpfgen, sbtpfgenlabel, tboffer;
+       public Rect tbpriceinput, tbororand, tbcard,tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll;
+       public Rect sbclrearpricesbutton, sbnetworklabel, sbtimelabel, sbtimerect, getOwnStuffButton;
+       public Rect crtpriceinput, crtororand, crtmessage, crtcard, crtduration, crtdurationInput, updateGoogleThings;
+
+        //create rects
+
         //settings
        public Rect settingRect, setsave, setreset, setload, setpreventspammlabel, setpreventspammrect, setpreventspammlabel2;
        public Rect setowncardsanzbox, setowncardsanzlabel, setsugrangebox, setsugrangelabel;
@@ -91,7 +95,7 @@ namespace Auction.mod
 
        public void setupPositions(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
         {
-           
+           // set rects for auction windows + searchwindow
            
            // set rects for menus
             this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.6f, (float)Screen.height * 0.57f);
@@ -112,6 +116,8 @@ namespace Auction.mod
            this.wtbbuttonrect = new Rect(wtsbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.bothbuttonrect = new Rect(wtbbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.ownbuttonrect = new Rect(bothbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.auctionhousebuttonrect = new Rect(ownbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
+           this.createbuttonrect = new Rect(auctionhousebuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
             this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
 
@@ -196,6 +202,9 @@ namespace Auction.mod
             this.tbororand = new Rect((this.tradingbox.x + this.tradingbox.xMax - goldlength) / 2f, this.tbpriceinput.yMax, goldlength, texthight);
             this.tbcard = new Rect((this.tradingbox.x + this.tradingbox.xMax - 2*this.cardWidth-8f) / 2f, this.tbororand.yMax, 2*this.cardWidth+8f, 2*this.cardHeight+8f);
 
+            this.updateGoogleThings = new Rect(filtermenurect.x + 4 + num2, filtermenurect.yMax - num2 - num2, buttonlength * 2f, num2);
+
+
             GUI.skin =  Helpfunktions.Instance.cardListPopupBigLabelSkin;
 
 
@@ -205,7 +214,7 @@ namespace Auction.mod
        public void setupPositionsboth(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
        {
 
-
+           // setup rects for the auction menu, if wts and wtb offers are shown at the same time
            // set rects for menus
            this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.485f, (float)Screen.height * 0.57f);
            if (!chatisshown) { this.screenRect = new Rect((float)Screen.width * 0.01f, (float)Screen.height * 0.18f, (float)Screen.width * 0.485f, (float)Screen.height * 0.80f); }
@@ -248,7 +257,23 @@ namespace Auction.mod
            GUI.skin = cardListPopupSkin;
            float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("Jg"), 1000);
            this.sbnetworklabel = new Rect(filtermenurect.x + 4, filtermenurect.yMax - smalltexthight - 4, filtermenurect.width, smalltexthight);
+           this.getOwnStuffButton = new Rect(this.innerRect.xMax + (float)Screen.width * 0.5f - buttonlength * 2f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength * 2f, num2);
+           this.updateGoogleThings = new Rect(filtermenurect.x + 4 + num2, innerBGRect.yMax + num2 * 0.28f, buttonlength * 2f, num2);
+
+           float chatheight = chatLogStyle.CalcHeight(new GUIContent("JScrollg"), 1000);
+           float texthight = chatheight + 2;
+           Vector2 vector = GUI.skin.label.CalcSize(new GUIContent("00000000g"));
+           goldlength = vector.x;
+
+           this.crtmessage = new Rect(this.innerRect.x, this.innerRect.y, this.innerRect.width, (this.innerRect.height - (float)Screen.height * 0.05f) / 2f);
            
+           
+           this.crtcard = new Rect((this.innerRect.x + this.innerRect.xMax - 2 * this.cardWidth - 8f) / 2f, this.crtmessage.yMax, 2 * this.cardWidth + 8f, 2 * this.cardHeight + 8f);
+           this.crtororand = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtcard.yMax, goldlength, texthight);
+           this.crtpriceinput = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtororand.yMax, goldlength, texthight);
+           this.crtduration = new Rect((this.innerRect.x + this.innerRect.xMax - 2f*goldlength) / 2f, this.crtpriceinput.yMax, 2f*goldlength, texthight);
+           this.crtdurationInput = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtduration.yMax, goldlength, texthight);
+
            calcguirects();
        }
 
@@ -281,6 +306,7 @@ namespace Auction.mod
 
        public void setupsettingpositions(GUIStyle chatLogStyle, GUISkin cardListPopupBigLabelSkin)
         {
+           // setup rects for the settings menu
            // buttons in store:
             GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
             ahbutton = new Rect(subMenuPositioner.getButtonRect(2f));

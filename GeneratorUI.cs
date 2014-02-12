@@ -363,15 +363,18 @@ namespace Auction.mod
                     { GUI.color = dblack; }
                 }
 
-                if (GUI.Button(recto.sbclrearpricesbutton, "Post to Network"))
+                if (false)
                 {
-
-                    if (ntwrk.contonetwork)
+                    if (GUI.Button(recto.sbclrearpricesbutton, "Post to Network"))
                     {
-                        ntwrk.sendownauctiontoall(helpf.wtsmenue, srchsvr.getshortgenmsg(true), srchsvr.getshortgenmsg(false));
+
+                        if (ntwrk.contonetwork)
+                        {
+                            ntwrk.sendownauctiontoall(helpf.wtsmenue, srchsvr.getshortgenmsg(true), srchsvr.getshortgenmsg(false));
+
+                        }
 
                     }
-
                 }
                 GUI.color = Color.white;
 
@@ -419,8 +422,15 @@ namespace Auction.mod
                         foreach (string w in words)
                         {
                             if (w == "" || w == " ") continue;
+
+                            foreach (string ww in (w.Split(' ')[0]).Split(','))
+                            {
+                                if (ww == "" || ww == " ") continue;
+                                //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                prcs.wtspricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                            }
                             //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                            //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                         }
                         generatewtxmsg(generator.getAllOwnSellOffers());
 
@@ -445,9 +455,22 @@ namespace Auction.mod
                         foreach (string w in words)
                         {
                             if (w == "" || w == " ") continue;
+
+                            foreach (string ww in (w.Split(' ')[0]).Split(','))
+                            {
+                                if (ww == "" || ww == " ") continue;
+                                //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                prcs.wtbpricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                            }
                             //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            prcs.wtbpricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                            //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                         }
+                        //foreach (string w in words)
+                        //{
+                        //    if (w == "" || w == " ") continue;
+                        //    //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                        //    prcs.wtbpricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                        //}
                         generatewtxmsg(generator.getAllOwnBuyOffers());
                     }
                 }

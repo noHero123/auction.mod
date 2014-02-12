@@ -48,15 +48,22 @@ namespace Auction.mod
         public FieldInfo showBuyinfo;
         public FieldInfo showSellinfo;
 
+
+        public bool createAuctionMenu = false; // true if the Create-Auction menu is shown
+        public bool playerStoreMenu = false; // true if the playerStore menu is shown
+        public bool wtsmenue = false;
         public bool bothmenue = false;
+        public bool ownoffermenu = false;
+
         public bool chatisshown = false;
         public bool canLoadWTSmsg = false;
         public bool canLoadWTBmsg = false;
         public string ownaucpath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar;
+        
         public bool inauchouse = false;
-        public bool wtsmenue = false;
         public bool generator = false;
         public bool settings = false;
+
         public string postmsgmsg = "";
         public bool postmsgontrading = false;
         public bool postmsggetnextroomenter = false;
@@ -65,7 +72,9 @@ namespace Auction.mod
         public string[] cardnames;
         public int[] cardImageid;
         public string[] cardType;
-        public bool ownoffermenu=false;
+
+        public Dictionary<long, string> auctionBotCardsToNames = new Dictionary<long, string>();
+        
         public bool makeOfferMenu = false;
         public bool offerMenuSelectCardMenu = false;
         public bool deleteAuctionMenu = false;
@@ -76,6 +85,7 @@ namespace Auction.mod
         public Dictionary<int, string> cardidsToCardnames = new Dictionary<int, string>();
         public Dictionary<string, int> cardnamesToID = new Dictionary<string, int>();
         public Dictionary<int, int> cardIDToNumberOwned = new Dictionary<int, int>();
+        public Dictionary<int, long> cardIDToCardNumber = new Dictionary<int, long>();
 
         public Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();
         public GUISkin cardListPopupSkin;
@@ -224,6 +234,29 @@ namespace Auction.mod
 
         }
 
+        public void setOwnCards(Message msg)
+        {//set id-cardid dictionary
+            this.cardIDToCardNumber.Clear();
+            foreach (Card c in (((LibraryViewMessage)msg).cards))
+            {
+                if (c.tradable && !this.cardIDToCardNumber.ContainsKey(c.typeId))
+                {
+                    this.cardIDToCardNumber.Add(c.typeId, c.id);
+                }
+            }
+        }
+
+        public void setAuctionModCards(Message msg)
+        {//set id-cardid dictionary
+            this.auctionBotCardsToNames.Clear();
+            foreach (Card c in (((LibraryViewMessage)msg).cards))
+            {
+                if (c.tradable)
+                {
+                    this.auctionBotCardsToNames.Add(c.id,c.getName());
+                }
+            }
+        }
 
         public void messegparsingtest()
         {

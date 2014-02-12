@@ -12,8 +12,9 @@ using Mono.Cecil;
 using Irrelevant.Assets;
 using System.Net;
 using System.IO;
+using System.Threading;
 
-namespace Auction.mod
+namespace Auction.mod 
 {
 
 
@@ -71,6 +72,7 @@ namespace Auction.mod
         SettingsUI setui;
         Generator generator;
         VersionCheck vc;
+        PopupManager pppmngr;
 
         public void onConnect(OnConnectData ocd)
         {
@@ -81,7 +83,7 @@ namespace Auction.mod
         public void handleMessage(Message msg)
         {
 
-            if (msg is WhisperMessage && OfferHouse.isOfferMessage(msg as WhisperMessage))
+            /*if (msg is WhisperMessage && OfferHouse.isOfferMessage(msg as WhisperMessage))
             {
                WhisperMessage wmsg=(WhisperMessage) msg;
                 string s=wmsg.text.ToLower();
@@ -108,13 +110,15 @@ namespace Auction.mod
                        }
                    }
                }
-            }
+            }*/
 
             if (msg is LibraryViewMessage)
             {
                 if ((((LibraryViewMessage)msg).profileId == App.MyProfile.ProfileInfo.id))
                 {
                     generator.setowncards(msg);
+                    helpf.setOwnCards(msg);
+                    this.ahui.clearOffercard();
                     //this.playerLibrary.AddRange();
                 }
             }
@@ -146,7 +150,197 @@ namespace Auction.mod
                 }
             }
 
+           // trading with auctionbot#############################################################################################################
 
+
+            if (this.sttngs.waitForAuctionBot && msg is FailMessage) // bot is offline! shame on him!
+            {   
+                FailMessage fm = (FailMessage)msg;
+                if (fm.op == "Whisper" && fm.info == "Could not find the user 'auctionmod'.")
+                {
+                    this.sttngs.AucBotMode = "";
+                    this.sttngs.waitForAuctionBot = false;
+                    this.sttngs.actualTrading = false;
+                    pppmngr.startOKPopup("auctionmodresponse", "offline", "the auctionbot is offline");
+                }
+            }
+
+
+            if (this.sttngs.waitForAuctionBot && msg is WhisperMessage)
+            {
+                WhisperMessage wm = msg as WhisperMessage;
+
+                if (wm.from == "auctionmod" && wm.text == "invite me")
+                {
+                    //invite the auctionmod for trade
+                    //App.Communicator.sendRequest(new TradeAcceptMessage("1b8a4125d2634634aa76f33e1d04b0d4"));
+                    App.Communicator.send(new TradeInviteMessage("1b8a4125d2634634aa76f33e1d04b0d4"));
+                    this.sttngs.actualTrading = true;
+                    this.sttngs.addedCard = false;
+                }
+            }
+
+            if ((this.sttngs.waitForAuctionBot||this.sttngs.actualTrading) && msg is WhisperMessage)
+            {
+                WhisperMessage wm=msg as WhisperMessage;
+
+                if (wm.from == "auctionmod" && wm.text == "invite me")
+                {
+                    //invite the auctionmod for trade
+                    //App.Communicator.sendRequest(new TradeAcceptMessage("1b8a4125d2634634aa76f33e1d04b0d4"));
+
+                    this.sttngs.actualTrading = true;
+                    this.sttngs.addedCard = false;
+                }
+
+                if(wm.from=="auctionmod" && wm.text=="there is not such an auction")
+                {
+                    this.sttngs.AucBotMode = "";
+                    this.sttngs.waitForAuctionBot = false;
+                    this.sttngs.actualTrading = false;
+                    Console.WriteLine("not such an auction");
+                    pppmngr.startOKPopup("auctionmodresponse", "non exsisting", "the auction you chosed, doesnt exist anymore");
+                }
+
+                if (wm.from == "auctionmod" && wm.text == "to slow")
+                {
+                    this.sttngs.AucBotMode = "";
+                    this.sttngs.waitForAuctionBot = false;
+                    this.sttngs.actualTrading = false;
+                    Console.WriteLine("you are to slow bro");
+                    pppmngr.startOKPopup("auctionmodresponse", "to slow", "you were responding to slow");
+                }
+
+                if (wm.from == "auctionmod" && wm.text == "auctionlimit reached")
+                {
+                    this.sttngs.AucBotMode = "";
+                    this.sttngs.waitForAuctionBot = false;
+                    this.sttngs.actualTrading = false;
+                    Console.WriteLine("not more than 10 auctions");
+                    pppmngr.startOKPopup("auctionmodresponse", "to much auctions", "You cant create more auctions");
+                }
+
+                if (wm.from == "auctionmod" && wm.text == "dont fool me")
+                {
+                    this.sttngs.AucBotMode = "";
+                    this.sttngs.waitForAuctionBot = false;
+                    this.sttngs.actualTrading = false;
+                    Console.WriteLine("there are no auctions open");
+                    pppmngr.startOKPopup("auctionmodresponse", "no auctions", "you dont own a finished auction");
+                }
+
+                if (wm.from == "auctionmod" && wm.text == "hit accept" && this.sttngs.AucBotMode == "getauc")
+                {
+                    new Thread(new ThreadStart(this.acceptTrade)).Start();
+                }
+            }
+
+
+            //trade finished
+            if (this.sttngs.actualTrading && msg is TradeViewMessage && (msg as TradeViewMessage).to.profile.name == "auctionmod" && (msg as TradeViewMessage).modified == false && (msg as TradeViewMessage).to.accepted == true && (msg as TradeViewMessage).from.accepted == true)
+            {
+
+                if (this.sttngs.AucBotMode == "setauc") pppmngr.startOKPopup("auctionmodresponse", "created auction", "you created the following auction:\r\n" + this.ahui.createdAuctionText);
+                if (this.sttngs.AucBotMode == "bidauc") pppmngr.startOKPopup("auctionmodresponse", "scroll bought", "you bought " + this.helpf.auctionBotCardsToNames[(msg as TradeViewMessage).to.cardIds[0]] + " for " + (msg as TradeViewMessage).from.gold + " gold.");
+                if (this.sttngs.AucBotMode == "getauc")
+                {
+                    string reccards = "";
+                    foreach( long x in (msg as TradeViewMessage).to.cardIds)
+                    {
+                        if (reccards != "") reccards = reccards + ", ";
+                        reccards = reccards + this.helpf.auctionBotCardsToNames[x];
+                    }
+                    string output = "you received: " + (msg as TradeViewMessage).to.gold + " gold and some scrolls (look in Chat).";
+                    if (reccards == "")
+                    {
+                        output = "you received: " + (msg as TradeViewMessage).to.gold + " gold."; 
+                    }
+                    pppmngr.startOKPopup("auctionmodresponse", "stuff received", output);
+                    if (reccards != "")
+                    {
+                        RoomChatMessageMessage nrcmm = new RoomChatMessageMessage("[note]", "You received these scrolls: " + reccards + ".");
+                        nrcmm.from = "AuctionHouse";
+                        App.ArenaChat.handleMessage(nrcmm);
+                    }
+                }
+                new Thread(new ThreadStart(this.getCardsAndGold)).Start();
+                
+            }
+
+            // get cardIDs+ Types from auctionbot, for knowing which cards you got :D
+
+            if (this.sttngs.actualTrading && msg is LibraryViewMessage)
+            {
+                if ((((LibraryViewMessage)msg).profileId == "1b8a4125d2634634aa76f33e1d04b0d4"))
+                {
+                    // the libViewMessage is from auctionmod :D
+                    helpf.setAuctionModCards(msg);
+                }
+            }
+
+            //accept in bidmode, after he adds card + we adds money
+            if (this.sttngs.actualTrading && msg is TradeViewMessage && this.sttngs.AucBotMode == "bidauc" && (msg as TradeViewMessage).to.profile.name == "auctionmod" && (msg as TradeViewMessage).to.cardIds.Length == 1 && (msg as TradeViewMessage).to.cardIds[0] == this.sttngs.tradeCardID && (msg as TradeViewMessage).from.gold == this.sttngs.bidgold && (msg as TradeViewMessage).modified == true)
+            { // trading with bot, he has added the wanted card, and we added the money... lets click ok in 5 seconds! (if modified = true (if he accept, it will be falls), so we accept only once
+                new Thread(new ThreadStart(this.acceptTrade)).Start();
+            }
+
+            //if trading with bot and wants to bid on an auction: add money, + wait till he adds card accept
+            if (this.sttngs.waitForAuctionBot && !this.sttngs.addedCard && this.sttngs.AucBotMode == "bidauc" && msg is TradeResponseMessage && (msg as TradeResponseMessage).to.name == "auctionmod" && (msg as TradeResponseMessage).status == "ACCEPT")
+            {
+                new Thread(new ThreadStart(this.setGold)).Start();
+            }
+
+            //if trading with bot and wants to set an auction: add card, accept after 5 seconds (threaded)
+            if (this.sttngs.waitForAuctionBot && !this.sttngs.addedCard && this.sttngs.AucBotMode=="setauc" && msg is TradeResponseMessage && (msg as TradeResponseMessage).to.name == "auctionmod" && (msg as TradeResponseMessage).status == "ACCEPT")
+            { 
+                App.Communicator.sendRequest(new TradeAddCardsMessage(new long[] { this.sttngs.tradeCardID }));
+                this.sttngs.addedCard = true;
+                new Thread(new ThreadStart(this.acceptTrade)).Start();
+
+            }
+            // trade was canceled
+            if (this.sttngs.waitForAuctionBot && msg is TradeResponseMessage && (msg as TradeResponseMessage).to.name == "auctionmod" && (msg as TradeResponseMessage).status == "CANCEL_BARGAIN")
+            {
+                this.sttngs.AucBotMode = "";
+                this.sttngs.waitForAuctionBot = false;
+                this.sttngs.actualTrading = false;
+            }
+            // trade was accepted
+            if (this.sttngs.waitForAuctionBot && msg is TradeResponseMessage && (msg as TradeResponseMessage).to.name == "auctionmod" && (msg as TradeResponseMessage).status == "ACCEPT")
+            {
+                // nice!
+                this.sttngs.waitForAuctionBot = false;
+            }
+            // trade was timeouted :D
+            if (this.sttngs.waitForAuctionBot && msg is TradeResponseMessage && (msg as TradeResponseMessage).to.name == "auctionmod" && (msg as TradeResponseMessage).status == "TIMEOUT")
+            {
+                this.sttngs.AucBotMode = "";
+                this.sttngs.waitForAuctionBot = false;
+                this.sttngs.actualTrading = false;
+            }
+
+            if (msg is RoomEnterMessage && (this.sttngs.waitForAuctionBot || this.sttngs.actualTrading))
+            {
+                this.sttngs.autoAuctionRoom = (msg as RoomEnterMessage).roomName;
+                this.sttngs.auctionScrollsMessagesCounter = 1;
+            }
+
+            if (msg is RoomChatMessageMessage && this.sttngs.auctionScrollsMessagesCounter >= 1)
+            {
+                if ((msg as RoomChatMessageMessage).from == "Scrolls") 
+                {
+                    this.sttngs.auctionScrollsMessagesCounter ++;
+                }
+                if (this.sttngs.auctionScrollsMessagesCounter == 3)
+                {
+                    App.ArenaChat.ChatRooms.LeaveRoom((msg as RoomChatMessageMessage).roomName);
+                    App.Communicator.send(new RoomExitMessage((msg as RoomChatMessageMessage).roomName));
+                }
+                
+            }
+            
+
+            // following stuff writes the offer you want to buy/sell in chatroom after entering the trade-chat-room#####################
 
             if (msg is TradeResponseMessage)
             {
@@ -177,6 +371,8 @@ namespace Auction.mod
                 }
             }
 
+
+            //network stuff####################################################
             if (msg is GameInfoMessage && ntwrk.contonetwork)
             {// you are connected to network and start a battle -> disconnect
                 GameInfoMessage gim =(GameInfoMessage) msg;
@@ -211,6 +407,7 @@ namespace Auction.mod
                 }
             }
 
+
             if (ntwrk.idtesting > 0 && msg is ProfilePageInfoMessage)//doesnt needed anymore
             {
                 ProfilePageInfoMessage ppim = (ProfilePageInfoMessage)msg;
@@ -228,10 +425,7 @@ namespace Auction.mod
             if (msg is CardTypesMessage)
             {
                 generator.setallavailablecards(msg);
-                
                 mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
-
-
             }
 
             return;
@@ -243,6 +437,7 @@ namespace Auction.mod
 
         public AuctionMod()
         {
+            pppmngr = new PopupManager();
             vc = new VersionCheck();
             DateTime itze= DateTime.Now;
             helpf = Helpfunktions.Instance;
@@ -304,7 +499,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 6;
+            return 8;
         }
 
         public static MethodDefinition[] GetHooks(TypeDefinitionCollection scrollsTypes, int version)
@@ -325,6 +520,8 @@ namespace Auction.mod
                     scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
                     scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
                     scrollsTypes["GameSocket"].Methods.GetMethod("OnDestroy")[0],
+                    //for trading with auctionbot
+                    scrollsTypes["InviteManager"].Methods.GetMethod("handleMessage",new Type[]{typeof(Message)}),
                     // only for testing:
                     //scrollsTypes["Communicator"].Methods.GetMethod("sendRequest", new Type[]{typeof(Message)}),  
                 };
@@ -337,6 +534,21 @@ namespace Auction.mod
 
         public override bool WantsToReplace(InvocationInfo info)
         {
+
+            if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeInviteForwardMessage && (info.arguments[0] as TradeInviteForwardMessage).inviter.name == "auctionmod")
+            { // return true if you are waiting for auctionbot
+
+                //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
+                return true;
+            }
+            if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeResponseMessage && (info.arguments[0] as TradeResponseMessage).to.name == "auctionmod")
+            { // return true if you are waiting for auctionbot
+
+                //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
+                return true;
+            }
+
+
             if (info.target is Store && info.targetMethod.Equals("OnGUI"))
             {
                 if (helpf.inauchouse || helpf.generator || helpf.settings) return true;
@@ -349,7 +561,7 @@ namespace Auction.mod
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
                     if (hideNetworkMessages && Network.isNetworkCommand(wmsg)) return true;
-                    if (OfferHouse.isOfferMessage(wmsg)) return true;
+                    //if (OfferHouse.isOfferMessage(wmsg)) return true;
                 }
             }
             
@@ -363,11 +575,17 @@ namespace Auction.mod
                     { // hides all whisper messages from auc-mod
 						return true;
                     }
-                    if (OfferHouse.isOfferMessage(wmsg)) return true;
+
+                    //if (OfferHouse.isOfferMessage(wmsg)) return true;
+                    if (this.sttngs.actualTrading && wmsg.from == "auctionmod") return true;
+                    if (this.sttngs.waitForAuctionBot && wmsg.toProfileName == "auctionmod") return true;
+                    if ((wmsg.text.Equals("to slow") || wmsg.text.Contains("dont fool me") || wmsg.text.Contains("there is not such an auction") || wmsg.text.Contains("auctionlimit reached")) && wmsg.from == "auctionmod") return true;
+                    
                 }
                 if (msg is RoomChatMessageMessage)
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
+                    if ((this.sttngs.auctionScrollsMessagesCounter >= 1) && rem.roomName.StartsWith("trade-")) { if (this.sttngs.auctionScrollsMessagesCounter == 3)this.sttngs.auctionScrollsMessagesCounter = 0; return true; }
 					if (hideNetworkMessages  && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                     if (rem.text.StartsWith("auc parsertest")) { helpf.messegparsingtest(); return true; }
                 }
@@ -375,6 +593,7 @@ namespace Auction.mod
                 if (msg is RoomEnterMessage)
                 {   
                     RoomEnterMessage rem = (RoomEnterMessage) msg;
+                    if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && rem.roomName.StartsWith("trade-")) return true;
 					if (hideNetworkMessages && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
@@ -409,6 +628,15 @@ namespace Auction.mod
 
         public override void ReplaceMethod(InvocationInfo info, out object returnValue)
         {
+
+            if (this.sttngs.waitForAuctionBot && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeInviteForwardMessage && (info.arguments[0] as TradeInviteForwardMessage).inviter.name == "auctionmod")
+            { // return true if you are waiting for auctionbot
+                App.Communicator.sendRequest(new TradeAcceptMessage("1b8a4125d2634634aa76f33e1d04b0d4"));
+                this.sttngs.actualTrading = true;
+                this.sttngs.addedCard = false;
+                //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
+            }
+
 			//Replace Methods by NOPs
             returnValue = null;
         }
@@ -483,7 +711,7 @@ namespace Auction.mod
                         //recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         //helpf.adjustskins(recto.fieldHeight);
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);// need  it to calc fieldhight even if bothmenue=true
-                        if ((helpf.bothmenue || helpf.ownoffermenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if ((helpf.bothmenue || helpf.ownoffermenu || helpf.createAuctionMenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
@@ -497,7 +725,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if (helpf.bothmenue || helpf.ownoffermenu || helpf.createAuctionMenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         ahui.ahbuttonpressed();
                         
@@ -507,7 +735,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue || helpf.ownoffermenu) recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         genui.genbuttonpressed();
                     }
 
@@ -554,18 +782,41 @@ namespace Auction.mod
                 {
                     //mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
                     AuctionHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
-                    if (msg.from == App.MyProfile.ProfileInfo.name)
+                    /*if (msg.from == App.MyProfile.ProfileInfo.name)
                     {
                         OfferHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
-                    }
+                    }*/
                 }
             }
 
             return;
         }
 
+        private void acceptTrade()
+        {
+            System.Threading.Thread.Sleep(5300);
+            App.Communicator.sendRequest(new TradeAcceptBargainMessage());
+        }
 
+        private void setGold()
+        {
+            //System.Threading.Thread.Sleep(1000);
+            App.Communicator.sendRequest(new TradeSetGoldMessage(this.sttngs.bidgold));
+        }
         
+
+        private void getCardsAndGold()
+        {
+            // need to be refreshed with small delay, because sometimes its to fast after an trade
+            System.Threading.Thread.Sleep(1000);
+            if (this.sttngs.AucBotMode == "bidauc" || this.sttngs.AucBotMode == "getauc")
+            { App.Communicator.sendRequest(new GetStoreItemsMessage()); }
+            if (this.sttngs.AucBotMode == "setauc" || this.sttngs.AucBotMode == "getauc")
+            { App.Communicator.sendRequest(new LibraryViewMessage()); }
+            this.sttngs.AucBotMode = "";
+            this.sttngs.waitForAuctionBot = false;
+            this.sttngs.actualTrading = false;
+        }
        
         
         
