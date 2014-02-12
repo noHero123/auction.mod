@@ -1686,7 +1686,7 @@ namespace Auction.mod
                     this.sttngs.tradeCardID = cardid;
                     //this.OfferPrice = "0"; this.OfferCard = null;
 
-                    App.Popups.ShowOkCancel(this, "wantToCreateAuction", "You are shure?", "You really want to create the following Auction?\r\n" + this.createdAuctionText, "OK", "Cancel");
+                    App.Popups.ShowOkCancel(this, "wantToCreateAuction", "You are sure?", "You really want to create the following Auction?\r\n" + this.createdAuctionText, "OK", "Cancel");
 
                 }
             }

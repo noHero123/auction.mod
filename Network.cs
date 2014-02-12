@@ -128,7 +128,7 @@ namespace Auction.mod
 
 
 
-				//dont needed anymore left in only to be shure :D
+				//dont needed anymore left in only to be sure :D
 				if (text.StartsWith("needaucid"))
 				{
 					this.needid(wmsg.from);
