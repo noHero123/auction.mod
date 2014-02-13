@@ -15,9 +15,6 @@ namespace Auction.mod
 
         public void PopupOk(string popupType)
         {
-
-
-
             if (popupType == "auctionmodresponse")
             { }
         }

@@ -12,7 +12,6 @@ namespace Auction.mod
     {
         //Database https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDVOVFhUVzN3U3RyVTlGR1FYQ1VqUGc&usp=drive_web#gid=0
         //PostSite 
-        string form = "https://docs.google.com/forms/d/19gk-tjiijeIJPLlwdqvcAGVSGvcAQ2iS3zKJ3UzbIBc/";
 
         public bool workthreadready = true;
         private PlayerStore pstore;

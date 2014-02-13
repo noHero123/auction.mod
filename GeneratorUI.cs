@@ -27,7 +27,6 @@ namespace Auction.mod
         Prices prcs;
         Cardviewer crdvwr;
         Searchsettings srchsvr;
-        Network ntwrk;
         Settings sttngs;
         Helpfunktions helpf;
         Generator generator;
@@ -63,7 +62,6 @@ namespace Auction.mod
             this.prcs = Prices.Instance;
             this.crdvwr = Cardviewer.Instance;
             this.srchsvr = Searchsettings.Instance;
-            this.ntwrk = Network.Instance;
             this.sttngs = Settings.Instance;
             this.generator = Generator.Instance;
             systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
@@ -209,11 +207,6 @@ namespace Auction.mod
 
                 GUI.skin = helpf.cardListPopupSkin;
 
-                if (ntwrk.contonetwork)
-                {
-                    GUI.Label(recto.sbnetworklabel, "User online: " + ntwrk.getnumberofaucusers());
-                }
-
                 if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
 
                 if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };
@@ -233,11 +226,6 @@ namespace Auction.mod
                         generator.buyOwnCardsFilter.resetFilters();
 
                     srchsvr.resetgensearchsettings(helpf.wtsmenue);
-                    if (ntwrk.realycontonetwork)
-                    {
-                        ntwrk.deleteownmessage(helpf.wtsmenue);
-
-                    }
                 }
                 if (helpf.wtsmenue) { srchsvr.savesettings(false, true); } else { srchsvr.savesettings(false, false); }
 
@@ -363,19 +351,6 @@ namespace Auction.mod
                     { GUI.color = dblack; }
                 }
 
-                if (false)
-                {
-                    if (GUI.Button(recto.sbclrearpricesbutton, "Post to Network"))
-                    {
-
-                        if (ntwrk.contonetwork)
-                        {
-                            ntwrk.sendownauctiontoall(helpf.wtsmenue, srchsvr.getshortgenmsg(true), srchsvr.getshortgenmsg(false));
-
-                        }
-
-                    }
-                }
                 GUI.color = Color.white;
 
 
@@ -929,7 +904,7 @@ namespace Auction.mod
             }
             if (msg.Length < 512) systemCopyBufferProperty.SetValue(null, msg, null);
             if (msg.Length >= 512) { msg = "msg too long"; } // message cant be to long anymore :D
-            if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
+            //if (shortmsg.Length >= 512) { shortmsg = ""; msg = msg + ", networkmsg too"; }
             if (helpf.wtsmenue) { srchsvr.generatedwtsmessage = msg; srchsvr.shortgeneratedwtsmessage = shortmsg; } else { srchsvr.generatedwtbmessage = msg; srchsvr.shortgeneratedwtbmessage = shortmsg; }
             //Console.WriteLine(msg);
             //Console.WriteLine(shortmsg);

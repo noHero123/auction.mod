@@ -21,16 +21,6 @@ namespace Auction.mod
     using System;
     using UnityEngine;
 
-	/*public struct aucitem
-	{
-		public Card card;
-		public string seller;
-		public string price;
-		public int priceinint;
-		public string time;
-		public DateTime dtime;
-		public string whole;
-	}*/
 
     public struct nickelement
     {
@@ -41,12 +31,13 @@ namespace Auction.mod
 
     public class AuctionMod : BaseMod, ICommListener
     {
+        /*
 #if DEBUG
 		private bool hideNetworkMessages = false; //  false = testmodus
 #else
 		private bool hideNetworkMessages = true; //  false = testmodus
 #endif
-        
+        */
 
 
          // = realcardnames + loadedscrollsnicks
@@ -54,13 +45,13 @@ namespace Auction.mod
         int screenh = 0;
         int screenw = 0;
         bool deckchanged = false;
+
         private FieldInfo chatLogStyleinfo;
         private MethodInfo drawsubmenu;
 
         //Texture2D arrowdown = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
 
         Settings sttngs;
-        Network ntwrk;
         Searchsettings srchsvr;
         Cardviewer crdvwr;
         Prices prcs;
@@ -83,34 +74,11 @@ namespace Auction.mod
         public void handleMessage(Message msg)
         {
 
-            /*if (msg is WhisperMessage && OfferHouse.isOfferMessage(msg as WhisperMessage))
+            if (msg is CardTypesMessage)
             {
-               WhisperMessage wmsg=(WhisperMessage) msg;
-                string s=wmsg.text.ToLower();
-                if (s.StartsWith("auction update wts") || s.StartsWith("auction update wtb"))
-               {
-                   s.Replace("auction update ", "");
-                   List<Auction> la = mssgprsr.GetAuctionsFromMessage(s, wmsg.from, "whisper");
-                   foreach (Auction a in la) AuctionHouse.Instance.removeMessages(a.seller, a.offer, helpf.cardidsToCardnames[a.card.getType()]);
-                   AuctionHouse.Instance.addAuctions(la);
-               }
-               else
-               {
-                   if (s.StartsWith("auction ended wts") || s.StartsWith("auction ended wtb"))
-                   {
-                       s.Replace("auction ended ", "");
-                       List<Auction> la = mssgprsr.GetAuctionsFromMessage(s, wmsg.from, "whisper");
-                       foreach (Auction a in la) AuctionHouse.Instance.removeMessages(a.seller, a.offer, helpf.cardidsToCardnames[a.card.getType()]);
-                   }
-                   else
-                   {
-                       if ((msg as WhisperMessage).from != App.MyProfile.ProfileInfo.name)
-                       {
-                           OfferHouse.Instance.addOffers(mssgprsr.GetOffersFromWMessage(wmsg.text, wmsg.from));
-                       }
-                   }
-               }
-            }*/
+                generator.setallavailablecards(msg);
+                mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
+            }
 
             if (msg is LibraryViewMessage)
             {
@@ -119,7 +87,6 @@ namespace Auction.mod
                     generator.setowncards(msg);
                     helpf.setOwnCards(msg);
                     this.ahui.clearOffercard();
-                    //this.playerLibrary.AddRange();
                 }
             }
 
@@ -355,7 +322,7 @@ namespace Auction.mod
             }
 
 
-            if (msg is RoomEnterMessage && helpf.postmsggetnextroomenter)
+            if (helpf.postmsggetnextroomenter && msg is RoomEnterMessage )
             {// he accept your trade, post the auction message to yourself
                 RoomEnterMessage rmem = (RoomEnterMessage)msg;
                 if (rmem.roomName.StartsWith("trade-"))
@@ -371,65 +338,9 @@ namespace Auction.mod
                 }
             }
 
-
-            //network stuff####################################################
-            if (msg is GameInfoMessage && ntwrk.contonetwork)
-            {// you are connected to network and start a battle -> disconnect
-                GameInfoMessage gim =(GameInfoMessage) msg;
-                if (ntwrk.inbattle == false) { ntwrk.inbattle = true; ntwrk.disconfromaucnet(); Console.WriteLine("discon"); }
-            }
-
-            if (msg is RoomInfoMessage && ntwrk.contonetwork) //TODO: move to network class
-            {
-                // you enter a auc-x room , while connected to network... so do communication stuff, like adding the users etc
-                RoomInfoMessage roominfo = (RoomInfoMessage)msg;
-                if (roominfo.roomName.StartsWith("auc-"))
-                {
-                    ntwrk.enteraucroom(roominfo);
-                }
-            
-            }
-
-            if ( msg is FailMessage) //TODO: move to Network - detect if it was a TradeNetwork-Message that faild!
-            {   // delete user if he cant be whispered ( so he doesnt check out propperly... blame on him!)
-                FailMessage fm = (FailMessage)msg;
-                if (ntwrk.idtesting > 0)
-                {
-
-                    if (fm.op == "ProfilePageInfo") { ntwrk.idtesting--; };
-                }
-                if (fm.op == "Whisper" && fm.info.StartsWith("Could not find the user "))
-                {
-                    string name = "";
-                    name = (fm.info).Split('\'')[1];
-                    //Console.WriteLine("could not find: " + name);
-
-                }
-            }
-
-
-            if (ntwrk.idtesting > 0 && msg is ProfilePageInfoMessage)//doesnt needed anymore
-            {
-                ProfilePageInfoMessage ppim = (ProfilePageInfoMessage)msg;
-                ChatUser newuser = new ChatUser();
-                newuser.acceptChallenges = false;
-                newuser.acceptTrades = true;
-                newuser.adminRole = AdminRole.None;
-                newuser.name = ppim.name;
-                newuser.id = ppim.id;
-                if (!helpf.globalusers.ContainsKey(newuser.name)) { helpf.globalusers.Add(newuser.name, newuser); }
-                ntwrk.adduser(newuser);
-
-            }
-
-            if (msg is CardTypesMessage)
-            {
-                generator.setallavailablecards(msg);
-                mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
-            }
-
             return;
         }
+
         public void onReconnect()
         {
             return; // don't care
@@ -448,7 +359,6 @@ namespace Auction.mod
             prcs = Prices.Instance;
             recto = Rectomat.Instance;
             mssgprsr = Messageparser.Instance;
-            ntwrk = Network.Instance;
             ahui = AuctionHouseUI.Instance;
             generator = Generator.Instance;
             genui = GeneratorUI.Instance;
@@ -457,11 +367,6 @@ namespace Auction.mod
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
 
-
-            
-
-            
-            
             Directory.CreateDirectory(helpf.ownaucpath);
             this.aucfiles = Directory.GetFiles(helpf.ownaucpath, "*auc.txt");
             if (aucfiles.Contains(helpf.ownaucpath + "wtsauc.txt"))//File.Exists() was slower
@@ -482,8 +387,6 @@ namespace Auction.mod
                 sttngs.loadsettings(helpf.ownaucpath,helpf.deleteTime);
             }
 
-
-
             try
             {
                 App.Communicator.addListener(this);
@@ -499,7 +402,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 8;
+            return 9;
         }
 
         public static MethodDefinition[] GetHooks(TypeDefinitionCollection scrollsTypes, int version)
@@ -512,14 +415,15 @@ namespace Auction.mod
                     scrollsTypes["ChatRooms"].Methods.GetMethod("SetRoomInfo", new Type[] {typeof(RoomInfoMessage)}),
                     scrollsTypes["ChatRooms"].Methods.GetMethod("ChatMessage", new Type[]{typeof(RoomChatMessageMessage)}),
                     scrollsTypes["ArenaChat"].Methods.GetMethod("handleMessage", new Type[]{typeof(Message)}),
-                    scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
+                    //scrollsTypes["BattleMode"].Methods.GetMethod("_handleMessage", new Type[]{typeof(Message)}),
                     scrollsTypes["Store"].Methods.GetMethod("Start")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showSellMenu")[0],
                     scrollsTypes["Store"].Methods.GetMethod("showBuyMenu")[0],
                     scrollsTypes["Store"].Methods.GetMethod("OnGUI")[0],
                     scrollsTypes["TradeSystem"].Methods.GetMethod("StartTrade", new Type[]{typeof(List<Card>) , typeof(List<Card>), typeof(string), typeof(string), typeof(int)}),
-                    scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
-                    scrollsTypes["GameSocket"].Methods.GetMethod("OnDestroy")[0],
+
+                    //scrollsTypes["EndGameScreen"].Methods.GetMethod("GoToLobby")[0],
+                    //scrollsTypes["GameSocket"].Methods.GetMethod("OnDestroy")[0],
                     //for trading with auctionbot
                     scrollsTypes["InviteManager"].Methods.GetMethod("handleMessage",new Type[]{typeof(Message)}),
                     // only for testing:
@@ -534,35 +438,26 @@ namespace Auction.mod
 
         public override bool WantsToReplace(InvocationInfo info)
         {
-
+            /*
+            // the auctionbot isnt inviting you anymore
             if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeInviteForwardMessage && (info.arguments[0] as TradeInviteForwardMessage).inviter.name == "auctionmod")
             { // return true if you are waiting for auctionbot
-
                 //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
                 return true;
             }
+             */
+
             if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeResponseMessage && (info.arguments[0] as TradeResponseMessage).to.name == "auctionmod")
             { // return true if you are waiting for auctionbot
-
-                //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
+                //because we dont want to display the trading-gui
                 return true;
             }
 
 
             if (info.target is Store && info.targetMethod.Equals("OnGUI"))
             {
+                // dont want to see the orginal store-interface in our AH
                 if (helpf.inauchouse || helpf.generator || helpf.settings) return true;
-            }
-            
-            if (info.target is BattleMode && info.targetMethod.Equals("_handleMessage"))
-            {
-                Message msg = (Message)info.arguments[0];
-                if (msg is WhisperMessage)
-                {
-                    WhisperMessage wmsg = (WhisperMessage)msg;
-                    if (hideNetworkMessages && Network.isNetworkCommand(wmsg)) return true;
-                    //if (OfferHouse.isOfferMessage(wmsg)) return true;
-                }
             }
             
             if (info.target is ArenaChat && info.targetMethod.Equals("handleMessage"))
@@ -571,22 +466,17 @@ namespace Auction.mod
                 if (msg is WhisperMessage)
                 {
                     WhisperMessage wmsg = (WhisperMessage)msg;
-					if (hideNetworkMessages && Network.isNetworkCommand(wmsg))
-                    { // hides all whisper messages from auc-mod
-						return true;
-                    }
-
-                    //if (OfferHouse.isOfferMessage(wmsg)) return true;
+                    //dont want to see whisper messages from/to the auctionbot
                     if (this.sttngs.actualTrading && wmsg.from == "auctionmod") return true;
                     if (this.sttngs.waitForAuctionBot && wmsg.toProfileName == "auctionmod") return true;
                     if ((wmsg.text.Equals("to slow") || wmsg.text.Contains("dont fool me") || wmsg.text.Contains("there is not such an auction") || wmsg.text.Contains("auctionlimit reached")) && wmsg.from == "auctionmod") return true;
                     
                 }
+
                 if (msg is RoomChatMessageMessage)
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
                     if ((this.sttngs.auctionScrollsMessagesCounter >= 1) && rem.roomName.StartsWith("trade-")) { if (this.sttngs.auctionScrollsMessagesCounter == 3)this.sttngs.auctionScrollsMessagesCounter = 0; return true; }
-					if (hideNetworkMessages  && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                     if (rem.text.StartsWith("auc parsertest")) { helpf.messegparsingtest(); return true; }
                 }
 
@@ -594,35 +484,16 @@ namespace Auction.mod
                 {   
                     RoomEnterMessage rem = (RoomEnterMessage) msg;
                     if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && rem.roomName.StartsWith("trade-")) return true;
-					if (hideNetworkMessages && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
                 }
 
                 if (msg is RoomInfoMessage)
                 {
                     RoomInfoMessage rem = (RoomInfoMessage)msg;
-					if (hideNetworkMessages && ntwrk.contonetwork && rem.roomName.StartsWith("auc-")) return true;
+                    if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && rem.roomName.StartsWith("trade-")) return true;
                 }
 
 
             }
-            /*if (info.target is Lobby && info.targetMethod.Equals("handleMessage"))
-            {
-                Message msg = (Message)info.arguments[0];
-
-                if (msg is RoomEnterMessage)
-                {
-                    RoomEnterMessage rem = (RoomEnterMessage)msg;
-                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
-                }
-
-                if (msg is RoomInfoMessage)
-                {
-                    RoomInfoMessage rem = (RoomInfoMessage)msg;
-                    if (this.contonetwork && rem.roomName.StartsWith("auc-")) return true;
-                }
-
-
-            }*/
             return false;
         }
 
@@ -649,8 +520,8 @@ namespace Auction.mod
 
         public override void AfterInvoke(InvocationInfo info, ref object returnValue)
         {
-            if (info.target is GameSocket && info.targetMethod.Equals("OnDestroy")) { Console.WriteLine("##Closing window"); } 
-            if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
+
+            //if (info.target is EndGameScreen && info.targetMethod.Equals("GoToLobby")) { ntwrk.inbattle = false; } // user leaved a battle
 
             if (info.target is ChatUI && info.targetMethod.Equals("Show")) { helpf.chatisshown = (bool)info.arguments[0]; this.screenh = 0; }// so position will be calculatet new on next ongui
 
@@ -677,9 +548,8 @@ namespace Auction.mod
                 helpf.inauchouse = false;
                 helpf.generator = false;
                 helpf.settings = false;
-                
-                
             }
+
 
             if (info.target is ChatRooms && info.targetMethod.Equals("SetRoomInfo")) //adding new users to userlist
             {
@@ -693,7 +563,7 @@ namespace Auction.mod
                 } 
             }
 
-            if (info.target is Store && info.targetMethod.Equals("OnGUI"))
+            if (info.target is Store && info.targetMethod.Equals("OnGUI")) // drawing our buttons and stuff in store
             {
 
                
@@ -708,10 +578,8 @@ namespace Auction.mod
                         screenh = Screen.height;
                         screenw = Screen.width;
                         helpf.chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(helpf.target);
-                        //recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
-                        //helpf.adjustskins(recto.fieldHeight);
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);// need  it to calc fieldhight even if bothmenue=true
-                        if ((helpf.bothmenue || helpf.ownoffermenu || helpf.createAuctionMenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if ((helpf.bothmenue || helpf.createAuctionMenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
@@ -725,7 +593,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue || helpf.ownoffermenu || helpf.createAuctionMenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if (helpf.bothmenue || helpf.createAuctionMenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         ahui.ahbuttonpressed();
                         
@@ -738,7 +606,7 @@ namespace Auction.mod
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         genui.genbuttonpressed();
                     }
-
+                    //klick settings-button
                     if (LobbyMenu.drawButton(recto.settingsbutton, "Settings", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
@@ -755,7 +623,7 @@ namespace Auction.mod
                     GUI.color = Color.white;
                     GUI.contentColor = Color.white;
 
-                    crdvwr.draw();
+                    crdvwr.draw();// drawing the card you have clicked
                     
                 
             }
@@ -780,12 +648,7 @@ namespace Auction.mod
                 RoomChatMessageMessage msg = (RoomChatMessageMessage)info.arguments[0];
                 if (msg.from != "Scrolls")
                 {
-                    //mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
                     AuctionHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
-                    /*if (msg.from == App.MyProfile.ProfileInfo.name)
-                    {
-                        OfferHouse.Instance.addAuctions(mssgprsr.GetAuctionsFromMessage(msg.text, msg.from, msg.roomName));
-                    }*/
                 }
             }
 
@@ -793,14 +656,14 @@ namespace Auction.mod
         }
 
         private void acceptTrade()
-        {
+        { // accept the trade with auctionbot
             System.Threading.Thread.Sleep(5300);
             App.Communicator.sendRequest(new TradeAcceptBargainMessage());
         }
 
         private void setGold()
         {
-            //System.Threading.Thread.Sleep(1000);
+            //set the gold while trading with auctionbot
             App.Communicator.sendRequest(new TradeSetGoldMessage(this.sttngs.bidgold));
         }
         

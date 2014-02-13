@@ -55,9 +55,6 @@
     <Compile Include="Helpfunktions.cs" />
     <Compile Include="Cardviewer.cs" />
     <Compile Include="Messageparser.cs" />
-    <Compile Include="Network.cs" />
-    <Compile Include="Offer.cs" />
-    <Compile Include="OfferHouse.cs" />
     <Compile Include="PlayerStore.cs" />
     <Compile Include="PopupManager.cs" />
     <Compile Include="Prices.cs" />

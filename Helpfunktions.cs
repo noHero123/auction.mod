@@ -53,7 +53,6 @@ namespace Auction.mod
         public bool playerStoreMenu = false; // true if the playerStore menu is shown
         public bool wtsmenue = false;
         public bool bothmenue = false;
-        public bool ownoffermenu = false;
 
         public bool chatisshown = false;
         public bool canLoadWTSmsg = false;
