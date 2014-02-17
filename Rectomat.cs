@@ -28,6 +28,7 @@ namespace Auction.mod
        public Rect tbpriceinput, tbororand, tbcard,tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll;
        public Rect sbclrearpricesbutton, sbnetworklabel, sbtimelabel, sbtimerect, getOwnStuffButton;
        public Rect crtpriceinput, crtororand, crtmessage, crtcard, crtduration, crtdurationInput, updateGoogleThings;
+       public Rect headlinerect, footlinerect;
 
         //create rects
 
@@ -119,7 +120,11 @@ namespace Auction.mod
            this.auctionhousebuttonrect = new Rect(ownbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.createbuttonrect = new Rect(auctionhousebuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
-            this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+           this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+
+           this.headlinerect = new Rect(this.innerRect.x + buttonlength / 3.33f, this.innerRect.xMin + this.labelX, (this.innerRect.xMax - this.innerRect.width * 0.03f) - (this.innerRect.x + this.innerRect.width * 0.03f), num2);
+
+           this.footlinerect = new Rect(this.innerRect.x + buttonlength / 3.33f, this.innerBGRect.yMax + num2 * 0.28f, (this.innerRect.xMax - this.innerRect.width * 0.03f) - (this.innerRect.x + this.innerRect.width * 0.03f), num2);
 
             num = (float)Screen.height / (float)Screen.width * 0.16f * rowscale;//0.16
             this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);
@@ -236,6 +241,11 @@ namespace Auction.mod
            this.ownbuttonrect = new Rect(bothbuttonrect.xMax + num, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.updatebuttonrect = new Rect(this.innerRect.xMax - this.innerRect.width * 0.10f - this.innerRect.width * 0.03f, this.innerBGRect.yMax + num2 * 0.28f, buttonlength, num2);
            this.fillbuttonrect = new Rect(this.updatebuttonrect.x - this.innerRect.width * 0.10f - num, this.innerBGRect.yMax + num2 * 0.28f, this.innerRect.width * 0.10f, num2);
+
+           this.headlinerect = new Rect(this.innerRect.x + buttonlength / 3.33f, this.innerRect.xMin + this.labelX, (this.innerRect.xMax - this.innerRect.width * 0.03f) - (this.innerRect.x + this.innerRect.width * 0.03f), num2);
+
+           this.footlinerect = new Rect(this.innerRect.x + buttonlength / 3.33f, this.innerBGRect.yMax + num2 * 0.28f, (this.innerRect.xMax - this.innerRect.width * 0.03f) - (this.innerRect.x + this.innerRect.width * 0.03f), num2);
+
 
            num = (float)Screen.height / (float)Screen.width * 0.16f * rowscale;//0.16
            //this.fieldHeight = (this.innerRect.width - this.scrollBarSize) / (1f / num + 1f);

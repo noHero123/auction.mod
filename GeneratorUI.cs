@@ -88,7 +88,7 @@ namespace Auction.mod
             if (this.wtsingen)
             {
                 helpf.wtsmenue = true;
-                srchsvr.setsettings(false, true);
+                srchsvr.setsettings(1, true);
                 //alists.setAhlistsToGenWtsLists();
 
 
@@ -96,7 +96,7 @@ namespace Auction.mod
             else
             {
                 helpf.wtsmenue = false;
-                srchsvr.setsettings(false, false);
+                srchsvr.setsettings(1, false);
                 //alists.setAhlistsToGenWtbLists();
 
 
@@ -227,7 +227,7 @@ namespace Auction.mod
 
                     srchsvr.resetgensearchsettings(helpf.wtsmenue);
                 }
-                if (helpf.wtsmenue) { srchsvr.savesettings(false, true); } else { srchsvr.savesettings(false, false); }
+                if (helpf.wtsmenue) { srchsvr.savesettings(1, true); } else { srchsvr.savesettings(1, false); }
 
 
                 if (selfcopy != srchsvr.wtssearchstring)
@@ -667,7 +667,7 @@ namespace Auction.mod
                     //
                     helpf.wtsmenue = true; 
                     this.wtsingen = true;
-                    srchsvr.setsettings(false, true);
+                    srchsvr.setsettings(1, true);
                     //
                 }
                 if (!helpf.wtsmenue)
@@ -682,7 +682,7 @@ namespace Auction.mod
                 if (GUI.Button(recto.wtbbuttonrect, "WTB") && !helpf.showtradedialog)
                 {
                     //alists.setAhlistsToGenWtbLists();
-                    srchsvr.setsettings(false, false);
+                    srchsvr.setsettings(1, false);
                     helpf.wtsmenue = false;
                     this.wtsingen = false;
                     //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, helpf.inauchouse, helpf.wtsmenue, helpf.generator);

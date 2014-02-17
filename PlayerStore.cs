@@ -26,16 +26,24 @@ namespace Auction.mod
         {
             this.helpf = Helpfunktions.Instance; 
             sellOfferFilter = new AuctionFilter();
+            createCardsFilter = new AuctionFilter();
+            this.prcs = Prices.Instance;
+            this.sttngs = Settings.Instance;
         }
 
         int maxLen = 1000;
         Helpfunktions helpf;
         public AuctionFilter sellOfferFilter;
+        public AuctionFilter createCardsFilter;
         protected List<Auction> fullSellOfferList = new List<Auction>();
         protected List<Auction> sellOfferListFiltered = new List<Auction>();
+        protected List<Auction> createOfferListFiltered = new List<Auction>();
         protected AuctionHouse.SortMode sellSortMode = AuctionHouse.SortMode.TIME;
         private AuctionHouse.SortMode sellSortModeCopy = AuctionHouse.SortMode.TIME;
         public bool newSellOffers { get; private set; }
+        private Settings sttngs;
+        private Prices prcs;
+
 
         public List<Auction> getSellOffers()
         {
@@ -43,7 +51,8 @@ namespace Auction.mod
             if (sellOfferFilter.filtersChanged || this.sellSortMode != this.sellSortModeCopy)
             {
                 //sellOfferListFiltered = new List<Auction> (fullSellOfferList);
-                sellOfferListFiltered.Clear(); sellOfferListFiltered.AddRange(fullSellOfferList);
+                sellOfferListFiltered.Clear(); 
+                sellOfferListFiltered.AddRange(fullSellOfferList);
                 sellOfferListFiltered.RemoveAll(sellOfferFilter.isFiltered);
                 sellOfferFilter.filtersChanged = false;
                 this.sellSortModeCopy = this.sellSortMode;
@@ -53,12 +62,35 @@ namespace Auction.mod
             return new List<Auction>(sellOfferListFiltered);
         }
 
+        public List<Auction> getCreateOffers()
+        {
+            if (createCardsFilter.filtersChanged)
+            {
+                //sellOfferListFiltered = new List<Auction> (fullSellOfferList);
+                createOfferListFiltered.Clear();
+                createOfferListFiltered.AddRange(Generator.Instance.getAllOwnSellOffers());
+                foreach (Auction c in this.createOfferListFiltered)
+                {
+
+                    int index = helpf.cardidToArrayIndex(c.card.getType());
+                    if(index>=1)c.setPrice(prcs.getPrice(index, sttngs.wtbAHpriceType));
+                    if (c.price == 0) c.setPrice(1);
+
+                }
+                createOfferListFiltered.RemoveAll(createCardsFilter.isFiltered);
+                createCardsFilter.filtersChanged = false;
+                createOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.CARD));
+            }
+            return new List<Auction>(createOfferListFiltered);
+        }
+
         public List<Auction> getOwnOffers()
         {
             List<Auction> sellOwnOfferListFiltered = new List<Auction>();
             foreach (Auction x in this.fullSellOfferList)
             {
-                if (x.message == "sold" || (x.message.Split(';')[3] == App.MyProfile.ProfileInfo.id && x.time < DateTime.Now )) sellOwnOfferListFiltered.Add(x);
+                //if (x.message == "sold" || (x.message.Split(';')[3] == App.MyProfile.ProfileInfo.id && x.time < DateTime.Now )) sellOwnOfferListFiltered.Add(x);
+                if (x.message.Split(';')[3] == App.MyProfile.ProfileInfo.id ) sellOwnOfferListFiltered.Add(x);
 
             }
 
@@ -70,7 +102,6 @@ namespace Auction.mod
 
         public void setSellSortMode(AuctionHouse.SortMode sortMode)
         {
-
             this.sellSortMode = sortMode;
         }
         public void setSellSortMode(int sortint)

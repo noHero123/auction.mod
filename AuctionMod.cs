@@ -402,7 +402,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 9;
+            return 10;
         }
 
         public static MethodDefinition[] GetHooks(TypeDefinitionCollection scrollsTypes, int version)
@@ -579,7 +579,7 @@ namespace Auction.mod
                         screenw = Screen.width;
                         helpf.chatLogStyle = (GUIStyle)chatLogStyleinfo.GetValue(helpf.target);
                         recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);// need  it to calc fieldhight even if bothmenue=true
-                        if ((helpf.bothmenue || helpf.createAuctionMenu) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if ((helpf.bothmenue || (helpf.createAuctionMenu && !helpf.offerMenuSelectCardMenu)) && !helpf.generator) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         recto.setupsettingpositions(helpf.chatLogStyle, helpf.cardListPopupBigLabelSkin);
 
                     }
@@ -593,7 +593,7 @@ namespace Auction.mod
                     {
                         if (this.deckchanged)
                         { App.Communicator.sendRequest(new LibraryViewMessage()); this.deckchanged = false; }
-                        if (helpf.bothmenue || helpf.createAuctionMenu) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                        if (helpf.bothmenue || helpf.createAuctionMenu ) recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         else recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                         ahui.ahbuttonpressed();
                         

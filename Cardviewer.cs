@@ -27,7 +27,7 @@ namespace Auction.mod
             public Color color;
         }
 
-        bool mytext = false;
+        public bool cardReadyToDraw { get; set; }
         Texture cardtext;
         float scalefactor = 1.0f;
         public int clicked = 0;
@@ -64,6 +64,7 @@ namespace Auction.mod
 
         private Cardviewer()
         {
+            cardReadyToDraw=false;
             //needed for getting the textures of the drawing card
             statsBGField = typeof(CardView).GetField("statsBG", BindingFlags.Instance | BindingFlags.NonPublic);
             icoBGField = typeof(CardView).GetField("icoBG", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -108,7 +109,7 @@ namespace Auction.mod
                 ttrec = new Rect(ttvec1.x, Screen.height - ttvec2.y, ttvec2.x - ttvec1.x, ttvec2.y - ttvec1.y);
                 cardrect = ttrec;
                 gettextures(cardView);
-                this.mytext = true;
+                this.cardReadyToDraw = true;
                 Camera.main.transform.localPosition = vccopy;
                 //Console.WriteLine("CARD: " + clink);
 
@@ -263,13 +264,13 @@ namespace Auction.mod
             UnityEngine.Object.Destroy(this.cardRule);
             textsArr = new List<renderwords>();
             gameObjects = new List<cardtextures>();
-            this.mytext = false;
+            this.cardReadyToDraw = false;
         }
 
         public void draw()
         {
             // draw cardoverlay again!
-            if (this.mytext)
+            if (this.cardReadyToDraw)
             {
                 if (this.clicked < 3) clicked++;
                 //GUI.depth =1;

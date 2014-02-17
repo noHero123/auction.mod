@@ -14,7 +14,7 @@ namespace Auction.mod
         /// <summary>
         /// The price. 0 indicates unknown.
         /// </summary>
-        public readonly int price;
+        public int price {get; private set;}
         /// <summary>
         /// The amount offered. 1 indicates unknown.
         /// </summary>
@@ -63,6 +63,9 @@ namespace Auction.mod
                 throw new ArgumentException ();
             }
         }
+        public void setPrice(int p)
+        { this.price=p;}
+
     }
 }
 

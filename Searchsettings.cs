@@ -34,6 +34,9 @@ namespace Auction.mod
         private settingcopy genwtssettings = new settingcopy();
         private settingcopy genwtbsettings = new settingcopy();
 
+        private settingcopy pswtssettings = new settingcopy();
+        private settingcopy pswtbsettings = new settingcopy();
+
         public bool growthbool=true;
         public bool orderbool=true;
         public bool energybool=true;
@@ -52,6 +55,8 @@ namespace Auction.mod
         public string pricesearchstring2 = "";
         public string genpricesearchstring = "";
         public string genpricesearchstring2 = "";
+        public string pspricesearchstring = "";
+        public string pspricesearchstring2 = "";
         public int sortmode = 0;
         public bool reverse = false;
         public string shortgeneratedwtsmessage = "";
@@ -132,6 +137,8 @@ namespace Auction.mod
             this.rarebool = true;
             this.threebool = false;
             this.onebool = false;
+            this.genpricesearchstring = "";
+            this.genpricesearchstring2 = "";
             if (wts)
             {
                 this.generatedwtsmessage = "";
@@ -144,21 +151,43 @@ namespace Auction.mod
             }
         }
 
-        public void saveall()
+        public void resetpssearchsettings(bool wts)
         {
-            this.savesettings(true, true);
-            this.savesettings(true, false);
-            this.savesettings(false, true);
-            this.savesettings(false, false);
+            this.wtssearchstring = "";
+            this.pricesearchstring = "";
+            this.sellersearchstring = "";
+            this.growthbool = true;
+            this.orderbool = true;
+            this.energybool = true;
+            this.decaybool = true;
+            this.commonbool = true;
+            this.uncommonbool = true;
+            this.rarebool = true;
+            this.threebool = false;
+            this.onebool = false;
+            this.pspricesearchstring = "";
+            this.pspricesearchstring2 = "";
         }
 
-        public void savesettings(bool ah, bool wts)
+        public void saveall()
+        {
+            this.savesettings(0, true);
+            this.savesettings(0, false);
+            this.savesettings(1, true);
+            this.savesettings(1, false);
+            this.savesettings(2, true);
+            this.savesettings(2, false);
+        }
+
+        public void savesettings(int ah, bool wts)
         {
             settingcopy copy=new settingcopy() ;
-            if (ah && wts) copy= this.ahwtssettings;
-            if (ah && !wts) copy = this.ahwtbsettings;
-            if (!ah && wts) copy = this.genwtssettings;
-            if (!ah && !wts) copy = this.genwtbsettings;
+            if (ah==0 && wts) copy= this.ahwtssettings;
+            if (ah==0 && !wts) copy = this.ahwtbsettings;
+            if (ah==1 && wts) copy = this.genwtssettings;
+            if (ah==1 && !wts) copy = this.genwtbsettings;
+            if (ah == 2 && wts) copy = this.pswtssettings;
+            if (ah == 2 && !wts) copy = this.pswtbsettings;
             copy.boolean0 = growthbool;
             copy.boolean1 = orderbool;
             copy.boolean2 = energybool;
@@ -179,13 +208,15 @@ namespace Auction.mod
             copy.sortreverse = reverse;
         }
 
-        public void setsettings(bool ah, bool wts)
+        public void setsettings(int ah, bool wts)
         {
             settingcopy copy = new settingcopy();
-            if (ah && wts) copy = this.ahwtssettings;
-            if (ah && !wts) copy = this.ahwtbsettings;
-            if (!ah && wts) copy = this.genwtssettings;
-            if (!ah && !wts) copy = this.genwtbsettings;
+            if (ah == 0 && wts) copy = this.ahwtssettings;
+            if (ah == 0 && !wts) copy = this.ahwtbsettings;
+            if (ah == 1 && wts) copy = this.genwtssettings;
+            if (ah == 1 && !wts) copy = this.genwtbsettings;
+            if (ah == 2 && wts) copy = this.pswtssettings;
+            if (ah == 2 && !wts) copy = this.pswtbsettings;
             growthbool = copy.boolean0;
             orderbool = copy.boolean1;
             energybool = copy.boolean2;

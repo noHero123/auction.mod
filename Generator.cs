@@ -82,6 +82,7 @@ namespace Auction.mod
         {
             List<Card> orgicardsPlayer = new List<Card>();
             this.fullSellOwnList.Clear();
+            PlayerStore.Instance.createCardsFilter.filtersChanged = true;
             orgicardsPlayer.AddRange(((LibraryViewMessage)msg).cards);
             List<string> checklist = new List<string>();
             helpf.cardIDToNumberOwned.Clear();

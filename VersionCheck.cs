@@ -16,11 +16,9 @@ namespace Auction.mod
         //bool getdata = false;
         int anzWarnings = 2;
         int warnings = 0;
-        string currentversion = "1.0.0.9";// only change this and the  version-file in github 
+        string currentversion = "1.0.1.0";// only change this and the  version-file in github 
         string newestversion = "0.0.0.0";// dont change this
 
-        // older version take the info from
-        // https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDBMUy1kdFFpa19IQTk5Ukd0T3JNU3c#gid=0
 
         public VersionCheck()
         {
@@ -38,6 +36,9 @@ namespace Auction.mod
         {
             string s = getDataFromGoogleDocs();
             //readJsonfromGoogle(s);
+            s=s.Replace(" ","");
+            s = s.Replace("\r", "");
+            s = s.Replace("\n", "");
             this.newestversion=s;
         }
 
@@ -84,7 +85,7 @@ namespace Auction.mod
                 RoomChatMessageMessage rcmm = (RoomChatMessageMessage)msg;
                 if (rcmm.text.StartsWith("You have joined"))
                 {
-                    
+                    Console.WriteLine("##Aucversion:#" + currentversion + "#" + newestversion+"#");
                     if (this.currentversion != this.newestversion)
                     {
                         RoomChatMessageMessage nrcmm = new RoomChatMessageMessage("[note]", "your Auctionmod is outdated, please visit www.scrollsguide.com/forum and install a new version or check noHeros repository");

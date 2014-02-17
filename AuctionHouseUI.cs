@@ -20,7 +20,6 @@ namespace Auction.mod
         public bool wtsinah = true;//remembers which menupoint in ah was the last one
         private Auction tradeitem;
         private bool selectable=true;
-        private bool clickableItems=false;
         private float opacity;
         public Vector2 scrollPos, scrollPos2,scrollPos4;
         Rectomat recto;
@@ -76,6 +75,7 @@ namespace Auction.mod
             helpf.inauchouse = true;
             helpf.settings = false;
             helpf.generator = false;
+            helpf.offerMenuSelectCardMenu = false;
             //this.hideInformation();
             helpf.hideInformationinfo.Invoke(helpf.storeinfo, null);
 
@@ -84,12 +84,16 @@ namespace Auction.mod
                 ah.spamFilter.setSpamTime(new TimeSpan(0, sttngs.spamprevint, 0));
                 ah.buyOfferFilter.filtersChanged = true;
                 ah.sellOfferFilter.filtersChanged = true;
+                ps.createCardsFilter.filtersChanged = true;
+                ps.sellOfferFilter.filtersChanged = true;
             }
             else
             {
                 ah.spamFilter.disableSpamFilter();
                 ah.buyOfferFilter.filtersChanged = true;
                 ah.sellOfferFilter.filtersChanged = true;
+                ps.createCardsFilter.filtersChanged = true;
+                ps.sellOfferFilter.filtersChanged = true;
             }
 
             iTween.MoveTo((GameObject)(helpf.buymen).GetValue(helpf.storeinfo), iTween.Hash(new object[] { "x", -0.5f, "time", 1f, "easetype", iTween.EaseType.easeInExpo }));
@@ -105,17 +109,19 @@ namespace Auction.mod
 
             ah.sellOfferFilter.filtersChanged = true;
             ah.buyOfferFilter.filtersChanged = true;
+            ps.createCardsFilter.filtersChanged = true;
+            ps.sellOfferFilter.filtersChanged = true;
             if (this.wtsinah)
             {
 
-                srchsvr.setsettings(true, true);
+                srchsvr.setsettings(0, true);
                 helpf.wtsmenue = true;
 
             }
             else
             {
 
-                srchsvr.setsettings(true, false);
+                srchsvr.setsettings(0, false);
                 helpf.wtsmenue = false;
 
             }
@@ -128,6 +134,13 @@ namespace Auction.mod
         
         public void drawAH()
         {
+
+            if (helpf.offerMenuSelectCardMenu)
+            {
+                //this.ccardlist(false);// want to show the sell prices
+                this.drawgenerator();
+                return;
+            }
 
             if (helpf.createAuctionMenu)
             {
@@ -145,11 +158,11 @@ namespace Auction.mod
                 // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
                 if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message, tradeitem.card.getType()); }
                 
-                srchsvr.setsettings(true, true);
+                srchsvr.setsettings(0, true);
                 ah.setSellSortMode(srchsvr.sortmode);
                 this.drawAHlist(true);
 
-                srchsvr.setsettings(true, false);
+                srchsvr.setsettings(0, false);
                 ah.setBuySortMode(srchsvr.sortmode);
                 this.drawAHlist(false);
 
@@ -164,6 +177,7 @@ namespace Auction.mod
 
         private void drawAHandSearch()
         {
+            bool clickableItems = false;
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
             if (helpf.inauchouse)
             {
@@ -343,7 +357,12 @@ namespace Auction.mod
 
                 }
 
-                if (helpf.wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
+                if (helpf.wtsmenue)
+                {
+                    if (helpf.playerStoreMenu) srchsvr.savesettings(2, true); 
+                    else srchsvr.savesettings(0, true); 
+                } 
+                else { srchsvr.savesettings(0, false); }
 
                 //set filters
                 if (tpfgen)
@@ -509,6 +528,7 @@ namespace Auction.mod
                     if (helpf.wtsmenue)
                     {
                         ah.setSellSortMode(AuctionHouse.SortMode.CARD);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.CARD);
                     }
                     else
                     {
@@ -530,6 +550,7 @@ namespace Auction.mod
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
                         ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.SELLER);
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
@@ -555,6 +576,7 @@ namespace Auction.mod
                     if (helpf.wtsmenue)
                     {
                         ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.PRICE);
                     }
                     else
                     {
@@ -573,6 +595,7 @@ namespace Auction.mod
                     if (helpf.wtsmenue)
                     {
                         ah.setSellSortMode(AuctionHouse.SortMode.TIME);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.TIME);
                     }
                     else
                     {
@@ -961,6 +984,7 @@ namespace Auction.mod
                 recto.filtermenurect.x = recto.filtermenurect.x + Screen.width * 0.495f;
                 recto.calcguirects();
             }
+
             // Draw Auctionhouse here:
             if (helpf.inauchouse)
             {
@@ -979,108 +1003,119 @@ namespace Auction.mod
 
 
                 // draw sort buttons:###############################################
-                Vector2 vec11 = GUI.skin.button.CalcSize(new GUIContent("Scroll"));
-
-                if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX, recto.screenRect.yMin - 4, vec11.x, 20), "Scroll"))
-                {
-                    if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
-                    if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                    srchsvr.sortmode = 1;
-                    if (helpf.bothmenue)
-                    {
-                        if (wtsmenue)
-                        {
-                            ah.setSellSortMode(AuctionHouse.SortMode.CARD);
-                        }
-                        else
-                        {
-                            ah.setBuySortMode(AuctionHouse.SortMode.CARD);
-                        }
-                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
-                    }
-                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-
-                }
-                float datelength = GUI.skin.button.CalcSize(new GUIContent("Date")).x;
-                float datebeginn = 0;
                 if (helpf.bothmenue)
                 {
-                    if (wtsmenue)
-                    {
-                        vec11 = GUI.skin.button.CalcSize(new GUIContent("Seller"));
+                    Vector2 vec11 = GUI.skin.button.CalcSize(new GUIContent("Scroll"));
 
-                        if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
-                        {
-                            if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                            if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                            srchsvr.sortmode = 3;
-                            if (helpf.bothmenue)
-                            {
-                                ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
-                                //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-                                srchsvr.savesettings(true, true);
-                            }
-                        }
-                    }
-                    else
+                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX, recto.screenRect.yMin - 4, vec11.x, 20), "Scroll"))
                     {
-                        vec11 = GUI.skin.button.CalcSize(new GUIContent("Buyer"));
-                        if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
+                        if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
+                        if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                        srchsvr.sortmode = 1;
+                        if (helpf.bothmenue)
                         {
-                            if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                            if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                            srchsvr.sortmode = 3;
-                            if (helpf.bothmenue)
+                            if (wtsmenue)
                             {
-                                ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
-
-                                srchsvr.savesettings(true, false);
+                                ah.setSellSortMode(AuctionHouse.SortMode.CARD);
                             }
-                            //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                            else
+                            {
+                                ah.setBuySortMode(AuctionHouse.SortMode.CARD);
+                            }
+                            if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
                         }
+                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+
                     }
-                }
-                datebeginn = recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
-                vec11 = GUI.skin.button.CalcSize(new GUIContent("Price"));
-                if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + 2f * recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + 2 * recto.costIconWidth + recto.labelsWidth / 4f - vec11.x / 2, recto.screenRect.yMin - 4, vec11.x, 20), "Price"))
-                {
-                    if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                    if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                    srchsvr.sortmode = 2;
-                    
+                    float datelength = GUI.skin.button.CalcSize(new GUIContent("Date")).x;
+                    float datebeginn = 0;
                     if (helpf.bothmenue)
                     {
                         if (wtsmenue)
                         {
-                            ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                            vec11 = GUI.skin.button.CalcSize(new GUIContent("Seller"));
+
+                            if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Seller"))
+                            {
+                                if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                                if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                                srchsvr.sortmode = 3;
+                                if (helpf.bothmenue)
+                                {
+                                    ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
+                                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                                    srchsvr.savesettings(0, true);
+                                }
+                            }
                         }
                         else
                         {
-                            ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
-                        }
-                        if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
-                    }
-                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-                }
-                vec11 = GUI.skin.button.CalcSize(new GUIContent("Date"));
-                //if (GUI.Button(new Rect(this.innerRect.x + offX , this.screenRect.yMin - 4, vec11.x * 2, 20), "Date"))
-                if (GUI.Button(new Rect(datebeginn + 4, recto.screenRect.yMin - 4, vec11.x, 20), "Date"))
-                {
-                    if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
-                    if (srchsvr.sortmode == 0) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
-                    srchsvr.sortmode = 0;
-                    if (wtsmenue)
-                    {
-                        ah.setSellSortMode(AuctionHouse.SortMode.TIME);
-                    }
-                    else
-                    {
-                        ah.setBuySortMode(AuctionHouse.SortMode.TIME);
-                    }
-                    if (wtsmenue) { srchsvr.savesettings(true, true); } else { srchsvr.savesettings(true, false); }
-                    //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
-                }
+                            vec11 = GUI.skin.button.CalcSize(new GUIContent("Buyer"));
+                            if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2f - datelength / 2f - 2f, recto.screenRect.yMin - 4f, vec11.x, 20f), "Buyer"))
+                            {
+                                if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                                if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                                srchsvr.sortmode = 3;
+                                if (helpf.bothmenue)
+                                {
+                                    ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
 
+                                    srchsvr.savesettings(0, false);
+                                }
+                                //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                            }
+                        }
+                    }
+                    datebeginn = recto.innerRect.xMin + recto.labelX + recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + recto.costIconWidth + (recto.labelsWidth - vec11.x) / 2 - datelength / 2 - 2 + vec11.x;
+                    vec11 = GUI.skin.button.CalcSize(new GUIContent("Price"));
+                    if (GUI.Button(new Rect(recto.innerRect.xMin + recto.labelX + 2f * recto.labelsWidth + (recto.costIconSize - recto.costIconWidth) / 2f - 5f + 2 * recto.costIconWidth + recto.labelsWidth / 4f - vec11.x / 2, recto.screenRect.yMin - 4, vec11.x, 20), "Price"))
+                    {
+                        if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                        if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                        srchsvr.sortmode = 2;
+
+                        if (helpf.bothmenue)
+                        {
+                            if (wtsmenue)
+                            {
+                                ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                            }
+                            else
+                            {
+                                ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
+                            }
+                            if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
+                        }
+                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                    }
+                    vec11 = GUI.skin.button.CalcSize(new GUIContent("Date"));
+                    //if (GUI.Button(new Rect(this.innerRect.x + offX , this.screenRect.yMin - 4, vec11.x * 2, 20), "Date"))
+                    if (GUI.Button(new Rect(datebeginn + 4, recto.screenRect.yMin - 4, vec11.x, 20), "Date"))
+                    {
+                        if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
+                        if (srchsvr.sortmode == 0) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
+                        srchsvr.sortmode = 0;
+                        if (wtsmenue)
+                        {
+                            ah.setSellSortMode(AuctionHouse.SortMode.TIME);
+                        }
+                        else
+                        {
+                            ah.setBuySortMode(AuctionHouse.SortMode.TIME);
+                        }
+                        if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
+                        //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
+                    }
+                }
+                else
+                {
+                    GUI.skin = helpf.cardListPopupSkin;
+                    GUI.Box(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "");
+                    GUI.skin = helpf.cardListPopupBigLabelSkin;
+                    GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                    GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "own auctions");
+                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                }
 
 
                 int num = 0;
@@ -1198,7 +1233,31 @@ namespace Auction.mod
                             { sellername = current.message; }
                             else
                             {
-                                sellername = "ended"; 
+                                TimeSpan ts = temptime.Subtract(current.time);
+                                ts = (current.time).Subtract(temptime);
+                                if (ts.TotalHours >= 1.0)
+                                {
+                                    sellername = ((int)ts.TotalHours + 1) + " hours left";
+                                }
+                                else
+                                {
+
+                                    if (ts.TotalMinutes >= 1.0)
+                                    {
+                                        sellername = (ts.Minutes + 1) + " min left";
+
+                                    }
+                                    else
+                                    {
+                                        sellername = "ends in a minute";
+                                        if (ts.Seconds <= 40) { sellername = "ends in 40 seconds"; }
+                                        if (ts.Seconds <= 20) { sellername = "ends in 20 seconds"; }
+                                        if (ts.Seconds <= 10) { sellername = "ends in 10 seconds"; }
+                                        if (ts.Seconds <= 5) { sellername = "ends in 5 seconds"; }
+                                        if (ts.Seconds <= 0) { sellername = "ended"; }
+                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[3] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
+                                    }
+                                }
                             }
 
                         }
@@ -1438,7 +1497,8 @@ namespace Auction.mod
 
                     if (helpf.offerMenuSelectCardMenu)
                     {
-                        this.ccardlist(false);// want to show the sell prices
+                        //this.ccardlist(false);// want to show the sell prices
+                        this.drawgenerator();
                         return;
                     }
 
@@ -1510,6 +1570,8 @@ namespace Auction.mod
                 if (GUI.Button(recto.crtcard, ""))
                 {
                     helpf.offerMenuSelectCardMenu = true;
+                    recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+                    srchsvr.setsettings(2, false);
                 }
 
                 if (this.OfferCard != null)
@@ -1614,6 +1676,7 @@ namespace Auction.mod
             if (GUI.Button(recto.tbcancel, "Cancel")) { helpf.showtradedialog = false; };
             //if ( !this.helpf.playerStoreMenu && GUI.Button(recto.tboffer, "Offer") ) { helpf.makeOfferMenu = true; this.OrOrAnd = 0; this.OfferPrice = "0"; this.OfferCard = null; };
         }
+
 
         private void ccardlist(bool wtsmenue)//select card you want to offer
         {
@@ -1762,6 +1825,342 @@ namespace Auction.mod
             if (card != null) { helpf.offerMenuSelectCardMenu = false; this.OfferPrice = "1000"; }
         }
 
+
+        public void drawgenerator()
+        {
+            // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
+            GUI.depth = 15;
+            bool clickableItems = true;
+            if (crdvwr.cardReadyToDraw) clickableItems = false;
+            if (true)
+            {
+                GUI.color = Color.white;
+
+                // draw filter menue
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Box(recto.filtermenurect, string.Empty);
+                // wts filter menue
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                GUI.Label(recto.sbarlabelrect, "Scroll:");
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Box(recto.sbrect, string.Empty);
+                string selfcopy = srchsvr.wtssearchstring;
+                GUI.SetNextControlName("dbSearchfield");
+                srchsvr.wtssearchstring = GUI.TextField(recto.sbrect, srchsvr.wtssearchstring, helpf.chatLogStyle);
+                recto.drawsearchpulldown();// draw here to be the pull down menue the first clicked object
+
+                GUI.contentColor = Color.white;
+                GUI.color = Color.white;
+                if (!srchsvr.growthbool) { GUI.color = dblack; }
+                bool growthclick = GUI.Button(recto.sbgrect, growthres);
+                GUI.color = Color.white;
+                if (!srchsvr.orderbool) { GUI.color = dblack; }
+                bool orderclick = GUI.Button(recto.sborect, orderres);
+                GUI.color = Color.white;
+                if (!srchsvr.energybool) { GUI.color = dblack; }
+                bool energyclick = GUI.Button(recto.sberect, energyres);
+                GUI.color = Color.white;
+                if (!srchsvr.decaybool) { GUI.color = dblack; }
+                bool decayclick = GUI.Button(recto.sbdrect, decayres);
+
+
+                GUI.contentColor = Color.gray;
+                GUI.color = Color.white;
+                if (!srchsvr.commonbool) { GUI.color = dblack; }
+                bool commonclick = GUI.Button(recto.sbcommonrect, "C");
+                GUI.color = Color.white;
+                if (!srchsvr.uncommonbool) { GUI.color = dblack; }
+                GUI.contentColor = Color.white;
+                bool uncommonclick = GUI.Button(recto.sbuncommonrect, "U");
+                GUI.color = Color.white;
+                if (!srchsvr.rarebool) { GUI.color = dblack; }
+                GUI.contentColor = Color.yellow;
+                bool rareclick = GUI.Button(recto.sbrarerect, "R");
+                GUI.color = Color.white;
+                if (!srchsvr.threebool) { GUI.color = dblack; }
+                //if (!p1mt3bool) { GUI.color = dblack; }
+                bool mt3click;
+                bool mt0click = false;
+
+                mt3click = GUI.Button(recto.sbthreerect, ">3"); // >3 bei wtsmenue=false
+
+                GUI.color = Color.white;
+                if (!srchsvr.onebool) { GUI.color = dblack; }
+                //if (this.wtsmenue) { mt0click = GUI.Button(sbonerect, ">0"); };
+                GUI.color = Color.white;
+                GUI.contentColor = Color.white;
+
+
+                // draw price filter
+
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                GUI.Label(recto.sbpricelabelrect, "<= Price <=");
+                GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.Box(recto.sbpricerect, string.Empty);
+                GUI.Box(recto.sbpricerect2, string.Empty);
+                string pricecopy = srchsvr.pspricesearchstring;
+                string pricecopy2 = srchsvr.pspricesearchstring2;
+                srchsvr.pspricesearchstring = Regex.Replace(GUI.TextField(recto.sbpricerect, srchsvr.pspricesearchstring, helpf.chatLogStyle), @"[^0-9]", "");
+                srchsvr.pspricesearchstring2 = Regex.Replace(GUI.TextField(recto.sbpricerect2, srchsvr.pspricesearchstring2, helpf.chatLogStyle), @"[^0-9]", "");
+                GUI.color = Color.white;
+
+                GUI.color = Color.white;
+                GUI.contentColor = Color.red;
+                bool closeclick = GUI.Button(recto.sbclearrect, "X");
+                GUI.contentColor = Color.white;
+
+                GUI.skin = helpf.cardListPopupSkin;
+
+                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
+
+                if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };
+                if (orderclick) { srchsvr.orderbool = !srchsvr.orderbool; }
+                if (energyclick) { srchsvr.energybool = !srchsvr.energybool; };
+                if (decayclick) { srchsvr.decaybool = !srchsvr.decaybool; }
+                if (commonclick) { srchsvr.commonbool = !srchsvr.commonbool; };
+                if (uncommonclick) { srchsvr.uncommonbool = !srchsvr.uncommonbool; }
+                if (rareclick) { srchsvr.rarebool = !srchsvr.rarebool; };
+                if (mt3click) { srchsvr.threebool = !srchsvr.threebool; }
+                if (mt0click) { srchsvr.onebool = !srchsvr.onebool; }
+                if (closeclick)
+                {
+                    ps.createCardsFilter.resetFilters();
+
+                    srchsvr.resetpssearchsettings(helpf.wtsmenue);
+                }
+                
+                 
+
+                if (selfcopy != srchsvr.wtssearchstring)
+                {
+                    ps.createCardsFilter.setCardFilter(srchsvr.wtssearchstring);
+
+                }
+                if (mt3click || mt0click)
+                {
+                    int filter = 0;
+                    if (srchsvr.threebool) filter = 2;
+                    ps.createCardsFilter.setAmountFilter(filter);
+
+                }
+                if (growthclick || orderclick || energyclick || decayclick)
+                {
+                    string[] res = { "", "", "", "" };
+                    if (srchsvr.decaybool) { res[0] = "decay"; };
+                    if (srchsvr.energybool) { res[1] = "energy"; };
+                    if (srchsvr.growthbool) { res[2] = "growth"; };
+                    if (srchsvr.orderbool) { res[3] = "order"; };
+
+                    ps.createCardsFilter.setResourceFilter(res);
+
+                }
+                if (commonclick || uncommonclick || rareclick)
+                {
+                    ps.createCardsFilter.setRarityFilter(srchsvr.commonbool, srchsvr.uncommonbool, srchsvr.rarebool);
+
+                }
+
+                if (pricecopy != srchsvr.pspricesearchstring)
+                {
+                    ps.createCardsFilter.setPriceLowerBound(srchsvr.pspricesearchstring);
+                }
+                if (pricecopy2 != srchsvr.pspricesearchstring2)
+                {
+
+                    ps.createCardsFilter.setPriceUpperBound(srchsvr.pspricesearchstring2);
+                }
+
+
+                srchsvr.savesettings(2, false);
+
+
+            }
+
+            // Draw generator here:
+            if (true)
+            {
+                //Console.WriteLine(GUI.GetNameOfFocusedControl());
+                this.opacity = 1f;
+                GUI.skin = helpf.cardListPopupSkin;
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
+                GUI.Box(recto.position, string.Empty);
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity * 0.3f);
+                GUI.Box(recto.position2, string.Empty);
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
+
+                this.ahlist = ps.getCreateOffers();
+
+                this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * (float)this.ahlist.Count));
+                int num = 0;
+                Card card = null;
+                Card clickcard = null;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                foreach (Auction current in this.ahlist)
+                {
+
+                    if (!current.card.tradable)
+                    {
+                        GUI.color = new Color(1f, 1f, 1f, 0.5f);
+                    }
+                    GUI.skin = helpf.cardListPopupGradientSkin;
+                    //draw boxes
+                    Rect position7 = recto.position7(num);
+                    if (position7.yMax < this.scrollPos.y || position7.y > this.scrollPos.y + recto.position3.height)
+                    {
+                        num++;
+                        GUI.color = Color.white;
+                    }
+                    else
+                    {
+                        if (clickableItems)
+                        {
+                            if (GUI.Button(position7, string.Empty))
+                            {
+                                //this.callback.ItemClicked(this, current);
+                                clickcard = current.card;
+                            }
+                        }
+                        else
+                        {
+                            GUI.Box(position7, string.Empty);
+                        }
+                        string name = current.card.getName();
+
+                        string txt = helpf.cardIDtoimageid(current.card.getType()).ToString();
+                        Texture texture = App.AssetLoader.LoadTexture2D(txt);//current.getCardImage())
+                        if (sttngs.shownumberscrolls) name = "(" + helpf.cardIDToNumberOwned[current.card.getType()] + ") " + name;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        Vector2 vector = GUI.skin.label.CalcSize(new GUIContent(name));
+                        // draw text
+                        Rect position8 = recto.position8(num);
+                        GUI.Label(position8, (vector.x >= position8.width) ? (name.Substring(0, Mathf.Min(name.Length, recto.maxCharsName)) + "...") : name);
+                        GUI.skin = helpf.cardListPopupSkin;
+                        string text = current.card.getPieceKind().ToString();
+                        string str = text.Substring(0, 1) + text.Substring(1).ToLower();
+                        string text2 = string.Empty;
+                        int num2 = recto.maxCharsRK;
+                        /* if (current.card.level > 0)
+                         {
+                             string text3 = text2;
+                             text2 = string.Concat(new object[] { text3, "<color=#ddbb44>Tier ", current.card.level + 1, "</color>, " });
+                             num2 += "<color=#rrggbb></color>".Length;
+                         }*/
+                        text2 = text2 + current.card.getRarityString() + ", " + str;
+                        Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
+                        Rect position9 = recto.position9(num);
+                        GUI.Label(position9, (vector2.x >= position9.width) ? (text2.Substring(0, Mathf.Min(text2.Length, num2)) + "...") : text2);
+                        Rect restyperect = recto.restyperect(num);
+                        //draw resource type
+                        this.RenderCost(restyperect, current.card);
+                        // write PRICE
+                        //GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+                        float nextx = restyperect.xMax + recto.costIconWidth / 2;
+                        string gold = "";
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        vector = GUI.skin.label.CalcSize(new GUIContent(gold));
+                        Rect position12 = new Rect(nextx + 2f, (float)num * recto.fieldHeight, recto.labelsWidth / 2f, recto.fieldHeight);
+                        //GUI.Label(position12, gold);
+
+
+                        int index = helpf.cardidToArrayIndex(current.card.getType());
+                        string suggeprice = "";
+                        int p1 = 0, p2 = 0;
+                        if (index >= 0)
+                        {
+                            
+                            //p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
+                             p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
+                            suggeprice = "SG: " + p1;
+                            if (sttngs.showsugrange)
+                            {
+                                
+                                //    p2 = prcs.getPrice(index, sttngs.wtsAHpriceType2);
+                                    p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
+                            }
+                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                        }
+                        nextx = position12.xMax + recto.costIconWidth;
+                        GUI.skin = helpf.cardListPopupBigLabelSkin;
+                        Rect position14 = new Rect(nextx + 2f, position12.y, recto.labelsWidth / 2f, recto.fieldHeight);
+                        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                        GUI.Label(position14, suggeprice);
+                        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+                        //draw pricebox
+                        //
+                        //Rect position11 = new Rect(position12.xMax + 2f, (float)(num + 1) * recto.fieldHeight - (recto.fieldHeight + vector2.y) / 2 - 2, recto.labelsWidth, vector2.y + 4);
+                        //GUI.skin = helpf.cardListPopupSkin;
+                        //GUI.Box(position11, string.Empty);
+
+                        GUI.skin = helpf.cardListPopupLeftButtonSkin;
+                        if (!this.selectable)
+                        {
+                            GUI.enabled = false;
+                        }
+                        if (GUI.Button(recto.position10(num), string.Empty) && current.card.tradable)
+                        {
+                            card = current.card;
+                            App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_button_click");
+                        }
+                        if (!this.selectable)
+                        {
+                            GUI.enabled = true;
+                        }
+                        //draw picture
+                        if (texture != null)
+                        {
+                            GUI.DrawTexture(new Rect(4f, (float)num * recto.fieldHeight + (recto.fieldHeight - recto.cardHeight) * 0.43f, recto.cardWidth, recto.cardHeight), texture);
+                        }
+
+                        if (!current.card.tradable)
+                        {
+                            GUI.color = Color.white;
+                        }
+                        num++;
+                    }
+                }
+                GUI.EndScrollView();
+                GUI.color = Color.white;
+                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                GUI.Label(recto.footlinerect,"Select a Scroll you want to sell!");
+                GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+
+                if (card != null)
+                {
+                    //this.callback.ItemButtonClicked(this, card);
+                    string clink = card.getName().ToLower();
+                    //int arrindex = Array.FindIndex(helpf.cardnames, element => element.Equals(clink));
+                    int arrindex = helpf.cardnameToArrayIndex(clink);
+                    if (arrindex >= 0)
+                    {
+                        crdvwr.createcard(arrindex, helpf.cardids[arrindex]);
+                    }
+                }
+
+                if (clickcard != null) 
+                { 
+                    this.OfferCard = clickcard; 
+                    helpf.offerMenuSelectCardMenu = false; 
+                    this.OfferPrice = "1000"; 
+                    recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin); 
+                }
+                //wts / wtb menue buttons
+
+                GUI.color = Color.white;
+                GUI.contentColor = Color.white;
+            }
+        }
+
+
+
+
+
         private void RenderCost(Rect rect, Card card)
         {
             //draw resource-icon
@@ -1797,7 +2196,7 @@ namespace Auction.mod
             {
                 recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
                 helpf.wtsmenue = true; this.wtsinah = true;
-                srchsvr.setsettings(true, true);
+                srchsvr.setsettings(0, true);
                 ah.setSellSortMode(srchsvr.sortmode);
                 helpf.bothmenue = false;
                 helpf.createAuctionMenu = false;
@@ -1831,7 +2230,7 @@ namespace Auction.mod
                 helpf.wtsmenue = false; this.wtsinah = false;
 
                 //lstfltrs.sortlist(alists.ahlist);
-                srchsvr.setsettings(true, false);
+                srchsvr.setsettings(0, false);
                 ah.setBuySortMode(srchsvr.sortmode);
                 helpf.bothmenue = false;
                 helpf.createAuctionMenu = false;
@@ -1852,13 +2251,14 @@ namespace Auction.mod
 
             GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             if (helpf.playerStoreMenu) GUI.color = Color.white;
+
             if (GUI.Button(recto.auctionhousebuttonrect, "PStr") && !helpf.showtradedialog)
             {
                 helpf.createAuctionMenu = false;
                 helpf.playerStoreMenu = true;
                 helpf.bothmenue = false;
                 helpf.wtsmenue = true;
-                srchsvr.setsettings(true, true);
+                srchsvr.setsettings(2, true);
                 ah.setSellSortMode(srchsvr.sortmode);
                 recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
 
