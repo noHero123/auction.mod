@@ -16,7 +16,7 @@ namespace Auction.mod
         //bool getdata = false;
         int anzWarnings = 2;
         int warnings = 0;
-        string currentversion = "1.0.1.0";// only change this and the  version-file in github 
+        string currentversion = "1.0.1.1";// only change this and the  version-file in github 
         string newestversion = "0.0.0.0";// dont change this
 
 

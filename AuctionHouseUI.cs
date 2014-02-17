@@ -1548,7 +1548,7 @@ namespace Auction.mod
 
                 if (GUI.Button(recto.crtdurationInput, ""))
                 {
-                    this.durationIndex = (this.durationIndex + 1) % 3;
+                    this.durationIndex = (this.durationIndex + 1) % 5;
                 }
 
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
@@ -1556,6 +1556,8 @@ namespace Auction.mod
                 if (this.durationIndex == 0) { GUI.Label(recto.crtdurationInput, "12h"); }
                 if (this.durationIndex == 1) { GUI.Label(recto.crtdurationInput, "24h"); }
                 if (this.durationIndex == 2) { GUI.Label(recto.crtdurationInput, "48h"); }
+                if (this.durationIndex == 3) { GUI.Label(recto.crtdurationInput, "60h"); }
+                if (this.durationIndex == 4) { GUI.Label(recto.crtdurationInput, "72h"); }
 
                 GUI.Label(recto.crtororand, "for");
                 GUI.Label(recto.crtduration, "Duration:");
@@ -1599,6 +1601,8 @@ namespace Auction.mod
                     string duration = "12";
                     if (this.durationIndex == 1) duration = "24";
                     if (this.durationIndex == 2) duration = "48";
+                    if (this.durationIndex == 3) duration = "60";
+                    if (this.durationIndex == 4) duration = "72";
                     this.createdAuctionText = "Wts " + cname + " for " + this.OfferPrice + "g.\r\nThe auction ends in " + duration + "hours";
                     this.sttngs.tradeCardID = cardid;
                     //this.OfferPrice = "0"; this.OfferCard = null;
@@ -2288,6 +2292,8 @@ namespace Auction.mod
                 string duration = "12";
                 if (this.durationIndex == 1) duration = "24";
                 if (this.durationIndex == 2) duration = "48";
+                if (this.durationIndex == 3) duration = "60";
+                if (this.durationIndex == 4) duration = "72";
                 string cname = ""; int cid = 0; long cardid = 0;
                 cname = OfferCard.getName(); cid = OfferCard.getType(); cardid = OfferCard.getId();
                 string sendmessage = " \\setauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", cardid:" + cardid + ", cardtype:" + cid + ", price:" + this.OfferPrice + ", duration:" + duration + "h" + ",";
