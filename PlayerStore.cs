@@ -157,9 +157,8 @@ namespace Auction.mod
         public void removeOldEntrys()
         {
             DateTime n = DateTime.Now;
-            fullSellOfferList.RemoveAll(a => (a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id));
-            sellOfferListFiltered.RemoveAll(a => (a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id));
-            
+            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id)));
+            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id)));
         }
 
 

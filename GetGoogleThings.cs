@@ -126,12 +126,14 @@ namespace Auction.mod
                 string text = si.id;
                 if (si.status == "SOLD" || si.status == "BUY")
                 {
-                    text = "sold";
+                    text = text + ";sold";
                 }
+                else { text = text + ";active"; }
                 Auction a = new Auction(si.seller,d,Auction.OfferType.SELL,card,text,price);
                 auctionsToAdd.Add(a);
             }
             this.pstore.addAuctions(auctionsToAdd);
+            this.pstore.removeOldEntrys();
         }
 
 

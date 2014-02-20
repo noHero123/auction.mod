@@ -65,6 +65,17 @@ namespace Auction.mod
         VersionCheck vc;
         PopupManager pppmngr;
 
+        public static string GetName()
+        {
+            return "auc";
+        }
+
+        public static int GetVersion()
+        {
+            return 12;
+        }
+
+
         public void onConnect(OnConnectData ocd)
         {
         //lol
@@ -395,15 +406,7 @@ namespace Auction.mod
             Console.WriteLine("### not an Auction House loaded in "+(DateTime.Now.Subtract(itze)).TotalMilliseconds + " ms ###");
         }
 
-        public static string GetName()
-        {
-            return "auc";
-        }
-
-        public static int GetVersion()
-        {
-            return 11;
-        }
+        
 
         public static MethodDefinition[] GetHooks(TypeDefinitionCollection scrollsTypes, int version)
         {

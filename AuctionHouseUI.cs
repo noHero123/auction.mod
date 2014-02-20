@@ -177,6 +177,7 @@ namespace Auction.mod
 
         private void drawAHandSearch()
         {
+            
             bool clickableItems = false;
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
             if (helpf.inauchouse)
@@ -727,8 +728,8 @@ namespace Auction.mod
                         TimeSpan ts = temptime.Subtract(current.time);
                         if (this.helpf.playerStoreMenu)
                         {
-                            if (current.message == "sold")
-                            { sellername = current.message; }
+                            if (current.message.Split(';')[5] == "sold")
+                            { sellername = "sold"; }
                             else
                             {
                                 ts = (current.time).Subtract(temptime);
@@ -915,20 +916,7 @@ namespace Auction.mod
                 GUI.EndScrollView();
 
                 // delete old entrys
-                if (helpf.playerStoreMenu)
-                {
-                    if (deleteOldEntrys)
-                    {
-                        ps.removeOldEntrys();
-                    }
-                }
-                else
-                {
-                    if (deleteOldEntrys) 
-                    {
-                        ah.removeOldEntrys(); 
-                    }
-                }
+                
 
                 GUI.color = Color.white;
                 // show clicked card
@@ -960,6 +948,24 @@ namespace Auction.mod
 
 
                 GUI.color = Color.white;
+
+                
+
+                if (helpf.playerStoreMenu)
+                {
+                    if (deleteOldEntrys)
+                    {
+                        ps.removeOldEntrys();
+                    }
+                }
+                else
+                {
+                    if (deleteOldEntrys)
+                    {
+                        ah.removeOldEntrys();
+                    }
+                }
+
 
                 if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType()); }
 
@@ -1229,8 +1235,8 @@ namespace Auction.mod
                         DateTime temptime = DateTime.Now;
                         if (helpf.createAuctionMenu)
                         {
-                            if (current.message == "sold")
-                            { sellername = current.message; }
+                            if (current.message.Split(';')[5] == "sold")
+                            { sellername = "sold"; }
                             else
                             {
                                 TimeSpan ts = temptime.Subtract(current.time);
@@ -1660,14 +1666,18 @@ namespace Auction.mod
                     {
                         helpf.showtradedialog = false;
                         // \pidauc profileid:894cb62d9bca4791bfa77d0659f2c7d8, target:232;20958472;price,
-                        string sendmessage = " \\pidauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", target:" + orgmsg + ",";
-                        WhisperMessage wmsg = new WhisperMessage("auctionmod", sendmessage);
-                        this.sttngs.waitForAuctionBot = true;
-                        this.sttngs.bidgold = price;
-                        this.sttngs.tradeCardID = Convert.ToInt64(orgmsg.Split(';')[1]);
-                        App.Communicator.sendRequest(wmsg);
-                        this.sttngs.waitForAuctionBot = true;
-                        this.sttngs.AucBotMode = "bidauc";
+                        if (orgmsg.Split(';')[5] == "active")
+                        {
+                            string target = orgmsg.Split(';')[0] + ";" + orgmsg.Split(';')[1] + ";" + orgmsg.Split(';')[2] + ";" + orgmsg.Split(';')[3] + ";" + orgmsg.Split(';')[4];
+                            string sendmessage = " \\pidauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", target:" + target + ",";
+                            WhisperMessage wmsg = new WhisperMessage("auctionmod", sendmessage);
+                            this.sttngs.waitForAuctionBot = true;
+                            this.sttngs.bidgold = price;
+                            this.sttngs.tradeCardID = Convert.ToInt64(orgmsg.Split(';')[1]);
+                            App.Communicator.sendRequest(wmsg);
+                            this.sttngs.waitForAuctionBot = true;
+                            this.sttngs.AucBotMode = "bidauc";
+                        }
                     }
 
                 }
