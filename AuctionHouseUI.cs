@@ -324,13 +324,11 @@ namespace Auction.mod
                 }
                 GUI.skin = helpf.cardListPopupSkin;
 
-
-
-                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
-
                 GUI.contentColor = Color.red;
                 bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
+
+                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
 
                 if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };
                 if (orderclick) { srchsvr.orderbool = !srchsvr.orderbool; }

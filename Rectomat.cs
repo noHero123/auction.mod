@@ -449,29 +449,38 @@ namespace Auction.mod
            }
        }
 
-       private static string _append(string s, char add)
+       private static string _append(string s, string add)
        {
            if (s == "Search   ")
            {
                s = string.Empty;
            }
-           s = s.TrimEnd(new char[]
-		{
-			' '
-		});
+           s = s.TrimEnd(new char[]{' '});
            int num = s.LastIndexOf(' ') + 1;
            int num2 = s.LastIndexOf(':');
+
+           if (num2 == s.Length - 1 && (num == num2 - 1 || num == num2 - 2)) 
+           {
+               //cause we have now also commands with len 2
+               return s.Substring(0, num) + add;
+           }
+           /*
            if (num2 == s.Length - 1 && num == num2 - 1)
            {
+               Console.WriteLine("#"+add);
                char[] array = s.ToCharArray();
-               array[num] = add;
+               for (int i = 0; i < add.Length; i++)
+               {
+                   array[num+i] = add[i];
+               }
+               
                return new string(array);
-           }
+           }*/
            return string.Concat(new object[]
 		{
 			s,
 			(!(s == string.Empty)) ? " " : string.Empty,
-			add,
+			add.Substring(0,Math.Max(add.Length-1,0)),
 			":"
 		});
        }
@@ -484,9 +493,15 @@ namespace Auction.mod
 			new GUIContent("   Type"),
 			new GUIContent("   Description"),
 			new GUIContent("   Rarity"),
-            new GUIContent("   # of Scrolls"),
+            new GUIContent("   Count"),
             new GUIContent("   Level"),
-            new GUIContent("   Set")
+            new GUIContent("   Set"),
+            new GUIContent("   Flavor"),
+            new GUIContent("   Cost"),
+            new GUIContent("   Attack"),
+            new GUIContent("   Countdown"),
+            new GUIContent("   Health")
+
             
 		};
            string[] array = new string[]
@@ -496,7 +511,12 @@ namespace Auction.mod
 			"r:",
             "#:",
             "l:",
-            "s:"
+            "s:",
+            "fl:",
+            "c:",
+            "ap:",
+            "cd:",
+            "hp:"
 		};
            int num = DeckBuilder2.OnGUI_drawButtonList(this.pulldownSkin, searchbarRect, true, itemHeight, content, array, out this._searchDropdownBoundingRect);
            return (num < 0) ? null : array[num];
@@ -520,7 +540,7 @@ namespace Auction.mod
                {
                    this._showSearchDropdown = false;
                    this._setFocusState = 2;
-                   srchsvr.wtssearchstring = Rectomat._append(srchsvr.wtssearchstring, text2[0]);
+                   srchsvr.wtssearchstring = Rectomat._append(srchsvr.wtssearchstring, text2);
                }
            }
 

@@ -16,7 +16,7 @@ namespace Auction.mod
         //bool getdata = false;
         int anzWarnings = 2;
         int warnings = 0;
-        string currentversion = "1.0.1.2";// only change this and the  version-file in github 
+        string currentversion = "1.0.2.0";// only change this and the  version-file in github 
         string newestversion = "0.0.0.0";// dont change this
 
 
@@ -88,7 +88,7 @@ namespace Auction.mod
                     Console.WriteLine("##Aucversion:#" + currentversion + "#" + newestversion+"#");
                     if (this.currentversion != this.newestversion)
                     {
-                        RoomChatMessageMessage nrcmm = new RoomChatMessageMessage("[note]", "your Auctionmod is outdated, please visit www.scrollsguide.com/forum and install a new version or check noHeros repository");
+                        RoomChatMessageMessage nrcmm = new RoomChatMessageMessage("[note]", "your Auctionmod is outdated, please visit www.scrollsguide.com/forum and install a new version or check noHeros repository\r\n" + "your version: " + this.currentversion + "\r\n" + "latest version: " + this.newestversion);
                         nrcmm.from = "Version Checker";
                         App.ArenaChat.handleMessage(nrcmm);
                     }

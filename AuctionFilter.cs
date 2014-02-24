@@ -146,12 +146,12 @@ namespace Auction.mod
         #endregion
 
         #region CardFilter
-        CardFilter cardFilter = new CardFilter("");
+        CardFilter cardFilter = CardFilter.from("");
         string cardFilterString = "";
         Predicate<int> f=null;
         public void setCardFilter(string cardFilterString) {
             if (!this.cardFilterString.Equals (cardFilterString)) {
-                cardFilter = new CardFilter (cardFilterString);
+                cardFilter = CardFilter.from(cardFilterString);
                 this.cardFilterString = cardFilterString;
 
                 // amount filter
@@ -196,7 +196,7 @@ namespace Auction.mod
 
         public void resetFilters()
         {
-            cardFilterString = ""; cardFilter = new CardFilter("");
+            cardFilterString = ""; cardFilter = CardFilter.from("");
             ignoredSellersString = ""; ignoredSellers = new List<string>();
             priceUpperBound = -1;
             priceLowerBound = -1;
