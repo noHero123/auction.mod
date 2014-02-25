@@ -162,9 +162,12 @@ namespace Auction.mod
                 ah.setSellSortMode(srchsvr.sortmode);
                 this.drawAHlist(true);
 
-                srchsvr.setsettings(0, false);
-                ah.setBuySortMode(srchsvr.sortmode);
-                this.drawAHlist(false);
+                if (helpf.bothmenue) // could be changed in drawAHlist(true), because there is the menu buttons drawn.
+                {
+                    srchsvr.setsettings(0, false);
+                    ah.setBuySortMode(srchsvr.sortmode);
+                    this.drawAHlist(false);
+                }
 
                 if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message,tradeitem.card.getType()); }
                 return;
