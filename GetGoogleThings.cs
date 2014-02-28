@@ -13,7 +13,8 @@ namespace Auction.mod
         //Database https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDVOVFhUVzN3U3RyVTlGR1FYQ1VqUGc&usp=drive_web#gid=0
         //PostSite 
 
-        public bool workthreadready = true;
+        public volatile bool workthreadready = true;
+        public volatile bool dataisready = false;
         private PlayerStore pstore;
 
         public struct sharedItem
@@ -91,7 +92,7 @@ namespace Auction.mod
                 Console.WriteLine(si.status + " " + si.id);
             }
 
-            addDataToPlayerStore();
+            //addDataToPlayerStore();
         }
 
 
@@ -103,7 +104,7 @@ namespace Auction.mod
             return dtDateTime;
         }
 
-        private void addDataToPlayerStore()
+        public void addDataToPlayerStore()
         {
             this.pstore.removeAllMessages();
             List<Auction> auctionsToAdd = new List<Auction>();
@@ -134,6 +135,7 @@ namespace Auction.mod
             }
             this.pstore.addAuctions(auctionsToAdd);
             this.pstore.removeOldEntrys();
+            this.dataisready = false;
         }
 
 
@@ -145,6 +147,7 @@ namespace Auction.mod
             try
             {
                 this.readJsonfromGoogle(this.getDataFromGoogleDocs());
+                this.dataisready = true;
             }
             catch
             {

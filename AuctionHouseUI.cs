@@ -135,9 +135,20 @@ namespace Auction.mod
         public void drawAH()
         {
 
+            // update playerstore auctions:
+            if (helpf.playerStoreMenu || helpf.createAuctionMenu)
+            {
+                if (this.gglthngs.dataisready)
+                {
+                    this.gglthngs.addDataToPlayerStore();
+                }
+            }
+
+
             if (helpf.offerMenuSelectCardMenu)
             {
                 //this.ccardlist(false);// want to show the sell prices
+                
                 this.drawgenerator();
                 return;
             }
@@ -331,7 +342,15 @@ namespace Auction.mod
                 bool closeclick = GUI.Button(recto.sbclearrect, "X");
                 GUI.contentColor = Color.white;
 
-                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
+                if (this.helpf.playerStoreMenu)
+                {
+                    if (GUI.Button(recto.updateGoogleThings, "Update"))
+                    {
+                        if (this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
+                    }
+                }
+
+                
 
                 if (growthclick) { srchsvr.growthbool = !srchsvr.growthbool; };
                 if (orderclick) { srchsvr.orderbool = !srchsvr.orderbool; }
@@ -499,8 +518,8 @@ namespace Auction.mod
 
                 }
 
-                
 
+                if (recto._showSearchDropdown) recto.OnGUI_drawSearchPulldown(recto.sbrect);// draw pulldown again (for overlay)
             }
             // Draw Auctionhouse here:
             if (helpf.inauchouse)
@@ -637,6 +656,7 @@ namespace Auction.mod
                     anzcards = (float)this.ahlist.Count(delegate(Auction p1) { return (p1.time).CompareTo(currenttime) >= 0; });
                 }
 
+                GUI.skin = helpf.cardListPopupSkin;
                 if (helpf.wtsmenue)
                 {
                     this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
@@ -934,13 +954,7 @@ namespace Auction.mod
                     }
 
                 }
-                if (this.helpf.playerStoreMenu)
-                {
-                    if (GUI.Button(recto.updateGoogleThings, "Update"))
-                    {
-                        if (this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
-                    }
-                }
+                
 
                 drawButtonsBelow();
 
@@ -1154,7 +1168,7 @@ namespace Auction.mod
                     anzcards = (float)this.ahlist.Count(delegate(Auction p1) { return (p1.time).CompareTo(currenttime) >= 0; });
                 }
 
-                
+                GUI.skin = helpf.cardListPopupSkin;
                 if (wtsmenue)
                 {
                     this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
