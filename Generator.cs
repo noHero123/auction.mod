@@ -49,6 +49,14 @@ namespace Auction.mod
         protected List<Auction> buyOwnListFiltered = new List<Auction>();
         protected AuctionHouse.SortMode sortMode = AuctionHouse.SortMode.CARD;
 
+        private void updateCardFilter()
+        {
+            // the own cards have changed, we have to update the CardFilter (because the amountfilter needs our own cards)
+            sellOwnCardsFilter.setCardFilterAmountfilter();
+            buyOwnCardsFilter.setCardFilterAmountfilter();
+            this.helpf.generatorAllCardsChanged = false;
+        }
+
         public void setSellSortMode(int sortint)
         {
             if (sortint == 1) this.sortMode = AuctionHouse.SortMode.CARD;
@@ -58,16 +66,19 @@ namespace Auction.mod
         }
 
         public List<Auction> getOwnBuyOffers() {
+            if (this.helpf.generatorAllCardsChanged) this.updateCardFilter();
             if (buyOwnCardsFilter.filtersChanged)
-            {
+            {  
                 buyOwnListFiltered = new List<Auction> (fullBuyOwnList);
-                buyOwnListFiltered.RemoveAll (buyOwnCardsFilter.isFiltered);
+                buyOwnListFiltered.RemoveAll(buyOwnCardsFilter.isFiltered);
                 buyOwnCardsFilter.filtersChanged = false;
             }
             return buyOwnListFiltered;
         }
         public List<Auction> getOwnSellOffers() {
+            if (this.helpf.generatorAllCardsChanged) this.updateCardFilter();
             if (sellOwnCardsFilter.filtersChanged) {
+
                 sellOwnListFiltered = new List<Auction> (fullSellOwnList);
                 sellOwnListFiltered.RemoveAll(sellOwnCardsFilter.isFiltered);
                 sellOwnCardsFilter.filtersChanged = false;

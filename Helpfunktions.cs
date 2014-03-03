@@ -96,6 +96,12 @@ namespace Auction.mod
 
         public bool nicks = false;
         public List<nickelement> loadedscrollsnicks = new List<nickelement>();
+        // for card-AmountFilters
+        public List<Card> allOwnCards = new List<Card>();
+        public bool playerstoreAllCardsChanged = false;
+        public bool auctionHouseAllCardsChanged = false;
+        public bool generatorAllCardsChanged = false;
+
 
         public void setOwnAucPath(string s)
         {
@@ -243,7 +249,12 @@ namespace Auction.mod
                     this.cardIDToCardNumber.Add(c.typeId, c.id);
                 }
             }
-        }
+            this.allOwnCards.Clear();
+            this.allOwnCards.AddRange(((LibraryViewMessage)msg).cards);
+            this.playerstoreAllCardsChanged = true;
+            this.auctionHouseAllCardsChanged = true;
+            this.generatorAllCardsChanged = true;
+            }
 
         public void setAuctionModCards(Message msg)
         {//set id-cardid dictionary

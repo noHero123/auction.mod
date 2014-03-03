@@ -44,10 +44,18 @@ namespace Auction.mod
         private Settings sttngs;
         private Prices prcs;
 
+        private void updateCardFilter()
+        {
+            // the own cards have changed, we have to update the CardFilter (because the amountfilter needs our own cards)
+            sellOfferFilter.setCardFilterAmountfilter();
+            createCardsFilter.setCardFilterAmountfilter();
+            this.helpf.playerstoreAllCardsChanged = false;
+        }
 
         public List<Auction> getSellOffers()
         {
             newSellOffers = false;
+            if (this.helpf.playerstoreAllCardsChanged) this.updateCardFilter();
             if (sellOfferFilter.filtersChanged || this.sellSortMode != this.sellSortModeCopy)
             {
                 //sellOfferListFiltered = new List<Auction> (fullSellOfferList);
@@ -64,6 +72,7 @@ namespace Auction.mod
 
         public List<Auction> getCreateOffers()
         {
+            if (this.helpf.playerstoreAllCardsChanged) this.updateCardFilter();
             if (createCardsFilter.filtersChanged)
             {
                 //sellOfferListFiltered = new List<Auction> (fullSellOfferList);

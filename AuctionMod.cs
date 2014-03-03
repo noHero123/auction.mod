@@ -72,7 +72,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 15;
+            return 16;
         }
 
 

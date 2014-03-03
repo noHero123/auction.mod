@@ -149,12 +149,26 @@ namespace Auction.mod
         CardFilter cardFilter = CardFilter.from("");
         string cardFilterString = "";
         Predicate<int> f=null;
+        List<int> cardFilterAmountfilter = new List<int>();
+        bool everSetCFAmountFiler = false;
+
+        public void setCardFilterAmountfilter()
+        {
+            cardFilterAmountfilter.Clear();
+            this.everSetCFAmountFiler = true;
+            foreach (Card c in cardFilter.getFiltered(this.helpf.allOwnCards))
+            {
+                if (!cardFilterAmountfilter.Contains(c.getType())) cardFilterAmountfilter.Add(c.getType());
+            }
+        }
+
         public void setCardFilter(string cardFilterString) {
             if (!this.cardFilterString.Equals (cardFilterString)) {
                 cardFilter = CardFilter.from(cardFilterString);
                 this.cardFilterString = cardFilterString;
-
+                this.setCardFilterAmountfilter();
                 // amount filter
+                /*
                 string s = (!(this.cardFilterString == "Search   ")) ? this.cardFilterString : string.Empty;
                 string[] array = CardFilter.SplitPairs(s);
                 string[] array2 = array;
@@ -169,16 +183,17 @@ namespace Auction.mod
                         this.f = CardFilter.CreateComparer(countString);
                         break;
                     }
-                }
-
-
+                }*/
 
                 filtersChanged = true;
             }
         }
 
         private bool isFilteredByCardFilter(Auction a) {
-            return !cardFilter.isIncluded (a.card);
+            if (this.everSetCFAmountFiler) return !cardFilterAmountfilter.Contains(a.card.getType());
+            return !cardFilter.isIncluded(a.card);
+
+            
         }
 
         private bool isFilteredByTypeCount(Auction a)

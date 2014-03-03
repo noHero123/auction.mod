@@ -155,8 +155,14 @@ this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, w
             Auction.OfferType currentOfferType = Auction.OfferType.BUY; //Will be overwritten
             //string[] words=msg.Split(' ');
             List<Auction> addingAuctions = new List<Auction>();
-            char[] delimiters = new char[] { '\r', '\n', ' ', ',', ';' };
-            string[] words = msg.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            List<char> delimiters = new List<char>();
+            //{ '\r', '\n', ' ', ',', ';' };
+            foreach (char a in msg)
+            {
+                if (!char.IsLetterOrDigit(a)) delimiters.Add(a);
+            }
+            string[] words = msg.Split(delimiters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            
             //words = Regex.Split(msg, @"");
 
             if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return addingAuctions;

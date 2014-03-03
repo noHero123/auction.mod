@@ -54,8 +54,16 @@ namespace Auction.mod
         /// <value><c>true</c> if new buy offers where added; otherwise, <c>false</c>.</value>
         public bool newBuyOffers { get; private set;}
 
+        private void updateCardFilter()
+        {  // the own cards have changed, we have to update the CardFilter (because the amountfilter needs our own cards)
+            sellOfferFilter.setCardFilterAmountfilter();
+            buyOfferFilter.setCardFilterAmountfilter();
+            this.helpf.auctionHouseAllCardsChanged = false;
+        }
+
         public List<Auction> getBuyOffers() {
             newBuyOffers = false;
+            if (this.helpf.auctionHouseAllCardsChanged) this.updateCardFilter();
             if (buyOfferFilter.filtersChanged || this.buySortMode != this.buySortModeCopy)
             {
                 buyOfferListFiltered = new List<Auction> (fullBuyOfferList);// is even refiltered if sortmode changed, so order issnt changed at sort-change
@@ -73,6 +81,7 @@ namespace Auction.mod
         public List<Auction> getSellOffers()
         {
             newSellOffers = false;
+            if (this.helpf.auctionHouseAllCardsChanged) this.updateCardFilter();
             if (sellOfferFilter.filtersChanged||this.sellSortMode != this.sellSortModeCopy) 
             {
                 //sellOfferListFiltered = new List<Auction> (fullSellOfferList);
