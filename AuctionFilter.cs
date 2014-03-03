@@ -212,6 +212,7 @@ namespace Auction.mod
         public void resetFilters()
         {
             cardFilterString = ""; cardFilter = CardFilter.from("");
+            this.setCardFilterAmountfilter();
             ignoredSellersString = ""; ignoredSellers = new List<string>();
             priceUpperBound = -1;
             priceLowerBound = -1;
