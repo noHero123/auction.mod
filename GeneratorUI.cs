@@ -355,6 +355,43 @@ namespace Auction.mod
                 GUI.color = Color.white;
 
 
+                if (GUI.Button(recto.sbclrearpricesbutton, "clear unfiltered"))
+                {
+                    List<int> cleartargets = new List<int>();
+                    // fill cleartargets with all card-types.
+                    foreach (KeyValuePair<int, string> kvp in prcs.wtspricelist1) // could use any list which contains all  types
+                    {
+                        cleartargets.Add(kvp.Key);
+                    }
+                    if (helpf.wtsmenue)
+                    {
+                        foreach (Auction a in this.generator.getOwnSellOffers())
+                        {
+                            cleartargets.Remove(a.card.getType());
+                        }
+                        //delete prices of nonfiltered
+                        foreach (int i in cleartargets)
+                        {
+                            prcs.wtspricelist1[i] = "";
+                        }
+                    }
+                    else 
+                    {
+                        foreach (Auction a in this.generator.getOwnBuyOffers())
+                        {
+                            cleartargets.Remove(a.card.getType());
+                        }
+                        //delete prices of nonfiltered
+                        foreach (int i in cleartargets)
+                        {
+
+                            prcs.wtbpricelist1[i] = "";
+
+                        }
+                    }
+
+                }
+
 
                 if (helpf.wtsmenue)
                 {
