@@ -65,6 +65,7 @@ namespace Auction.mod
         VersionCheck vc;
         PopupManager pppmngr;
 
+
         public static string GetName()
         {
             return "auc";
@@ -72,7 +73,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 18;
+            return 20;
         }
 
 
@@ -89,6 +90,7 @@ namespace Auction.mod
             {
                 generator.setallavailablecards(msg);
                 mssgprsr.searchscrollsnicks.AddRange(helpf.loadedscrollsnicks);
+                
             }
 
             if (msg is LibraryViewMessage)

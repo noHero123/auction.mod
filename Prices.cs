@@ -44,6 +44,8 @@ namespace Auction.mod
         //public int takewtbgenint = 0;
         public Dictionary<int, string> wtspricelist1 = new Dictionary<int, string>();
         public Dictionary<int, string> wtbpricelist1 = new Dictionary<int, string>();
+        public Dictionary<int, string> wtspricelist2 = new Dictionary<int, string>();
+        public Dictionary<int, string> wtbpricelist2 = new Dictionary<int, string>();
         Helpfunktions helpf;
         Settings sttngs;
 

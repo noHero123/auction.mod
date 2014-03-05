@@ -429,23 +429,25 @@ namespace Auction.mod
 
 
                         string textel = System.IO.File.ReadAllText(helpf.ownaucpath + "wtsauc.txt");
-
-                        string secmsg = (textel.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
-                        string[] words = secmsg.Split(';');
-                        foreach (string w in words)
+                        if (textel.Contains("aucs "))
                         {
-                            if (w == "" || w == " ") continue;
-
-                            foreach (string ww in (w.Split(' ')[0]).Split(','))
+                            string secmsg = (textel.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
+                            string[] words = secmsg.Split(';');
+                            foreach (string w in words)
                             {
-                                if (ww == "" || ww == " ") continue;
+                                if (w == "" || w == " ") continue;
+
+                                foreach (string ww in (w.Split(' ')[0]).Split(','))
+                                {
+                                    if (ww == "" || ww == " ") continue;
+                                    //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                    prcs.wtspricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                                }
                                 //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                                prcs.wtspricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                                //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                             }
-                            //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                            generatewtxmsg(generator.getAllOwnSellOffers());
                         }
-                        generatewtxmsg(generator.getAllOwnSellOffers());
 
 
                     }
@@ -463,28 +465,31 @@ namespace Auction.mod
 
                         }
                         string textel = System.IO.File.ReadAllText(helpf.ownaucpath + "wtbauc.txt");
-                        string secmsg = (textel.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
-                        string[] words = secmsg.Split(';');
-                        foreach (string w in words)
+                        if (textel.Contains("aucb "))
                         {
-                            if (w == "" || w == " ") continue;
-
-                            foreach (string ww in (w.Split(' ')[0]).Split(','))
+                            string secmsg = (textel.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
+                            string[] words = secmsg.Split(';');
+                            foreach (string w in words)
                             {
-                                if (ww == "" || ww == " ") continue;
+                                if (w == "" || w == " ") continue;
+
+                                foreach (string ww in (w.Split(' ')[0]).Split(','))
+                                {
+                                    if (ww == "" || ww == " ") continue;
+                                    //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                                    prcs.wtbpricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                                }
                                 //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                                prcs.wtbpricelist1[Convert.ToInt32(ww)] = w.Split(' ')[1];
+                                //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
                             }
-                            //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                            //prcs.wtspricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                            //foreach (string w in words)
+                            //{
+                            //    if (w == "" || w == " ") continue;
+                            //    //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
+                            //    prcs.wtbpricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
+                            //}
+                            generatewtxmsg(generator.getAllOwnBuyOffers());
                         }
-                        //foreach (string w in words)
-                        //{
-                        //    if (w == "" || w == " ") continue;
-                        //    //string cardname = helpf.cardnames[Array.FindIndex(helpf.cardids, element => element == Convert.ToInt32(w.Split(' ')[0]))];
-                        //    prcs.wtbpricelist1[Convert.ToInt32(w.Split(' ')[0])] = w.Split(' ')[1];
-                        //}
-                        generatewtxmsg(generator.getAllOwnBuyOffers());
                     }
                 }
                 GUI.color = Color.white;
@@ -493,7 +498,7 @@ namespace Auction.mod
                 if (helpf.wtsmenue)
                 {
                     if (srchsvr.generatedwtsmessage == "") GUI.color = dblack;
-                    if (GUI.Button(recto.sbsavebutton, "save WTS msg"))
+                    if (GUI.Button(recto.sbsavebutton, "save WTS msg") && srchsvr.generatedwtsmessage != "")
                     {
                         helpf.showtradedialog = true;
 
@@ -504,7 +509,7 @@ namespace Auction.mod
                 else
                 {
                     if (srchsvr.generatedwtbmessage == "") GUI.color = dblack;
-                    if (GUI.Button(recto.sbsavebutton, "save WTB msg"))
+                    if (GUI.Button(recto.sbsavebutton, "save WTB msg") && srchsvr.generatedwtbmessage != "")
                     {
                         helpf.showtradedialog = true;
 
@@ -901,8 +906,15 @@ namespace Auction.mod
 
                 if (msg.Length + ai.card.getName().Length + 1 + ai.price.ToString().Length > 506)// check if the element and the price still fits in the chat-message
                 {
-                    if (priceToAdd > 0) { msg = msg.Substring(0,msg.Length-2)+ " " + ai.price + "g;"; }
-                    if (priceToAdd == 0) { msg = msg.Substring(0, msg.Length - 2) + ";"; }
+                    if (priceToAdd > 0)
+                    { 
+                        msg = msg.Substring(0,msg.Length-2)+ " " + ai.price + "g;";
+                        shortmsg = shortmsg.Substring(0, shortmsg.Length - 1) + " " + ai.price + ";";
+                    }
+                    if (priceToAdd == 0) {
+                        msg = msg.Substring(0, msg.Length - 2) + ";";
+                        shortmsg = shortmsg.Substring(0, shortmsg.Length - 1) +";";
+                    }
                     messageWouldBeTooLong = true;
                     break;
                 }
