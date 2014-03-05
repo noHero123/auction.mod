@@ -239,6 +239,7 @@ namespace Auction.mod
 
         }
 
+
         public void setOwnCards(Message msg)
         {//set id-cardid dictionary
             this.cardIDToCardNumber.Clear();
@@ -249,8 +250,10 @@ namespace Auction.mod
                     this.cardIDToCardNumber.Add(c.typeId, c.id);
                 }
             }
+
             this.allOwnCards.Clear();
             this.allOwnCards.AddRange(((LibraryViewMessage)msg).cards);
+
             this.playerstoreAllCardsChanged = true;
             this.auctionHouseAllCardsChanged = true;
             this.generatorAllCardsChanged = true;

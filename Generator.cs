@@ -121,12 +121,11 @@ namespace Auction.mod
 
             this.fullSellOwnList.Sort(delegate(Auction p1, Auction p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
 
-            prcs.wtspricelist1.Clear();
-            for (int i = 0; i < fullSellOwnList.Count; i++)
-            {
-                prcs.wtspricelist1.Add(fullSellOwnList[i].card.getType(), "");
-
-            }
+            //prcs.wtspricelist1.Clear();
+            //for (int i = 0; i < fullSellOwnList.Count; i++)
+            //{
+            //    prcs.wtspricelist1.Add(fullSellOwnList[i].card.getType(), "");
+            //}
 
             this.sellOwnCardsFilter.filtersChanged = true;
         
@@ -142,10 +141,12 @@ namespace Auction.mod
             if (helpf.nicks) helpf.readnicksfromfile();
             mssgprsr.searchscrollsnicks.Clear();
             prcs.wtbpricelist1.Clear();
+            prcs.wtspricelist1.Clear();
             this.fullBuyOwnList.Clear();
             Console.WriteLine("add cards to fullbuyownList");
             for (int j = 0; j < helpf.cardnames.Length; j++)
             {
+                prcs.wtspricelist1.Add(helpf.cardids[j], "");
                 prcs.wtbpricelist1.Add(helpf.cardids[j], "");
                 CardType type = CardTypeManager.getInstance().get(helpf.cardids[j]);
                 Card card = new Card(helpf.cardids[j], type, true);

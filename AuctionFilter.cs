@@ -190,7 +190,7 @@ namespace Auction.mod
         }
 
         private bool isFilteredByCardFilter(Auction a) {
-            if (this.everSetCFAmountFiler) return !cardFilterAmountfilter.Contains(a.card.getType());
+            if (this.everSetCFAmountFiler && cardFilterString.Contains("#:")) return !cardFilterAmountfilter.Contains(a.card.getType());
             return !cardFilter.isIncluded(a.card);
 
             
