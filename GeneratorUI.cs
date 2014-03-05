@@ -355,7 +355,7 @@ namespace Auction.mod
                 GUI.color = Color.white;
 
 
-                if (GUI.Button(recto.sbclrearpricesbutton, "clear unfiltered"))
+                if (GUI.Button(recto.sbclrearpricesbutton, "clear filtered"))
                 {
                     List<int> cleartargets = new List<int>();
                     // fill cleartargets with all card-types.
