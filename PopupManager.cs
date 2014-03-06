@@ -8,6 +8,26 @@ namespace Auction.mod
     class PopupManager : IOkCallback
     {
 
+
+        private static PopupManager instance;
+
+        public static PopupManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new PopupManager();
+                }
+                return instance;
+            }
+        }
+
+        private PopupManager()
+        {
+ 
+        }
+
         public void startOKPopup(string popptype,string headerstring,string descriptionstring)
         {
             App.Popups.ShowOk(this, popptype, headerstring, descriptionstring, "OK");

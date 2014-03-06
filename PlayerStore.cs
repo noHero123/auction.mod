@@ -35,6 +35,9 @@ namespace Auction.mod
         Helpfunktions helpf;
         public AuctionFilter sellOfferFilter;
         public AuctionFilter createCardsFilter;
+
+        protected List<Auction> addAuctionList = new List<Auction>();
+
         protected List<Auction> fullSellOfferList = new List<Auction>();
         protected List<Auction> sellOfferListFiltered = new List<Auction>();
         protected List<Auction> createOfferListFiltered = new List<Auction>();
@@ -50,6 +53,21 @@ namespace Auction.mod
             sellOfferFilter.setCardFilterAmountfilter();
             createCardsFilter.setCardFilterAmountfilter();
             this.helpf.playerstoreAllCardsChanged = false;
+        }
+
+        public void clearAuctions()
+        {
+            this.addAuctionList.Clear();
+        }
+
+        public void addOffer(Auction a)
+        {
+            this.addAuctionList.Add(a);
+        }
+
+        public List<Auction> getAddOffers()
+        {
+            return new List<Auction>(addAuctionList);
         }
 
         public List<Auction> getSellOffers()

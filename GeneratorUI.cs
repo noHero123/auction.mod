@@ -412,6 +412,31 @@ namespace Auction.mod
                     }
                 }
 
+                /*if (helpf.wtsmenue) // want to setup an auction???
+                {
+                    if (GUI.Button(recto.sbcreateauctionbutton, "create Auction"))
+                    {
+                        string genAucMessage = " \\msetauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", duration:24h, data:";
+                        string tradedata="";
+                        for (int i = 0; i < prcs.wtspricelist1.Count; i++)
+                        {
+                            KeyValuePair<int, string> item = prcs.wtspricelist1.ElementAt(i);
+                            if(item.Value != "" || item.Value!="0")
+                            {
+                                string temp =  genAucMessage + tradedata + item.Key + ":" + item.Value+",";
+                                if (temp.Length > 506) break;
+                                if (tradedata != "") tradedata = tradedata + ";";
+                                tradedata = tradedata + item.Key + ":" + item.Value; 
+                            }
+                            tradedata = tradedata +",";
+
+                            string sendmessage = genAucMessage + tradedata;
+                        }
+
+                    }
+                }*/
+
+
                 // draw message save/load buttons
                 GUI.color = Color.white;
                 if (helpf.wtsmenue)

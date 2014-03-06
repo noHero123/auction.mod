@@ -10,12 +10,10 @@ namespace Auction.mod
 {
     public class GetGoogleThings
     {
-        //Database https://docs.google.com/spreadsheet/ccc?key=0AhhxijYPL-BGdDVOVFhUVzN3U3RyVTlGR1FYQ1VqUGc&usp=drive_web#gid=0
-        //PostSite 
-
         public volatile bool workthreadready = true;
         public volatile bool dataisready = false;
         private PlayerStore pstore;
+        private TradingWithBots twb;
 
         public struct sharedItem
         {
@@ -27,15 +25,31 @@ namespace Auction.mod
 
         public List<sharedItem> pStoreItems = new List<sharedItem>();
 
-        public GetGoogleThings()
+
+        private static GetGoogleThings instance;
+
+        public static GetGoogleThings Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GetGoogleThings();
+                }
+                return instance;
+            }
+        }
+
+        private GetGoogleThings()
         {
             this.pstore = PlayerStore.Instance;
+            this.twb = TradingWithBots.Instance;
         }
 
         public string getDataFromGoogleDocs()
         {
             WebRequest myWebRequest;
-            myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/0AhhxijYPL-BGdHBDYzRLcDhFU2FJZkVEaWNFREdaLUE/od6/public/values?alt=json");
+            myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/"+ this.twb.spreadsheet +"/od6/public/values?alt=json");
             System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
@@ -95,6 +109,11 @@ namespace Auction.mod
             //addDataToPlayerStore();
         }
 
+
+        public int DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (int)(dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+        }
 
         public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {

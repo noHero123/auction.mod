@@ -23,9 +23,9 @@ namespace Auction.mod
        public float goldlength;
         //filterrects
        public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
-       public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2;
+       public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2, sbcreateauctionbutton;
        public Rect sbonlywithpricebox, sbonlywithpricelabelbox,  sbtpfgen, sbtpfgenlabel, tboffer;
-       public Rect tbpriceinput, tbororand, tbcard,tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll;
+       public Rect tbpriceinput, tbororand, tbcard,tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll, tbadd;
        public Rect sbclrearpricesbutton, sbnetworklabel, sbtimelabel, sbtimerect, getOwnStuffButton;
        public Rect crtpriceinput, crtororand, crtmessage, crtcard, crtduration, crtdurationInput, updateGoogleThings;
        public Rect headlinerect, footlinerect;
@@ -185,7 +185,7 @@ namespace Auction.mod
             this.sbgeneratebutton = new Rect(sbarlabelrect.x, sbclearrect.y - 4 - texthight, sbclearrect.x - sbarlabelrect.x - num2, texthight);
             this.sbloadbutton = new Rect(sbarlabelrect.x, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2 - 4f) / 2f, texthight);
             this.sbsavebutton = new Rect(sbloadbutton.xMax + 4, sbgeneratebutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2 - 4f) / 2f, texthight);
-
+            this.sbcreateauctionbutton = new Rect(sbarlabelrect.x, sbloadbutton.y - 4 - texthight, (sbclearrect.x - sbarlabelrect.x - num2 - 4f) / 2f, texthight);
 
             GUI.skin = cardListPopupSkin;
             float smalltexthight = GUI.skin.label.CalcHeight(new GUIContent("Jg"), 1000);
@@ -283,6 +283,10 @@ namespace Auction.mod
            this.crtpriceinput = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtororand.yMax, goldlength, texthight);
            this.crtduration = new Rect((this.innerRect.x + this.innerRect.xMax - 2f*goldlength) / 2f, this.crtpriceinput.yMax, 2f*goldlength, texthight);
            this.crtdurationInput = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtduration.yMax, goldlength, texthight);
+
+
+           this.tbadd = new Rect(screenRect.xMax - (float)Screen.width * 0.15f + (float)Screen.height * 0.05f, tradingbox.yMax - (float)Screen.height * 0.05f, (float)Screen.width * 0.15f - 2 * (float)Screen.height * 0.05f, (float)Screen.height * 0.05f - 2f);
+            
 
            calcguirects();
        }

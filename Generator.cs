@@ -108,7 +108,7 @@ namespace Auction.mod
 
             foreach (Card c in orgicardsPlayer)
             {
-                if (c.tradable && !(checklist.Contains(helpf.cardidsToCardnames[c.getType()])))
+                if (c.tradable && c.level==0 && !(checklist.Contains(helpf.cardidsToCardnames[c.getType()]))) // no tier-scrolls
                 {
                     Auction ai = new Auction(App.MyProfile.ProfileInfo.name,DateTime.Now,Auction.OfferType.SELL,c,"");
                     this.fullSellOwnList.Add(ai);

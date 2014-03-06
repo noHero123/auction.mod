@@ -11,9 +11,10 @@ namespace Auction.mod
 {
     class AuctionHouseUI : IOkCancelCallback
     {
+        TradingWithBots twb;
+
         GetGoogleThings gglthngs;
         PlayerStore ps;
-        public string createdAuctionText="";
         private int durationIndex = 0;
 
         Vector2 scrolll = new Vector2(0, 0);
@@ -67,7 +68,8 @@ namespace Auction.mod
             this.sttngs = Settings.Instance;
             this.ah = AuctionHouse.Instance;
             this.ps = PlayerStore.Instance;
-            this.gglthngs = new GetGoogleThings();
+            this.gglthngs = GetGoogleThings.Instance;
+            this.twb = TradingWithBots.Instance;
         }
 
         public void ahbuttonpressed()
@@ -667,7 +669,8 @@ namespace Auction.mod
                 }
 
                 //this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
-                if (srchsvr.reverse) { this.ahlist.Reverse(); }
+                if (srchsvr.reverse || (this.helpf.playerStoreMenu && this.srchsvr.sortmode==0)) { this.ahlist.Reverse(); }
+
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
 
@@ -1134,7 +1137,14 @@ namespace Auction.mod
                     GUI.Box(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "");
                     GUI.skin = helpf.cardListPopupBigLabelSkin;
                     GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-                    GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "own auctions");
+                    if (this.helpf.addmode)
+                    {
+                        GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "auctions you want to create");
+                    }
+                    else
+                    {
+                        GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "own auctions");
+                    }
                     GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                 }
 
@@ -1145,7 +1155,14 @@ namespace Auction.mod
                 // set drawn cards
                 if (helpf.createAuctionMenu)
                 {
-                    this.ahlist = this.ps.getOwnOffers();
+                    if (this.helpf.addmode)
+                    {
+                        this.ahlist = this.ps.getAddOffers();
+                    }
+                    else
+                    {
+                        this.ahlist = this.ps.getOwnOffers();
+                    }
                 }
                 else
                 {
@@ -1160,14 +1177,14 @@ namespace Auction.mod
                 //timefilter: 
                 int time = 0;
                 bool usetimefilter = false;
-                float anzcards = anzcards = (float)this.ahlist.Count();
+                float anzcards  = (float)this.ahlist.Count();
                 if (srchsvr.timesearchstring != "")//doesnt show "old" offers filtered by time-filter
                 {
                     time = Convert.ToInt32(srchsvr.timesearchstring);
                     currenttime = DateTime.Now.AddMinutes(-1 * time); usetimefilter = true;
                     anzcards = (float)this.ahlist.Count(delegate(Auction p1) { return (p1.time).CompareTo(currenttime) >= 0; });
                 }
-
+                
                 GUI.skin = helpf.cardListPopupSkin;
                 if (wtsmenue)
                 {
@@ -1177,11 +1194,12 @@ namespace Auction.mod
                 {
                     this.scrollPos2 = GUI.BeginScrollView(recto.position3, this.scrollPos2, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 }
-                if (srchsvr.reverse) { this.ahlist.Reverse(); }
+                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.srchsvr.sortmode == 0)) { this.ahlist.Reverse(); }
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
                 float testy = this.scrollPos.y;
                 if (!wtsmenue) testy = this.scrollPos2.y;
+
                 foreach (Auction current in this.ahlist)
                 {
                     if (usetimefilter && (current.time).CompareTo(currenttime) < 0) { continue; }
@@ -1435,7 +1453,7 @@ namespace Auction.mod
                 }
 
                 GUI.EndScrollView();
-
+                
                 // delete old entrys
                 if (deleteOldEntrys) { ah.removeOldEntrys(); };
 
@@ -1465,23 +1483,33 @@ namespace Auction.mod
 
                 if (!wtsmenue && helpf.createAuctionMenu)
                 {
-
-                    if (GUI.Button(recto.updateGoogleThings, "Update"))
+                    if (helpf.addmode)
                     {
-                        if (this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
+                        if (GUI.Button(recto.updateGoogleThings, "Clear"))
+                        {
+                            this.ps.clearAuctions();
+                            helpf.addmode = false;
+                        }
                     }
-
-                    // draw button for getting cards here!
-                    if (GUI.Button(recto.getOwnStuffButton, "GetStuff") && this.sttngs.waitForAuctionBot==false && this.sttngs.actualTrading==false)
+                    else
                     {
-                        string sendmessage = " \\getauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ",";
-                        WhisperMessage wmsg = new WhisperMessage("auctionmod", sendmessage);
-                        this.sttngs.waitForAuctionBot = true;
-                        this.sttngs.tradeCardID = 0;
-                        this.sttngs.waitForAuctionBot = true;
-                        App.Communicator.sendRequest(wmsg);
-                        this.sttngs.AucBotMode = "getauc";
+                        if (GUI.Button(recto.updateGoogleThings, "Update"))
+                        {
+                            if (this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
+                        }
 
+                        // draw button for getting cards here!
+                        if (GUI.Button(recto.getOwnStuffButton, "GetStuff") && this.sttngs.waitForAuctionBot == false && this.sttngs.actualTrading == false)
+                        {
+                            string sendmessage = " \\getauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ",";
+                            WhisperMessage wmsg = new WhisperMessage(this.twb.botname, sendmessage);
+                            this.sttngs.waitForAuctionBot = true;
+                            this.sttngs.tradeCardID = 0;
+                            this.sttngs.waitForAuctionBot = true;
+                            App.Communicator.sendRequest(wmsg);
+                            this.sttngs.AucBotMode = "getauc";
+
+                        }
                     }
                 }
 
@@ -1608,28 +1636,91 @@ namespace Auction.mod
 
             }
 
+            if (GUI.Button(recto.tbadd, "+"))
+            {
+                this.helpf.addmode = true;
+                bool offeredCardInYouPossesion = false;
+                Auction add = null;
+                foreach (Auction a in Generator.Instance.getAllOwnSellOffers())
+                {
+                    if (a.card.getType() == this.OfferCard.getType())
+                    {
+                        bool nextone = false;
+                        foreach (Auction aa in this.ps.getAddOffers())
+                        {
+                            if (a.card.id == aa.card.id) { nextone = true; break; }
+                        }
+                        if (nextone) continue;
+                        add = a;
+                        offeredCardInYouPossesion = true; 
+                        break; 
+                    }
+                }
+                if (offeredCardInYouPossesion && this.OfferCard != null && this.OfferPrice != "0")
+                {
+                    int duration = 12;
+                    if (this.durationIndex == 1) duration = 24;
+                    if (this.durationIndex == 2) duration = 48;
+                    if (this.durationIndex == 3) duration = 60;
+                    if (this.durationIndex == 4) duration = 72;
 
+                    // final test if the generated message may be to long to post:
+
+                    string genAucMessage = " \\msetauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", duration:"+duration+"h, data:";
+                    string tradedata = "";
+                    foreach (Auction a in this.ps.getAddOffers())
+                    {
+                            if (tradedata != "") tradedata = tradedata + ";";
+                            tradedata = tradedata + a.card.getType() + ":" + a.price +":"+ a.message.Split(';')[4];
+                        
+
+                       
+                    }
+                    // add the new data to the testmessage
+                    if (tradedata != "") tradedata = tradedata + ";";
+                    tradedata = tradedata + this.OfferCard.getType() + ":" + this.OfferPrice;
+                    tradedata = tradedata + ",";
+                    string sendmessage = genAucMessage + tradedata;
+                    if (sendmessage.Length <= 506)
+                    {
+                        string id = this.OfferCard.getType() + ";" + this.OfferCard.getId() + ";" + add + ";" + App.MyProfile.ProfileInfo.id + ";" + duration + ";active";
+                        Auction au = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now.AddHours((double)duration), Auction.OfferType.SELL, this.OfferCard, id, Convert.ToInt32(this.OfferPrice));
+                        this.ps.addOffer(au);
+                    }
+                }
+     
+
+            }
 
             if (GUI.Button(recto.tbok, "OK"))
             {
-                bool offeredCardInYouPossesion=false;
-                foreach(Auction a in Generator.Instance.getAllOwnSellOffers())
+                if (helpf.addmode)
                 {
-                    if(a.card == this.OfferCard){offeredCardInYouPossesion=true; break;}
+                    this.helpf.createdAuctionText = "all the stuff on the right side=>";
+
+                    App.Popups.ShowOkCancel(this, "wantToCreateMultiAuction", "You are sure?", "You really want to create these Auctions?\r\n" + this.helpf.createdAuctionText, "OK", "Cancel");
                 }
-                if (offeredCardInYouPossesion && this.OfferCard != null && this.OfferPrice!="0")
+                else
                 {
-                    string duration = "12";
-                    if (this.durationIndex == 1) duration = "24";
-                    if (this.durationIndex == 2) duration = "48";
-                    if (this.durationIndex == 3) duration = "60";
-                    if (this.durationIndex == 4) duration = "72";
-                    this.createdAuctionText = "Wts " + cname + " for " + this.OfferPrice + "g.\r\nThe auction ends in " + duration + "hours";
-                    this.sttngs.tradeCardID = cardid;
-                    //this.OfferPrice = "0"; this.OfferCard = null;
+                    bool offeredCardInYouPossesion = false;
+                    foreach (Auction a in Generator.Instance.getAllOwnSellOffers())
+                    {
+                        if (a.card == this.OfferCard) { offeredCardInYouPossesion = true; break; }
+                    }
+                    if (offeredCardInYouPossesion && this.OfferCard != null && this.OfferPrice != "0")
+                    {
+                        string duration = "12";
+                        if (this.durationIndex == 1) duration = "24";
+                        if (this.durationIndex == 2) duration = "48";
+                        if (this.durationIndex == 3) duration = "60";
+                        if (this.durationIndex == 4) duration = "72";
+                        this.helpf.createdAuctionText = "Wts " + cname + " for " + this.OfferPrice + "g.\r\nThe auction ends in " + duration + "hours";
+                        this.sttngs.tradeCardID = cardid;
+                        //this.OfferPrice = "0"; this.OfferCard = null;
 
-                    App.Popups.ShowOkCancel(this, "wantToCreateAuction", "You are sure?", "You really want to create the following Auction?\r\n" + this.createdAuctionText, "OK", "Cancel");
+                        App.Popups.ShowOkCancel(this, "wantToCreateAuction", "You are sure?", "You really want to create the following Auction?\r\n" + this.helpf.createdAuctionText, "OK", "Cancel");
 
+                    }
                 }
             }
             
@@ -1685,7 +1776,7 @@ namespace Auction.mod
                         {
                             string target = orgmsg.Split(';')[0] + ";" + orgmsg.Split(';')[1] + ";" + orgmsg.Split(';')[2] + ";" + orgmsg.Split(';')[3] + ";" + orgmsg.Split(';')[4];
                             string sendmessage = " \\pidauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", target:" + target + ",";
-                            WhisperMessage wmsg = new WhisperMessage("auctionmod", sendmessage);
+                            WhisperMessage wmsg = new WhisperMessage(this.twb.botname, sendmessage);
                             this.sttngs.waitForAuctionBot = true;
                             this.sttngs.bidgold = price;
                             this.sttngs.tradeCardID = Convert.ToInt64(orgmsg.Split(';')[1]);
@@ -2322,13 +2413,38 @@ namespace Auction.mod
                 string cname = ""; int cid = 0; long cardid = 0;
                 cname = OfferCard.getName(); cid = OfferCard.getType(); cardid = OfferCard.getId();
                 string sendmessage = " \\setauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", cardid:" + cardid + ", cardtype:" + cid + ", price:" + this.OfferPrice + ", duration:" + duration + "h" + ",";
-                WhisperMessage wmsg = new WhisperMessage("auctionmod", sendmessage);
+                WhisperMessage wmsg = new WhisperMessage(this.twb.botname, sendmessage);
                 this.sttngs.waitForAuctionBot = true;
                 
                 this.sttngs.waitForAuctionBot = true;
                 App.Communicator.sendRequest(wmsg);
                 this.sttngs.AucBotMode = "setauc";
             }
+
+            if (popupType == "wantToCreateMultiAuction")
+            {
+                string genAucMessage = " \\msetauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", data:";
+                string tradedata = "";
+                this.helpf.cardsForTradeIds.Clear();
+                foreach (Auction a in this.ps.getAddOffers())
+                {
+                    if (tradedata != "") tradedata = tradedata + ";";
+                    tradedata = tradedata + a.card.getType() + ":" + a.price + ":" +a.message.Split(';')[4];
+
+                    this.helpf.cardsForTradeIds.Add(a.card.id);
+
+                }
+
+                string sendmessage = genAucMessage + tradedata+",";
+                Console.WriteLine("#sendmessage: " + sendmessage);
+                WhisperMessage wmsg = new WhisperMessage(this.twb.botname, sendmessage);
+                this.sttngs.waitForAuctionBot = true;
+                
+                this.sttngs.waitForAuctionBot = true;
+                App.Communicator.sendRequest(wmsg);
+                this.sttngs.AucBotMode = "multisetauc";
+            }
+            
         }
 
         public void PopupCancel(string popupType)

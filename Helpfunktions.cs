@@ -49,10 +49,15 @@ namespace Auction.mod
         public FieldInfo showSellinfo;
 
 
+        public List<long> cardsForTradeIds = new List<long>();
         public bool createAuctionMenu = false; // true if the Create-Auction menu is shown
         public bool playerStoreMenu = false; // true if the playerStore menu is shown
         public bool wtsmenue = false;
         public bool bothmenue = false;
+
+
+        public bool addmode = false;
+        public string createdAuctionText = "";
 
         public bool chatisshown = false;
         public bool canLoadWTSmsg = false;
