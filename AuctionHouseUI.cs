@@ -2268,6 +2268,12 @@ namespace Auction.mod
                 GUI.Label(recto.footlinerect,"Select a Scroll you want to sell!");
                 GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
+                if (GUI.Button(recto.updatebuttonrect, "Close"))
+                {
+                    helpf.offerMenuSelectCardMenu = false;
+                    recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin); 
+                }
+
                 if (card != null)
                 {
                     //this.callback.ItemButtonClicked(this, card);
