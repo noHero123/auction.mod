@@ -49,8 +49,8 @@ namespace Auction.mod
         public string getDataFromGoogleDocs()
         {
             WebRequest myWebRequest;
-            myWebRequest = WebRequest.Create("https://spreadsheets.google.com/feeds/list/"+ this.twb.spreadsheet +"/od6/public/values?alt=json");
-            System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
+            myWebRequest = WebRequest.Create("http://spreadsheets.google.com/feeds/list/"+ this.twb.spreadsheet +"/od6/public/values?alt=json");
+            //System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
             System.IO.Stream stream = myWebResponse.GetResponseStream();
@@ -138,17 +138,20 @@ namespace Auction.mod
                 }
                  */
                 DateTime d = UnixTimeStampToDateTime(Convert.ToInt32(si.id.Split(';')[4]));
-                
+                int level = 0;
+                if (si.id.Split(';').Length == 6) level = Convert.ToInt32(si.id.Split(';')[5]);
                 int id=Convert.ToInt32(si.id.Split(';')[0]);
                 int price=Convert.ToInt32(si.id.Split(';')[2]);
                 CardType type = CardTypeManager.getInstance().get(id);
                 Card card = new Card(id, type, true);
+                card.level = level;
                 string text = si.id;
                 if (si.status == "SOLD" || si.status == "BUY")
                 {
-                    text = text + ";sold";
+                    text = "sold;"+text ;
+                    d = DateTime.Now.AddYears(-10);
                 }
-                else { text = text + ";active"; }
+                else { text = "active;"+text ; }
                 Auction a = new Auction(si.seller,d,Auction.OfferType.SELL,card,text,price);
                 auctionsToAdd.Add(a);
             }

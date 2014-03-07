@@ -58,11 +58,21 @@ namespace Auction.mod
         public void clearAuctions()
         {
             this.addAuctionList.Clear();
+            createCardsFilter.filtersChanged = true;
+            helpf.addmode = false;
+        }
+
+        public void delOffer(Auction a)
+        {
+            this.addAuctionList.Remove(a);
+            createCardsFilter.filtersChanged = true;
+            if (addAuctionList.Count == 0) helpf.addmode = false;
         }
 
         public void addOffer(Auction a)
         {
             this.addAuctionList.Add(a);
+            createCardsFilter.filtersChanged = true;
         }
 
         public List<Auction> getAddOffers()
@@ -95,7 +105,21 @@ namespace Auction.mod
             {
                 //sellOfferListFiltered = new List<Auction> (fullSellOfferList);
                 createOfferListFiltered.Clear();
-                createOfferListFiltered.AddRange(Generator.Instance.getAllOwnSellOffers());
+                //createOfferListFiltered.AddRange(this.helpf.allOwnTradeableAuctions);
+                foreach (Auction c in this.helpf.allOwnTradeableAuctions)
+                {
+                    bool found = false;
+                    foreach (Auction a in this.addAuctionList)
+                    {
+                        if (a.card.id == c.card.id)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) continue;
+                    createOfferListFiltered.Add(c);
+                }
                 foreach (Auction c in this.createOfferListFiltered)
                 {
 
@@ -116,8 +140,7 @@ namespace Auction.mod
             List<Auction> sellOwnOfferListFiltered = new List<Auction>();
             foreach (Auction x in this.fullSellOfferList)
             {
-                //if (x.message == "sold" || (x.message.Split(';')[3] == App.MyProfile.ProfileInfo.id && x.time < DateTime.Now )) sellOwnOfferListFiltered.Add(x);
-                if (x.message.Split(';')[3] == App.MyProfile.ProfileInfo.id ) sellOwnOfferListFiltered.Add(x);
+                if (x.message.Split(';')[4] == App.MyProfile.ProfileInfo.id ) sellOwnOfferListFiltered.Add(x);
 
             }
 
@@ -184,8 +207,8 @@ namespace Auction.mod
         public void removeOldEntrys()
         {
             DateTime n = DateTime.Now;
-            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id)));
-            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[3] != App.MyProfile.ProfileInfo.id)));
+            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id)));
+            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id)));
         }
 
 

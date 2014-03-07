@@ -103,6 +103,7 @@ namespace Auction.mod
         public List<nickelement> loadedscrollsnicks = new List<nickelement>();
         // for card-AmountFilters
         public List<Card> allOwnCards = new List<Card>();
+        public List<Auction> allOwnTradeableAuctions = new List<Auction>();
         public bool playerstoreAllCardsChanged = false;
         public bool auctionHouseAllCardsChanged = false;
         public bool generatorAllCardsChanged = false;
@@ -248,8 +249,15 @@ namespace Auction.mod
         public void setOwnCards(Message msg)
         {//set id-cardid dictionary
             this.cardIDToCardNumber.Clear();
+            this.allOwnTradeableAuctions.Clear();
             foreach (Card c in (((LibraryViewMessage)msg).cards))
             {
+                if (c.tradable)
+                {
+                    Auction a = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now, Auction.OfferType.SELL, c, "");
+                    this.allOwnTradeableAuctions.Add(a);
+                }
+
                 if (c.tradable && !this.cardIDToCardNumber.ContainsKey(c.typeId))
                 {
                     this.cardIDToCardNumber.Add(c.typeId, c.id);

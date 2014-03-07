@@ -157,8 +157,8 @@ namespace Auction.mod
 
             if (helpf.createAuctionMenu)
             {
-                if (OfferCard == null && Generator.Instance.getAllOwnSellOffers().Count>=1)
-                { OfferCard = Generator.Instance.getAllOwnSellOffers()[0].card; }
+                if (OfferCard == null && this.helpf.allOwnTradeableAuctions.Count >= 1)
+                { OfferCard = this.helpf.allOwnTradeableAuctions[0].card; }
                 // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
                 drawCreateMenu();
                 this.drawAHlist(false);
@@ -169,7 +169,7 @@ namespace Auction.mod
             if (helpf.bothmenue)
             {
                 // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
-                if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message, tradeitem.card.getType()); }
+                if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message, tradeitem.card.getType(), tradeitem.card.level); }
                 
                 srchsvr.setsettings(0, true);
                 ah.setSellSortMode(srchsvr.sortmode);
@@ -182,11 +182,11 @@ namespace Auction.mod
                     this.drawAHlist(false);
                 }
 
-                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message,tradeitem.card.getType()); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, this.bothstarttrading, tradeitem.message,tradeitem.card.getType(),tradeitem.card.level); }
                 return;
             }
             // for getting mouse wheel-scrolling in overlayed window, we have to paint it first
-            if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType()); }
+            if (helpf.showtradedialog && !(helpf.makeOfferMenu && !helpf.offerMenuSelectCardMenu)) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType(),tradeitem.card.level); }
             //draw regular menu + searchmenu
             this.drawAHandSearch();
         }
@@ -752,7 +752,7 @@ namespace Auction.mod
                         TimeSpan ts = temptime.Subtract(current.time);
                         if (this.helpf.playerStoreMenu)
                         {
-                            if (current.message.Split(';')[5] == "sold")
+                            if (current.message.Split(';')[0] == "sold")
                             { sellername = "sold"; }
                             else
                             {
@@ -777,7 +777,7 @@ namespace Auction.mod
                                         if (ts.Seconds <= 10) { sellername = "ends in 10 seconds"; }
                                         if (ts.Seconds <= 5) { sellername = "ends in 5 seconds"; }
                                         if (ts.Seconds <= 0) { sellername = "ended"; }
-                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[3] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
+                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
                                     }
                                 }
                             }
@@ -985,7 +985,7 @@ namespace Auction.mod
                 }
 
 
-                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType()); }
+                if (helpf.showtradedialog) { this.starttrading(tradeitem.seller, tradeitem.card.getName(), tradeitem.price, helpf.wtsmenue, tradeitem.message, tradeitem.card.getType(),tradeitem.card.level); }
 
 
 
@@ -1268,7 +1268,7 @@ namespace Auction.mod
                         DateTime temptime = DateTime.Now;
                         if (helpf.createAuctionMenu)
                         {
-                            if (current.message.Split(';')[5] == "sold")
+                            if (current.message.Split(';')[0] == "sold")
                             { sellername = "sold"; }
                             else
                             {
@@ -1294,7 +1294,7 @@ namespace Auction.mod
                                         if (ts.Seconds <= 10) { sellername = "ends in 10 seconds"; }
                                         if (ts.Seconds <= 5) { sellername = "ends in 5 seconds"; }
                                         if (ts.Seconds <= 0) { sellername = "ended"; }
-                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[3] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
+                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
                                     }
                                 }
                             }
@@ -1399,7 +1399,22 @@ namespace Auction.mod
                         }
                         // draw buy/sell button
                         GUI.skin = helpf.cardListPopupGradientSkin;
-                        if (!helpf.createAuctionMenu) // dont need a sell button in own-auctions-menu
+                        if (helpf.createAuctionMenu) // dont need a sell button in own-auctions-menu
+                        {
+                            if (helpf.addmode)
+                            {
+                                if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
+                                {
+                                    this.ps.delOffer(current);
+                                }
+                                GUI.skin = helpf.cardListPopupBigLabelSkin;
+                                GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+                                GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Del");
+
+
+                            }
+                        }
+                        else
                         {
                             if (wtsmenue)
                             {
@@ -1488,7 +1503,14 @@ namespace Auction.mod
                         if (GUI.Button(recto.updateGoogleThings, "Clear"))
                         {
                             this.ps.clearAuctions();
-                            helpf.addmode = false;
+                            
+                        }
+
+                        if (GUI.Button(recto.getOwnStuffButton, "Create") && this.sttngs.waitForAuctionBot == false && this.sttngs.actualTrading == false)
+                        {
+                            this.helpf.createdAuctionText = "";
+
+                            App.Popups.ShowOkCancel(this, "wantToCreateMultiAuction", "You are sure?", "You really want to create these Auctions?\r\n" + this.helpf.createdAuctionText, "OK", "Cancel");
                         }
                     }
                     else
@@ -1639,20 +1661,13 @@ namespace Auction.mod
             if (GUI.Button(recto.tbadd, "+"))
             {
                 this.helpf.addmode = true;
-                bool offeredCardInYouPossesion = false;
+                bool offeredCardInYouPossesion = true;
                 Auction add = null;
-                foreach (Auction a in Generator.Instance.getAllOwnSellOffers())
+                foreach (Auction a in this.ps.getAddOffers())
                 {
-                    if (a.card.getType() == this.OfferCard.getType())
+                    if (a.card.id == this.OfferCard.id)
                     {
-                        bool nextone = false;
-                        foreach (Auction aa in this.ps.getAddOffers())
-                        {
-                            if (a.card.id == aa.card.id) { nextone = true; break; }
-                        }
-                        if (nextone) continue;
-                        add = a;
-                        offeredCardInYouPossesion = true; 
+                        offeredCardInYouPossesion = false; 
                         break; 
                     }
                 }
@@ -1671,19 +1686,19 @@ namespace Auction.mod
                     foreach (Auction a in this.ps.getAddOffers())
                     {
                             if (tradedata != "") tradedata = tradedata + ";";
-                            tradedata = tradedata + a.card.getType() + ":" + a.price +":"+ a.message.Split(';')[4];
+                            tradedata = tradedata + a.card.id + ":" + a.price +":"+ a.message.Split(';')[5];
                         
 
                        
                     }
                     // add the new data to the testmessage
                     if (tradedata != "") tradedata = tradedata + ";";
-                    tradedata = tradedata + this.OfferCard.getType() + ":" + this.OfferPrice;
+                    tradedata = tradedata + this.OfferCard.getId() + ":" + this.OfferPrice + ":" + duration;
                     tradedata = tradedata + ",";
                     string sendmessage = genAucMessage + tradedata;
                     if (sendmessage.Length <= 506)
                     {
-                        string id = this.OfferCard.getType() + ";" + this.OfferCard.getId() + ";" + add + ";" + App.MyProfile.ProfileInfo.id + ";" + duration + ";active";
+                        string id = "active;" + this.OfferCard.getType() + ";" + this.OfferCard.getId() + ";" + this.OfferPrice + ";" + App.MyProfile.ProfileInfo.id + ";" + duration;
                         Auction au = new Auction(App.MyProfile.ProfileInfo.name, DateTime.Now.AddHours((double)duration), Auction.OfferType.SELL, this.OfferCard, id, Convert.ToInt32(this.OfferPrice));
                         this.ps.addOffer(au);
                     }
@@ -1691,7 +1706,7 @@ namespace Auction.mod
      
 
             }
-
+            /*
             if (GUI.Button(recto.tbok, "OK"))
             {
                 if (helpf.addmode)
@@ -1703,7 +1718,7 @@ namespace Auction.mod
                 else
                 {
                     bool offeredCardInYouPossesion = false;
-                    foreach (Auction a in Generator.Instance.getAllOwnSellOffers())
+                    foreach (Auction a in this.helpf.allOwnTradeableAuctions)
                     {
                         if (a.card == this.OfferCard) { offeredCardInYouPossesion = true; break; }
                     }
@@ -1722,12 +1737,13 @@ namespace Auction.mod
 
                     }
                 }
-            }
+                
+            }*/
             
 
         }
 
-        private void starttrading(string name, string cname, int price, bool wts, string orgmsg, int cid)
+        private void starttrading(string name, string cname, int price, bool wts, string orgmsg, int cid, int level)
         {
             
             // asks the user if he wants to trade
@@ -1772,14 +1788,15 @@ namespace Auction.mod
                     {
                         helpf.showtradedialog = false;
                         // \pidauc profileid:894cb62d9bca4791bfa77d0659f2c7d8, target:232;20958472;price,
-                        if (orgmsg.Split(';')[5] == "active")
+                        if (orgmsg.Split(';')[0] == "active")
                         {
-                            string target = orgmsg.Split(';')[0] + ";" + orgmsg.Split(';')[1] + ";" + orgmsg.Split(';')[2] + ";" + orgmsg.Split(';')[3] + ";" + orgmsg.Split(';')[4];
+                            string target = orgmsg.Split(';')[1] + ";" + orgmsg.Split(';')[2] + ";" + orgmsg.Split(';')[3] + ";" + orgmsg.Split(';')[4] + ";" + orgmsg.Split(';')[5];
+                            if (level >= 1) target = target + ";" + level;
                             string sendmessage = " \\pidauc " + "profileid:" + App.MyProfile.ProfileInfo.id + ", target:" + target + ",";
                             WhisperMessage wmsg = new WhisperMessage(this.twb.botname, sendmessage);
                             this.sttngs.waitForAuctionBot = true;
                             this.sttngs.bidgold = price;
-                            this.sttngs.tradeCardID = Convert.ToInt64(orgmsg.Split(';')[1]);
+                            this.sttngs.tradeCardID = Convert.ToInt64(orgmsg.Split(';')[2]);
                             App.Communicator.sendRequest(wmsg);
                             this.sttngs.waitForAuctionBot = true;
                             this.sttngs.AucBotMode = "bidauc";
@@ -1811,7 +1828,7 @@ namespace Auction.mod
             
             List<Auction> offlist=null;
 
-            if (!wtsmenue) offlist = Generator.Instance.getAllOwnSellOffers(); // all cards YOU own ( the other user wants to buy
+            if (!wtsmenue) offlist = this.helpf.allOwnTradeableAuctions; // all cards YOU own ( the other user wants to buy
             else offlist = Generator.Instance.getAllOwnBuyOffers(); // all cards available
             this.scrollPos4 = GUI.BeginScrollView(innerRect, this.scrollPos4, new Rect(0f, 0f, innerRect.width - 20f, recto.fieldHeight * offlist.Count));
             GUI.skin = helpf.cardListPopupBigLabelSkin;
@@ -2164,12 +2181,12 @@ namespace Auction.mod
                         string str = text.Substring(0, 1) + text.Substring(1).ToLower();
                         string text2 = string.Empty;
                         int num2 = recto.maxCharsRK;
-                        /* if (current.card.level > 0)
+                        if (current.card.level > 0)
                          {
                              string text3 = text2;
                              text2 = string.Concat(new object[] { text3, "<color=#ddbb44>Tier ", current.card.level + 1, "</color>, " });
                              num2 += "<color=#rrggbb></color>".Length;
-                         }*/
+                         }
                         text2 = text2 + current.card.getRarityString() + ", " + str;
                         Vector2 vector2 = GUI.skin.label.CalcSize(new GUIContent(text2));
                         Rect position9 = recto.position9(num);
@@ -2429,7 +2446,7 @@ namespace Auction.mod
                 foreach (Auction a in this.ps.getAddOffers())
                 {
                     if (tradedata != "") tradedata = tradedata + ";";
-                    tradedata = tradedata + a.card.getType() + ":" + a.price + ":" +a.message.Split(';')[4];
+                    tradedata = tradedata + a.card.id + ":" + a.price + ":" +a.message.Split(';')[5];
 
                     this.helpf.cardsForTradeIds.Add(a.card.id);
 
