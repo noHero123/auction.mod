@@ -43,9 +43,9 @@ namespace Auction.mod
         {
         }
 
-        public bool shownumberscrolls;
-        public string rowscalestring = "10";
-        public float rowscale = 1.0f;
+        public bool shownumberscrolls=true;
+        public string rowscalestring = "7";
+        public float rowscale = 0.7f;
         public bool showsugrange;
         public bool wtsroundup = true;
         public int wtsroundmode = 0;
@@ -154,10 +154,10 @@ namespace Auction.mod
         {
             spampreventtime = "";
             spamprevint = 0;
-            shownumberscrolls = false;
+            shownumberscrolls = true;
             showsugrange = false;
-            rowscalestring = "10";
-            rowscale = 1f;
+            rowscalestring = "7";
+            rowscale = 0.7f;
             roundwts = false;
             wtsroundup = true;
             wtsroundmode = 0;

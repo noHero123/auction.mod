@@ -10,6 +10,7 @@ namespace Auction.mod
 {
     public class GetGoogleThings
     {
+        public bool loadeddata=false;
         public volatile bool workthreadready = true;
         public volatile bool dataisready = false;
         private PlayerStore pstore;
@@ -49,19 +50,27 @@ namespace Auction.mod
         public string getDataFromGoogleDocs()
         {
             WebRequest myWebRequest;
-            myWebRequest = WebRequest.Create("http://spreadsheets.google.com/feeds/list/"+ this.twb.spreadsheet +"/od6/public/values?alt=json");
+            if (this.loadeddata)
+            {
+                myWebRequest = WebRequest.Create("http://spreadsheets.google.com/feeds/list/" + this.twb.spreadsheet + "/od6/public/values?alt=json");
+            }
+            else
+            {
+                myWebRequest = WebRequest.Create("https://docs.google.com/spreadsheet/pub?key=" + this.twb.spreadsheet + "&output=txt");
+            }
             //System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
             myWebRequest.Timeout = 10000;
             WebResponse myWebResponse = myWebRequest.GetResponse();
             System.IO.Stream stream = myWebResponse.GetResponseStream();
             System.IO.StreamReader reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
+            
             string ressi = reader.ReadToEnd();
             return ressi;
         }
 
         public void readJsonfromGoogle(string txt)
         {
-            Console.WriteLine(txt);
+            //Console.WriteLine(txt);
             pStoreItems.Clear();
             JsonReader jsonReader = new JsonReader();
             Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(txt);
@@ -109,6 +118,48 @@ namespace Auction.mod
             //addDataToPlayerStore();
         }
 
+        public void readTxtfromGoogle(string txt)
+        {
+            //Console.WriteLine(txt);
+            pStoreItems.Clear();
+            foreach (string s in txt.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] data = s.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                if (data[0] == "Timestamp") continue;
+                sharedItem si = new sharedItem();
+                si.time = data[0];
+                si.status = data[1];
+                si.id = data[2];
+                si.seller = data[3];
+
+                //clear the database (its googles job, but he may be to slow)
+                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id) continue;
+
+                if (si.status.StartsWith("BUY"))
+                {
+                    this.pStoreItems.RemoveAll(x => x.id == si.id && si.status.StartsWith("active")); // remove all with active und same id
+
+                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id)//if not my id, ignore them
+                    {
+                        continue;
+                    }
+                }
+
+                if (si.status.StartsWith("DELETE")) // delete the auctions (even if they are mine)
+                {
+                    foreach (string a in si.id.Split(','))
+                    {
+                        this.pStoreItems.RemoveAll(x => x.id == a);
+                    }
+                    continue;
+                }
+
+                this.pStoreItems.Add(si);
+                //Console.WriteLine(si.status + " " + si.id);
+            }
+
+            //addDataToPlayerStore();
+        }
 
         public int DateTimeToUnixTimestamp(DateTime dateTime)
         {
@@ -168,13 +219,24 @@ namespace Auction.mod
             pStoreItems.Clear();
             try
             {
-                this.readJsonfromGoogle(this.getDataFromGoogleDocs());
+                if (this.loadeddata)
+                {
+                    this.readJsonfromGoogle(this.getDataFromGoogleDocs());
+                }
+                else
+                {
+                    this.readTxtfromGoogle(this.getDataFromGoogleDocs());
+                    this.loadeddata = true;
+                }
+                //
                 this.dataisready = true;
+                System.Threading.Thread.Sleep(5000);
             }
             catch
             {
                 Console.WriteLine("google error!");
             }
+
             this.workthreadready = true;
         }
 

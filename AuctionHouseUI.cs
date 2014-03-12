@@ -113,6 +113,7 @@ namespace Auction.mod
             ah.buyOfferFilter.filtersChanged = true;
             ps.createCardsFilter.filtersChanged = true;
             ps.sellOfferFilter.filtersChanged = true;
+
             if (this.wtsinah)
             {
 
@@ -127,6 +128,16 @@ namespace Auction.mod
                 helpf.wtsmenue = false;
 
             }
+            if (helpf.playerStoreMenu)
+            {
+                srchsvr.setsettings(2, true);
+                helpf.wtsmenue = true;
+            }
+            if (helpf.createAuctionMenu)
+            {
+                srchsvr.setsettings(2, false);
+            }
+
             //lstfltrs.fullupdatelist(alists.ahlist, alists.ahlistfull, this.inauchouse, this.wtsmenue, this.generator);
             helpf.targetchathightinfo.SetValue(helpf.target, (float)Screen.height * 0.25f);
         
@@ -669,7 +680,7 @@ namespace Auction.mod
                 }
 
                 //this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
-                if (srchsvr.reverse || (this.helpf.playerStoreMenu && this.srchsvr.sortmode==0)) { this.ahlist.Reverse(); }
+                if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { this.ahlist.Reverse(); }
 
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
@@ -887,6 +898,10 @@ namespace Auction.mod
                         {
                             if (!helpf.showtradedialog)
                             {
+                                if ((this.sttngs.actualTrading || this.sttngs.waitForAuctionBot || current.seller == App.MyProfile.ProfileInfo.name))
+                                {
+                                    GUI.color = dblack;
+                                }
                                 if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                 {
 
@@ -901,11 +916,15 @@ namespace Auction.mod
                                     }
                                 }
                             }
-                            else { GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""); }
+                            else
+                            {
+                                GUI.Box(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "");
+                            }
+                            
                             GUI.skin = helpf.cardListPopupBigLabelSkin;
                             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                             GUI.Label(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), "Buy");
-
+                            GUI.color = Color.white;
 
                         }
                         else
@@ -957,7 +976,25 @@ namespace Auction.mod
                     }
 
                 }
-                
+                if (helpf.playerStoreMenu)
+                {
+                    GUI.skin = helpf.cardListPopupSkin;
+
+                    GUI.contentColor = Color.red;
+                    if ((this.sttngs.actualTrading || this.sttngs.waitForAuctionBot))
+                    {
+                        if (this.sttngs.actualTrading)
+                        {
+                            GUI.Label(recto.sbnetworklabel, "struggling with bot");
+                            
+                        }
+                        else
+                        {
+                            GUI.Label(recto.sbnetworklabel, "waiting for bot");
+                        }
+                    }
+                    GUI.contentColor = Color.white;
+                }
 
                 drawButtonsBelow();
 
@@ -1194,7 +1231,7 @@ namespace Auction.mod
                 {
                     this.scrollPos2 = GUI.BeginScrollView(recto.position3, this.scrollPos2, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 }
-                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.srchsvr.sortmode == 0)) { this.ahlist.Reverse(); }
+                if (srchsvr.reverse || (this.helpf.createAuctionMenu)) { this.ahlist.Reverse(); }
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
                 float testy = this.scrollPos.y;
@@ -2418,7 +2455,8 @@ namespace Auction.mod
                 helpf.playerStoreMenu = false;
                 helpf.bothmenue = false;
                 recto.setupPositionsboth(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
-                //recto.setupPositions(helpf.chatisshown, sttngs.rowscale, helpf.chatLogStyle, helpf.cardListPopupSkin);
+
+                if(this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
             }
             GUI.color = Color.white;
  

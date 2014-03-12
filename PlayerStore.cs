@@ -144,7 +144,7 @@ namespace Auction.mod
 
             }
 
-            sellOwnOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
+            sellOwnOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.TIME));
 
                 return new List<Auction>(sellOwnOfferListFiltered);
         }
