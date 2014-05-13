@@ -11,7 +11,8 @@ namespace Auction.mod
 
         //for faster testing some variables:
         public string botname ="auctionmod";
-        public string botid = "1b8a4125d2634634aa76f33e1d04b0d4";
+        public int botid = 123;
+        public string oldbotid = "1b8a4125d2634634aa76f33e1d04b0d4";
         public string spreadsheet ="0AhhxijYPL-BGdHBDYzRLcDhFU2FJZkVEaWNFREdaLUE";
 
          private static TradingWithBots instance;

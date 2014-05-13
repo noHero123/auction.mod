@@ -140,7 +140,7 @@ namespace Auction.mod
             List<Auction> sellOwnOfferListFiltered = new List<Auction>();
             foreach (Auction x in this.fullSellOfferList)
             {
-                if (x.message.Split(';')[4] == App.MyProfile.ProfileInfo.id ) sellOwnOfferListFiltered.Add(x);
+                if (x.message.Split(';')[4] == App.MyProfile.ProfileInfo.id.ToString()) sellOwnOfferListFiltered.Add(x);
 
             }
 
@@ -207,8 +207,8 @@ namespace Auction.mod
         public void removeOldEntrys()
         {
             DateTime n = DateTime.Now;
-            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id)));
-            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id)));
+            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString())));
+            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString())));
         }
 
 

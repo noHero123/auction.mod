@@ -788,7 +788,7 @@ namespace Auction.mod
                                         if (ts.Seconds <= 10) { sellername = "ends in 10 seconds"; }
                                         if (ts.Seconds <= 5) { sellername = "ends in 5 seconds"; }
                                         if (ts.Seconds <= 0) { sellername = "ended"; }
-                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
+                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString()) deleteOldEntrys = true;
                                     }
                                 }
                             }
@@ -1331,7 +1331,7 @@ namespace Auction.mod
                                         if (ts.Seconds <= 10) { sellername = "ends in 10 seconds"; }
                                         if (ts.Seconds <= 5) { sellername = "ends in 5 seconds"; }
                                         if (ts.Seconds <= 0) { sellername = "ended"; }
-                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id) deleteOldEntrys = true;
+                                        if (ts.TotalSeconds <= 0 && current.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString()) deleteOldEntrys = true;
                                     }
                                 }
                             }

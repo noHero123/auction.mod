@@ -90,13 +90,13 @@ namespace Auction.mod
                 si.seller = (string)dictionary["$t"];
 
                 //clear the database (its googles job, but he may be to slow)
-                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3]!=App.MyProfile.ProfileInfo.id) continue;
+                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3]!=App.MyProfile.ProfileInfo.id.ToString()) continue;
 
                 if (si.status.StartsWith("BUY") )
                 {
                     this.pStoreItems.RemoveAll(x => x.id == si.id && si.status.StartsWith("active") ); // remove all with active und same id
 
-                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id)//if not my id, ignore them
+                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString())//if not my id, ignore them
                     {
                         continue;
                     }
@@ -133,13 +133,13 @@ namespace Auction.mod
                 si.seller = data[3];
 
                 //clear the database (its googles job, but he may be to slow)
-                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id) continue;
+                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString()) continue;
 
                 if (si.status.StartsWith("BUY"))
                 {
                     this.pStoreItems.RemoveAll(x => x.id == si.id && si.status.StartsWith("active")); // remove all with active und same id
 
-                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id)//if not my id, ignore them
+                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString())//if not my id, ignore them
                     {
                         continue;
                     }
