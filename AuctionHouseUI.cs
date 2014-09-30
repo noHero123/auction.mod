@@ -271,7 +271,11 @@ namespace Auction.mod
                 else { mt3click = GUI.Button(recto.sbthreerect, ">3"); }
                 GUI.color = Color.white;
                 if (!srchsvr.onebool) { GUI.color = dblack; }
-                if (!helpf.wtsmenue) { mt0click = GUI.Button(recto.sbonerect, ">0"); };
+                if (!helpf.wtsmenue) { mt0click = GUI.Button(recto.sbonerect, ">0"); }
+                else
+                {
+                    if(helpf.playerStoreMenu)mt0click = GUI.Button(recto.sbonerect, "<1");
+                }
                 GUI.color = Color.white;
                 GUI.contentColor = Color.white;
 
@@ -447,6 +451,7 @@ namespace Auction.mod
                     if (helpf.wtsmenue)
                     {
                         if (srchsvr.threebool) filter = 3;
+                        if (helpf.playerStoreMenu && srchsvr.onebool) filter = 4;
                         ah.sellOfferFilter.setAmountFilter(filter);
                         if (helpf.playerStoreMenu) ps.sellOfferFilter.setAmountFilter(filter);
                     }
