@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7DF5DEE9-EA96-4095-9EC2-D237C0B888BB}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Auction.mod</RootNamespace>
-    <AssemblyName>Auction.mod</AssemblyName>
+    <RootNamespace>bblack.mod</RootNamespace>
+    <AssemblyName>bblack.mod</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,7 +30,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Assembly-CSharp.dll</HintPath>
+      <HintPath>.\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx">
       <HintPath>..\JsonFx.dll</HintPath>
@@ -70,7 +70,6 @@
     <Compile Include="AuctionFilter.cs" />
     <Compile Include="SpamFilterTestCase.cs" />
     <Compile Include="SpammFilter.cs" />
-    <Compile Include="TradingWithBots.cs" />
     <Compile Include="VersionCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -18,9 +18,6 @@ namespace Auction.mod
        public string autoAuctionRoom = "";
        public int auctionScrollsMessagesCounter = 0;
        public bool doAutoTrade = false;
-        public string AucBotMode = ""; 
-        public bool waitForAuctionBot = false;
-        public bool actualTrading = false;
         public long tradeCardID = 0;
         public bool addedCard = false;
         public int bidgold = 0;

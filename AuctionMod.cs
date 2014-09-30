@@ -14,7 +14,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 
-namespace Auction.mod 
+namespace Auction.mod
 {
 
 
@@ -64,11 +64,10 @@ namespace Auction.mod
         Generator generator;
         VersionCheck vc;
         PopupManager pppmngr;
-        TradingWithBots twb;
 
         public static string GetName()
         {
-            return "auc";
+            return "blackmarket";
         }
 
         public static int GetVersion()
@@ -81,7 +80,6 @@ namespace Auction.mod
         {
         //lol
         }
-
 
         public void handleMessage(Message msg)
         {
@@ -186,7 +184,6 @@ namespace Auction.mod
             generator = Generator.Instance;
             genui = GeneratorUI.Instance;
             setui = SettingsUI.Instance;
-            twb = TradingWithBots.Instance;
             
             drawsubmenu = typeof(Store).GetMethod("drawSubMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             chatLogStyleinfo = typeof(ChatUI).GetField("chatMsgStyle", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -258,11 +255,6 @@ namespace Auction.mod
         public override bool WantsToReplace(InvocationInfo info)
         {
             
-            if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeResponseMessage && (info.arguments[0] as TradeResponseMessage).to.name == this.twb.botname)
-            { // return true if you are waiting for auctionbot
-                //because we dont want to display the trading-gui
-                return true;
-            }
 
 
             if (info.target is Store && info.targetMethod.Equals("OnGUI"))
@@ -274,33 +266,12 @@ namespace Auction.mod
             if (info.target is ArenaChat && info.targetMethod.Equals("handleMessage"))
             {
                 Message msg = (Message)info.arguments[0];
-                if (msg is WhisperMessage)
-                {
-                    WhisperMessage wmsg = (WhisperMessage)msg;
-                    //dont want to see whisper messages from/to the auctionbot
-                    if (this.sttngs.actualTrading && wmsg.from == this.twb.botname) return true;
-                    if (this.sttngs.waitForAuctionBot && wmsg.toProfileName == this.twb.botname) return true;
-                    if ((wmsg.text.Equals("to slow") || wmsg.text.Contains("dont fool me") || wmsg.text.Contains("there is not such an auction") || wmsg.text.Contains("auctionlimit reached")) && wmsg.from == this.twb.botname) return true;
-                    
-                }
 
                 if (msg is RoomChatMessageMessage)
                 {
                     RoomChatMessageMessage rem = (RoomChatMessageMessage)msg;
                     if ((this.sttngs.auctionScrollsMessagesCounter >= 1) && rem.roomName.StartsWith("trade-")) { if (this.sttngs.auctionScrollsMessagesCounter == 3)this.sttngs.auctionScrollsMessagesCounter = 0; return true; }
                     if (rem.text.StartsWith("auc parsertest")) { helpf.messegparsingtest(); return true; }
-                }
-
-                if (msg is RoomEnterMessage)
-                {   
-                    RoomEnterMessage rem = (RoomEnterMessage) msg;
-                    if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && rem.roomName.StartsWith("trade-")) return true;
-                }
-
-                if (msg is RoomInfoMessage)
-                {
-                    RoomInfoMessage rem = (RoomInfoMessage)msg;
-                    if ((this.sttngs.waitForAuctionBot || this.sttngs.actualTrading) && rem.roomName.StartsWith("trade-")) return true;
                 }
 
 
@@ -310,16 +281,6 @@ namespace Auction.mod
 
         public override void ReplaceMethod(InvocationInfo info, out object returnValue)
         {
-
-            if (this.sttngs.waitForAuctionBot && info.target is InviteManager && info.targetMethod.Equals("handleMessage") && info.arguments[0] is TradeInviteForwardMessage && (info.arguments[0] as TradeInviteForwardMessage).inviter.name == this.twb.botname)
-            { // return true if you are waiting for auctionbot
-                App.Communicator.sendRequest(new TradeAcceptMessage(this.twb.botid));
-                this.sttngs.actualTrading = true;
-                this.sttngs.addedCard = false;
-                //App.Communicator.sendRequest(new TradeAcceptBargainMessage());
-            }
-
-			//Replace Methods by NOPs
             returnValue = null;
         }
 
@@ -400,6 +361,7 @@ namespace Auction.mod
                     if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && crdvwr.clicked >= 3) { crdvwr.clearallpics(); }
                     
                     //klick button AH
+                    //Console.WriteLine("draw buttons");
                     if (LobbyMenu.drawButton(recto.ahbutton, "AH", helpf.lobbySkin) && !helpf.showtradedialog)
                     {
                         if (this.deckchanged)

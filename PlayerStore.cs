@@ -39,6 +39,7 @@ namespace Auction.mod
         protected List<Auction> addAuctionList = new List<Auction>();
 
         protected List<Auction> fullSellOfferList = new List<Auction>();
+        protected List<Auction> fullOWNOfferList = new List<Auction>();
         protected List<Auction> sellOfferListFiltered = new List<Auction>();
         protected List<Auction> createOfferListFiltered = new List<Auction>();
         protected AuctionHouse.SortMode sellSortMode = AuctionHouse.SortMode.TIME;
@@ -137,14 +138,14 @@ namespace Auction.mod
 
         public List<Auction> getOwnOffers()
         {
-            List<Auction> sellOwnOfferListFiltered = new List<Auction>();
-            foreach (Auction x in this.fullSellOfferList)
+            List<Auction> sellOwnOfferListFiltered = new List<Auction>(this.fullOWNOfferList);
+            /*foreach (Auction x in this.fullOfferList)
             {
-                if (x.message.Split(';')[4] == App.MyProfile.ProfileInfo.id.ToString()) sellOwnOfferListFiltered.Add(x);
+                //if (x.message.Split(';')[4] == App.MyProfile.ProfileInfo.id.ToString()) sellOwnOfferListFiltered.Add(x);
 
-            }
+            }*/
 
-            sellOwnOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.TIME));
+            sellOwnOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.CARD));
 
                 return new List<Auction>(sellOwnOfferListFiltered);
         }
@@ -165,8 +166,17 @@ namespace Auction.mod
         public void addAuctions(List<Auction> list)
         {
             list.ForEach(addAuction);
-            if (fullSellOfferList.Count > maxLen) { fullSellOfferList.RemoveRange(maxLen, fullSellOfferList.Count - maxLen); this.sellOfferFilter.filtersChanged = true; }
+            if (fullSellOfferList.Count > maxLen) 
+            { 
+                fullSellOfferList.RemoveRange(maxLen, fullSellOfferList.Count - maxLen);
+                this.sellOfferFilter.filtersChanged = true; 
+            }
             sellOfferListFiltered.Sort(Auction.getComparison(sellSortMode));
+        }
+
+        public void addOwnAuctions(List<Auction> list)
+        {
+            list.ForEach(addOwnAuction);
         }
 
         private void addAuction(Auction a)
@@ -183,6 +193,21 @@ namespace Auction.mod
             }
         }
 
+        private void addOwnAuction(Auction a)
+        {
+            if (a.offer == Auction.OfferType.SELL)
+            {
+                fullOWNOfferList.Insert(0, a);
+
+                /*if (!sellOfferFilter.isFiltered(a))
+                {
+                    sellOfferListFiltered.Insert(0, a);
+                    newSellOffers = true;
+                }*/
+            }
+        }
+
+
         public void removeMessages(string seller, Auction.OfferType aot, string cname)
         {
             fullSellOfferList.RemoveAll(a => a.seller.Equals(seller) && a.card.getType() == helpf.cardnamesToID[cname] && a.offer == aot);
@@ -197,20 +222,17 @@ namespace Auction.mod
 
         }
 
+        public void removeAllOwnMessages()
+        {
+            fullOWNOfferList.Clear();
+        }
+
         public void removeSeller(string seller)
         {
             fullSellOfferList.RemoveAll(a => a.seller.Equals(seller));
             sellOfferListFiltered.RemoveAll(a => a.seller.Equals(seller));
         }
         
-
-        public void removeOldEntrys()
-        {
-            DateTime n = DateTime.Now;
-            fullSellOfferList.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString())));
-            sellOfferListFiltered.RemoveAll(a => ((a.time < n) && (a.message.Split(';')[4] != App.MyProfile.ProfileInfo.id.ToString())));
-        }
-
 
 
     }

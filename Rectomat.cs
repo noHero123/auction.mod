@@ -276,9 +276,9 @@ namespace Auction.mod
            goldlength = vector.x;
 
            this.crtmessage = new Rect(this.innerRect.x, this.innerRect.y, this.innerRect.width, (this.innerRect.height - (float)Screen.height * 0.05f) / 2f);
-           
-           
-           this.crtcard = new Rect((this.innerRect.x + this.innerRect.xMax - 2 * this.cardWidth - 8f) / 2f, this.crtmessage.yMax, 2 * this.cardWidth + 8f, 2 * this.cardHeight + 8f);
+
+           float scalefact = 3f;
+           this.crtcard = new Rect((this.innerRect.x + this.innerRect.xMax - scalefact * this.cardWidth - 8f) / 2f, this.crtmessage.yMax, scalefact * this.cardWidth + 8f, scalefact * this.cardHeight + 8f);
            this.crtororand = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtcard.yMax, goldlength, texthight);
            this.crtpriceinput = new Rect((this.innerRect.x + this.innerRect.xMax - goldlength) / 2f, this.crtororand.yMax, goldlength, texthight);
            this.crtduration = new Rect((this.innerRect.x + this.innerRect.xMax - 2f*goldlength) / 2f, this.crtpriceinput.yMax, 2f*goldlength, texthight);
@@ -322,9 +322,9 @@ namespace Auction.mod
         {
            // setup rects for the settings menu
            // buttons in store:
-            GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 5);
-            ahbutton = new Rect(subMenuPositioner.getButtonRect(2f));
-            genbutton = new Rect(subMenuPositioner.getButtonRect(3f));
+            GUIPositioner subMenuPositioner = App.LobbyMenu.getSubMenuPositioner(1f, 6);
+            ahbutton = new Rect(subMenuPositioner.getButtonRect(3f));
+            genbutton = new Rect(subMenuPositioner.getButtonRect(4f));
             Rect setrecto = subMenuPositioner.getButtonRect(4f);
             setrecto.x = Screen.width - setrecto.width;// -subMenuPositioner.getButtonRect(0f).x;
             settingsbutton = new Rect(setrecto);

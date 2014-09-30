@@ -51,7 +51,7 @@ namespace Auction.mod
 
         public List<long> cardsForTradeIds = new List<long>();
         public bool createAuctionMenu = false; // true if the Create-Auction menu is shown
-        public bool playerStoreMenu = false; // true if the playerStore menu is shown
+        public bool playerStoreMenu = true; // true if the playerStore menu is shown
         public bool wtsmenue = false;
         public bool bothmenue = false;
 

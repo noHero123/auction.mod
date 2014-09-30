@@ -8,13 +8,30 @@ using JsonFx.Json;
 
 namespace Auction.mod
 {
-    public class GetGoogleThings
+    public class GetGoogleThings : ICommListener, IOkCallback, ICancelCallback, IOkCancelCallback, IOkStringCallback, IOkStringCancelCallback
     {
         public bool loadeddata=false;
         public volatile bool workthreadready = true;
+        public volatile bool workthreadreadyOwnOffers = true;
+        public volatile bool workthreadreadyCreateOffers = true;
         public volatile bool dataisready = false;
+        public volatile bool dataisreadyOwnOffers = false;
+        private int dataOffer = 0;
+
+        public Card sellingCard = null;
+
+        public long createCardID = -1;
+
         private PlayerStore pstore;
-        private TradingWithBots twb;
+
+        public int clickedItemLevel = 0;
+        public int clickedItemForSales = 0;
+        public int clickedItemPrice = 0;
+        public long clickedItemBuyID = -1;
+        public string clickedItemName = "";
+
+        Dictionary<int, TransactionInfo> soldScrollTransactions = new Dictionary<int, TransactionInfo>();
+        TransactionInfo transactionBeingClaimed = null;
 
         public struct sharedItem
         {
@@ -25,6 +42,7 @@ namespace Auction.mod
         }
 
         public List<sharedItem> pStoreItems = new List<sharedItem>();
+        public List<Auction> pstoreAucs = new List<Auction>();
 
 
         private static GetGoogleThings instance;
@@ -44,122 +62,240 @@ namespace Auction.mod
         private GetGoogleThings()
         {
             this.pstore = PlayerStore.Instance;
-            this.twb = TradingWithBots.Instance;
+            try
+            {
+                App.Communicator.addListener(this);
+            }
+            catch
+            {
+                Console.WriteLine("cant add listener");
+            }
         }
 
-        public string getDataFromGoogleDocs()
+        public void onConnect(OnConnectData ocd)
         {
-            WebRequest myWebRequest;
-            if (this.loadeddata)
-            {
-                myWebRequest = WebRequest.Create("http://spreadsheets.google.com/feeds/list/" + this.twb.spreadsheet + "/od6/public/values?alt=json");
-            }
-            else
-            {
-                myWebRequest = WebRequest.Create("https://docs.google.com/spreadsheet/pub?key=" + this.twb.spreadsheet + "&output=txt");
-            }
-            //System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, ce, ca, p) => true;// or you get an exeption, because mono doesnt trust anyone
-            myWebRequest.Timeout = 10000;
-            WebResponse myWebResponse = myWebRequest.GetResponse();
-            System.IO.Stream stream = myWebResponse.GetResponseStream();
-            System.IO.StreamReader reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
-            
-            string ressi = reader.ReadToEnd();
-            return ressi;
+            //lol
         }
 
-        public void readJsonfromGoogle(string txt)
+        public void handleMessage(Message msg)
         {
-            //Console.WriteLine(txt);
-            pStoreItems.Clear();
-            JsonReader jsonReader = new JsonReader();
-            Dictionary<string, object> dictionary = (Dictionary<string, object>)jsonReader.Read(txt);
-            dictionary = (Dictionary<string, object>)dictionary["feed"];
-            if (!dictionary.ContainsKey("entry")) { this.pstore.removeAllMessages();return; }
-            Dictionary<string, object>[] entrys = (Dictionary<string, object>[])dictionary["entry"];
-            for (int i = 0; i < entrys.GetLength(0); i++)
+            if (msg is OkMessage)
             {
-                sharedItem si = new sharedItem();
-                dictionary = (Dictionary<string, object>)entrys[i]["gsx$timestamp"];
-                si.time = (string)dictionary["$t"];
-                dictionary = (Dictionary<string, object>)entrys[i]["gsx$status"];
-                si.status = (string)dictionary["$t"];
-                dictionary = (Dictionary<string, object>)entrys[i]["gsx$id"];
-                si.id = (string)dictionary["$t"];
-                dictionary = (Dictionary<string, object>)entrys[i]["gsx$seller"];
-                si.seller = (string)dictionary["$t"];
-
-                //clear the database (its googles job, but he may be to slow)
-                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3]!=App.MyProfile.ProfileInfo.id.ToString()) continue;
-
-                if (si.status.StartsWith("BUY") )
+                OkMessage omsg = (OkMessage)msg;
+                if (Helpfunktions.Instance.createAuctionMenu)
                 {
-                    this.pStoreItems.RemoveAll(x => x.id == si.id && si.status.StartsWith("active") ); // remove all with active und same id
-
-                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString())//if not my id, ignore them
+                    
+                    if (omsg.op == "MarketplaceCreateOffer")
                     {
-                        continue;
+                        this.dataOffer = 0;
+                        App.Communicator.send(new MarketplaceOffersViewMessage());
+                        App.Communicator.send(new MarketplaceSoldListViewMessage());
+                        App.Communicator.sendRequest(new LibraryViewMessage());
+                    }
+                    if (omsg.op == "MarketplaceCancelOffer")
+                    {
+                        this.dataOffer = 0;
+                        App.Communicator.send(new MarketplaceOffersViewMessage());
+                        App.Communicator.send(new MarketplaceSoldListViewMessage());
+                        App.Communicator.sendRequest(new LibraryViewMessage());
+                    }
+
+                    if (omsg.op == "MarketplaceClaim")
+                    {
+                        
+                        if (transactionBeingClaimed == null) return;
+                        App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_coin_tally_end");
+                        CardType cardType = CardTypeManager.getInstance().get(this.transactionBeingClaimed.cardType);
+                        this.dataOffer = 0;
+                        App.Communicator.send(new MarketplaceOffersViewMessage());
+                        App.Communicator.send(new MarketplaceSoldListViewMessage());
+                        App.Communicator.sendRequest(new LibraryViewMessage());
+                        App.Popups.ShowOk(this, "claimgold", "Gold added", string.Concat(new object[]
+							{
+								"<color=#bbaa88>Tier ",
+								(int)(this.transactionBeingClaimed.level + 1),
+								" ",
+								cardType.name,
+								" sold for ",
+								this.transactionBeingClaimed.sellPrice,
+								" gold!\nEarned <color=#ffd055>",
+								this.transactionBeingClaimed.sellPrice - this.transactionBeingClaimed.fee,
+								" gold</color> (the fence collects ",
+								this.transactionBeingClaimed.fee,
+								").</color>"
+							}), "Ok");
+                    }
+                }
+                if (Helpfunktions.Instance.playerStoreMenu)
+                {
+                    if (omsg.op == "MarketplaceMakeDeal")
+                    {
+                        App.Communicator.sendRequest(new GetStoreItemsMessage());
+                        App.Communicator.sendRequest(new LibraryViewMessage());
+                        App.Popups.ShowOk(this, "dealmade", "Purchase complete!", clickedItemName + " has been added to your collection.", "Ok");
                     }
                 }
 
-                if (si.status.StartsWith("DELETE")) // delete the auctions (even if they are mine)
-                {
-                    foreach (string a in si.id.Split(','))
-                    {
-                        this.pStoreItems.RemoveAll(x => x.id == a);
-                    }
-                    continue;
-                }
-                
-                this.pStoreItems.Add(si);
-                Console.WriteLine(si.status + " " + si.id);
             }
 
-            //addDataToPlayerStore();
+
+            if (msg is CheckCardDependenciesMessage)
+            {
+                CheckCardDependenciesMessage checkCardDependenciesMessage = (CheckCardDependenciesMessage)msg;
+                if (checkCardDependenciesMessage.dependencies == null || checkCardDependenciesMessage.dependencies.Length == 0)
+                {
+                    this.GetCreateOfferInfo();
+                }
+                else
+                {
+                    App.Popups.ShowOkCancel(this, "deckinvalidationwarning", "Notice", "Selling this scroll will make the following decks illegal:\n\n" + DeckUtil.GetFormattedDeckNames(checkCardDependenciesMessage.GetDeckNames()), "Ok", "Cancel");
+                }
+            }
+
+            if (msg is MarketplaceCreateOfferInfoMessage)
+            {
+                MarketplaceCreateOfferInfoMessage marketplaceCreateOfferInfoMessage = (MarketplaceCreateOfferInfoMessage)msg;
+                App.Popups.ShowSellCard(this, "sellcard", this.sellingCard, marketplaceCreateOfferInfoMessage.lowestPrice, marketplaceCreateOfferInfoMessage.suggestedPrice, marketplaceCreateOfferInfoMessage.copiesForSale, marketplaceCreateOfferInfoMessage.tax);
+            }
+
+            if (msg is MarketplaceOffersSearchViewMessage)
+            {
+                MarketplaceOffersSearchViewMessage marketplaceOffersViewMessage = (MarketplaceOffersSearchViewMessage)msg;
+                clickedItemForSales = marketplaceOffersViewMessage.copiesForSale;
+                clickedItemLevel = marketplaceOffersViewMessage.offer.card.level;
+                clickedItemPrice = marketplaceOffersViewMessage.offer.price;
+                clickedItemBuyID = marketplaceOffersViewMessage.offer.id;
+                clickedItemName = marketplaceOffersViewMessage.offer.card.getName();
+
+            }
+
+            if (msg is MarketplaceOffersViewMessage)
+            {
+                //if (this.dataisreadyOwnOffers) return;
+
+                MarketplaceOffersViewMessage marketplaceOffersViewMessage = (MarketplaceOffersViewMessage)msg;
+                MarketplaceOffer[] offers = marketplaceOffersViewMessage.offers;
+                this.pstoreAucs.Clear();
+                DateTime tme = DateTime.Now;
+                for (int i = 0; i < offers.Length; i++)
+                {
+                    MarketplaceOffer marketplaceOffer = offers[i];
+                    Auction a = new Auction(App.MyProfile.ProfileInfo.name, tme, Auction.OfferType.SELL, marketplaceOffer.card, "" + marketplaceOffer.id, marketplaceOffer.price);
+                    tme = tme.AddMilliseconds(1);
+                    //Console.WriteLine("add owm auction: " + a.card.getName() + " " + a.price);
+                    this.pstoreAucs.Add(a);
+                }
+
+                this.dataOffer++;
+                if (this.dataOffer >= 2) this.dataisreadyOwnOffers = true;
+            }
+
+            if (msg is MarketplaceSoldListViewMessage)
+            {
+                //if (this.dataisreadyOwnOffers) return;
+
+                MarketplaceSoldListViewMessage marketplaceOffersViewMessage = (MarketplaceSoldListViewMessage)msg;
+                TransactionInfo[] offers = marketplaceOffersViewMessage.sold;
+                //this.pstoreAucs.Clear();
+                this.soldScrollTransactions.Clear();
+                DateTime tme = DateTime.Now;
+                for (int i = 0; i < offers.Length; i++)
+                {
+                    TransactionInfo marketplaceOffer = offers[i];
+                    if(!marketplaceOffer.claimed) this.soldScrollTransactions.Add(marketplaceOffer.cardId, marketplaceOffer);
+                    CardType type = CardTypeManager.getInstance().get(marketplaceOffer.cardType);
+                    Card c = new Card(marketplaceOffer.cardId, type, true);
+                    string aucmessage="sold " + marketplaceOffer.fee;
+                    if (marketplaceOffer.claimed) aucmessage += " claimed";
+                    Auction a = new Auction(App.MyProfile.ProfileInfo.name, tme, Auction.OfferType.SELL, c, aucmessage, marketplaceOffer.sellPrice, marketplaceOffer.cardId);
+                    tme = tme.AddMilliseconds(1);
+                    //Console.WriteLine("add owm auction: " + a.card.getName() + " " + a.price);
+                    this.pstoreAucs.Add(a);
+                }
+                this.dataOffer++;
+                if (this.dataOffer >= 2) this.dataisreadyOwnOffers = true;
+            }
+
+            if (msg is MarketplaceAvailableOffersListViewMessage)
+            {
+                if (this.dataisready) return;
+
+                MarketplaceAvailableOffersListViewMessage marketplaceAvailableOffersListViewMessage = (MarketplaceAvailableOffersListViewMessage)msg;
+
+                MarketplaceTypeAvailability[] available = marketplaceAvailableOffersListViewMessage.available;
+                this.pstoreAucs.Clear();
+                DateTime tme = DateTime.Now;
+                for (int i = 0; i < available.Length; i++)
+                {
+                    MarketplaceTypeAvailability mta = available[i];
+                    CardType type = CardTypeManager.getInstance().get(mta.type);
+                    Card card = new Card(1, type, true);
+                    card.level = mta.level;
+                    Auction a = new Auction("BlackMarket", tme, Auction.OfferType.SELL, card, "", mta.price);
+                    tme = tme.AddMilliseconds(1);
+                    Console.WriteLine("add auction: " + a.card.getName() + " " + a.price);
+                    this.pstoreAucs.Add(a);
+                }
+
+                this.dataisready = true;
+            }
+            return;
         }
 
-        public void readTxtfromGoogle(string txt)
+        private void GetCreateOfferInfo()
         {
-            //Console.WriteLine(txt);
-            pStoreItems.Clear();
-            foreach (string s in txt.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                string[] data = s.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                if (data[0] == "Timestamp") continue;
-                sharedItem si = new sharedItem();
-                si.time = data[0];
-                si.status = data[1];
-                si.id = data[2];
-                si.seller = data[3];
-
-                //clear the database (its googles job, but he may be to slow)
-                if (si.status.StartsWith("SOLD") && si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString()) continue;
-
-                if (si.status.StartsWith("BUY"))
-                {
-                    this.pStoreItems.RemoveAll(x => x.id == si.id && si.status.StartsWith("active")); // remove all with active und same id
-
-                    if (si.id.Split(';')[3] != App.MyProfile.ProfileInfo.id.ToString())//if not my id, ignore them
-                    {
-                        continue;
-                    }
-                }
-
-                if (si.status.StartsWith("DELETE")) // delete the auctions (even if they are mine)
-                {
-                    foreach (string a in si.id.Split(','))
-                    {
-                        this.pStoreItems.RemoveAll(x => x.id == a);
-                    }
-                    continue;
-                }
-
-                this.pStoreItems.Add(si);
-                //Console.WriteLine(si.status + " " + si.id);
-            }
-
-            //addDataToPlayerStore();
+            App.Communicator.send(new MarketplaceCreateOfferInfoMessage(this.sellingCard.getCardType().id, (byte)this.sellingCard.level));
         }
+
+        public void PopupOk(string popupType)
+        {
+            if (popupType == "deckinvalidationwarning")
+            {
+                this.GetCreateOfferInfo();
+            }
+        }
+        public void PopupOk(string popupType, string value)
+        {
+            if (popupType == "sellcard")
+            {
+                int price = 0;
+                bool flag = int.TryParse(value, out price);
+                if (flag)
+                {
+                    App.Communicator.send(new MarketplaceCreateOfferMessage(this.sellingCard.getId(), price));
+                }
+                else
+                {
+                    App.Popups.ShowOk(this, "infopopup", "Error", "Something went wrong! Did you enter a numeric price?", "Ok");
+                }
+            }
+        }
+
+        public void PopupCancel(string popupType)
+        {
+            if (popupType == "deckinvalidationwarning")
+            {
+                this.sellingCard = null;
+            }
+        }
+
+
+
+
+        public void getOffersFromMarketPlace()
+        {
+            this.dataisready = false;
+            App.Communicator.send(new MarketplaceAvailableOffersListViewMessage());
+        }
+
+        public void getOwnOffersFromMarketPlace()
+        {
+            this.dataisreadyOwnOffers = false;
+            this.dataOffer = 0;
+            App.Communicator.send(new MarketplaceOffersViewMessage());
+            App.Communicator.send(new MarketplaceSoldListViewMessage());
+        }
+
 
         public int DateTimeToUnixTimestamp(DateTime dateTime)
         {
@@ -177,38 +313,19 @@ namespace Auction.mod
         public void addDataToPlayerStore()
         {
             this.pstore.removeAllMessages();
-            List<Auction> auctionsToAdd = new List<Auction>();
-            foreach (sharedItem si in this.pStoreItems)
-            {
-                Console.WriteLine("parsing: "+si.time+" "+si.status + " " + si.id);
-                /*DateTime d = DateTime.ParseExact(si.time, "M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.CurrentCulture);
-                if (si.status.StartsWith("active:"))
-                {
-                    int hours = Convert.ToInt32(si.status.Split(':')[1]);
-                    d = d.AddMinutes(hours);
-                }
-                 */
-                DateTime d = UnixTimeStampToDateTime(Convert.ToInt32(si.id.Split(';')[4]));
-                int level = 0;
-                if (si.id.Split(';').Length == 6) level = Convert.ToInt32(si.id.Split(';')[5]);
-                int id=Convert.ToInt32(si.id.Split(';')[0]);
-                int price=Convert.ToInt32(si.id.Split(';')[2]);
-                CardType type = CardTypeManager.getInstance().get(id);
-                Card card = new Card(id, type, true);
-                card.level = level;
-                string text = si.id;
-                if (si.status == "SOLD" || si.status == "BUY")
-                {
-                    text = "sold;"+text ;
-                    d = DateTime.Now.AddYears(-10);
-                }
-                else { text = "active;"+text ; }
-                Auction a = new Auction(si.seller,d,Auction.OfferType.SELL,card,text,price);
-                auctionsToAdd.Add(a);
-            }
+            List<Auction> auctionsToAdd = new List<Auction>(this.pstoreAucs);
             this.pstore.addAuctions(auctionsToAdd);
-            this.pstore.removeOldEntrys();
             this.dataisready = false;
+        }
+
+        public void addOwnDataToPlayerStore()
+        {
+            Console.WriteLine("add data to own ps");
+            this.pstore.removeAllOwnMessages();
+            List<Auction> auctionsToAdd = new List<Auction>(this.pstoreAucs);
+            this.pstore.addOwnAuctions(auctionsToAdd);
+            this.dataOffer = 0;
+            this.dataisreadyOwnOffers = false;
         }
 
 
@@ -219,18 +336,8 @@ namespace Auction.mod
             pStoreItems.Clear();
             try
             {
-                if (this.loadeddata)
-                {
-                    this.readJsonfromGoogle(this.getDataFromGoogleDocs());
-                }
-                else
-                {
-                    this.readTxtfromGoogle(this.getDataFromGoogleDocs());
-                    this.loadeddata = true;
-                }
-                //
-                this.dataisready = true;
-                System.Threading.Thread.Sleep(5000);
+                this.getOffersFromMarketPlace();
+                System.Threading.Thread.Sleep(1000);
             }
             catch
             {
@@ -238,6 +345,35 @@ namespace Auction.mod
             }
 
             this.workthreadready = true;
+        }
+
+        public void workthreadOwnOffers()
+        {
+            this.workthreadreadyOwnOffers = false;
+            Console.WriteLine("collect own data");
+            pStoreItems.Clear();
+            try
+            {
+                this.getOwnOffersFromMarketPlace();
+                System.Threading.Thread.Sleep(1000);
+            }
+            catch
+            {
+                Console.WriteLine("google error!");
+            }
+
+            this.workthreadreadyOwnOffers = true;
+        }
+
+        public void ClaimSalesMoney(int cardid)
+        {
+            if (this.soldScrollTransactions.ContainsKey(cardid))
+            {
+                TransactionInfo transactionInfo = this.soldScrollTransactions[cardid];
+                this.transactionBeingClaimed = transactionInfo;
+                App.Communicator.send(new MarketplaceClaimMessage(transactionInfo.transactionId));
+                this.soldScrollTransactions.Remove(cardid);
+            }
         }
 
 
