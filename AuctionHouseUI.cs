@@ -35,6 +35,7 @@ namespace Auction.mod
         private string OfferPrice = "1000";// in offermenu the offered price
         private Card OfferCard = null;
 
+        bool resourcesLoaded = false;
         Texture2D growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
@@ -149,6 +150,14 @@ namespace Auction.mod
         {
 
             // update playerstore auctions:
+            if (!resourcesLoaded)
+            {
+                growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
+                energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
+                orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
+                decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
+                resourcesLoaded = true;
+            }
             if (helpf.playerStoreMenu || helpf.createAuctionMenu)
             {
                 if (this.gglthngs.dataisready)
@@ -2174,7 +2183,6 @@ namespace Auction.mod
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
 
                 this.ahlist = ps.getCreateOffers();
-
                 this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * (float)this.ahlist.Count));
                 int num = 0;
                 Card card = null;
@@ -2264,6 +2272,7 @@ namespace Auction.mod
                                     p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
                             }
                             if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                            suggeprice = "BM: " + prcs.getPrice(index, ScrollsPostPriceType.BLACKMARKET);
                         }
                         nextx = position12.xMax + recto.costIconWidth;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;

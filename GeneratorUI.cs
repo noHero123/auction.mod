@@ -31,6 +31,7 @@ namespace Auction.mod
         Helpfunktions helpf;
         Generator generator;
 
+        bool resourcesLoaded = false;
         Texture2D growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
         Texture2D energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
         Texture2D orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
@@ -110,7 +111,14 @@ namespace Auction.mod
         public void drawgenerator()
         {
             // have to draw textfield in front of scrollbar or otherwise you lose focus in textfield (lol)
-
+            if (!resourcesLoaded)
+            {
+                growthres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_growth");
+                energyres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_energy");
+                orderres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_order");
+                decayres = ResourceManager.LoadTexture("BattleUI/battlegui_icon_decay");
+                resourcesLoaded = true;
+            }
             if (helpf.generator)
             {
                 GUI.color = Color.white;

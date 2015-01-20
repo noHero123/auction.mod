@@ -72,7 +72,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 51;
+            return 133;
         }
 
 
@@ -114,7 +114,7 @@ namespace Auction.mod
                 {
                     boughtCards = null;
                 }
-                DeckInfo deckInfo = buyStoreItemResponseMessage.deckInfo;
+                DeckInfo[] deckInfo = buyStoreItemResponseMessage.deckInfos;
                 if (boughtCards != null)
                 {
                     deckchanged = true;

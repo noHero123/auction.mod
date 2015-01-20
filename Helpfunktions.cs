@@ -34,7 +34,7 @@ namespace Auction.mod
             this.targetchathightinfo = typeof(ChatUI).GetField("targetChatHeight", BindingFlags.Instance | BindingFlags.NonPublic);
             this.buymen = typeof(Store).GetField("buyMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
             this.sellmen = typeof(Store).GetField("sellMenuObj", BindingFlags.Instance | BindingFlags.NonPublic);
-            this.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
+            this.setskins((GUISkin)ResourceManager.Load("_GUISkins/CardListPopup"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupGradient"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupLeftButton"));
         }
 
 

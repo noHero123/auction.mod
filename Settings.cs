@@ -6,7 +6,7 @@ using System.Text;
 namespace Auction.mod
 {
 	public enum ScrollsPostPriceType {
-		LOWER, SUGGESTED, UPPER
+		LOWER, SUGGESTED, UPPER, BLACKMARKET
 	}
     public enum ScrollsPostDayType
     {

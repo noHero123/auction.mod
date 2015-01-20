@@ -34,6 +34,7 @@ namespace Auction.mod
         public int[] lowerprice = new int[0];
         public int[] upperprice = new int[0];
         public int[] sugprice = new int[0];
+        public int[] bmprice = new int[0];
         //public bool roundwts = false;
         //public bool wtsroundup = true;
         //public int wtsroundmode = 0;
@@ -58,6 +59,8 @@ namespace Auction.mod
 				return sugprice [index];
 			case ScrollsPostPriceType.UPPER:
 				return upperprice [index];
+            case ScrollsPostPriceType.BLACKMARKET:
+                return bmprice[index];
 			default:
 				throw new ArgumentException ();
 			}
@@ -288,11 +291,35 @@ namespace Auction.mod
 
         }
 
+        public void getBlackmarketPrices(MarketplaceAvailableOffersListViewMessage msg)
+        {
+            for (int i = 0; i < this.bmprice.Length; i++)
+            {
+                this.bmprice[i] = 0;
+            }
+
+            MarketplaceTypeAvailability[] available = msg.available;
+            DateTime tme = DateTime.Now;
+            for (int i = 0; i < available.Length; i++)
+            {
+                MarketplaceTypeAvailability mta = available[i];
+                int index = helpf.cardidToArrayIndex(mta.type);
+                if (index >= 0)
+                {
+                    this.bmprice[index]=mta.price;
+                }
+            }
+
+        }
+
+
+
         public void resetarrays(int len)
         {
             this.lowerprice = new int[len];
             this.upperprice = new int[len];
             this.sugprice = new int[len];
+            this.bmprice = new int[len];
         }
 
         /*

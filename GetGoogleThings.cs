@@ -177,6 +177,7 @@ namespace Auction.mod
                 MarketplaceOffer[] offers = marketplaceOffersViewMessage.offers;
                 this.pstoreAucs.Clear();
                 DateTime tme = DateTime.Now;
+                tme = tme.AddMilliseconds(1000);
                 for (int i = 0; i < offers.Length; i++)
                 {
                     MarketplaceOffer marketplaceOffer = offers[i];
@@ -199,6 +200,7 @@ namespace Auction.mod
                 //this.pstoreAucs.Clear();
                 this.soldScrollTransactions.Clear();
                 DateTime tme = DateTime.Now;
+                
                 for (int i = 0; i < offers.Length; i++)
                 {
                     TransactionInfo marketplaceOffer = offers[i];
@@ -206,7 +208,11 @@ namespace Auction.mod
                     CardType type = CardTypeManager.getInstance().get(marketplaceOffer.cardType);
                     Card c = new Card(marketplaceOffer.cardId, type, true);
                     string aucmessage="sold " + marketplaceOffer.fee;
-                    if (marketplaceOffer.claimed) aucmessage += " claimed";
+                    if (marketplaceOffer.claimed)
+                    {
+                        aucmessage += " claimed";
+                        continue;
+                    }
                     Auction a = new Auction(App.MyProfile.ProfileInfo.name, tme, Auction.OfferType.SELL, c, aucmessage, marketplaceOffer.sellPrice, marketplaceOffer.cardId);
                     tme = tme.AddMilliseconds(1);
                     //Console.WriteLine("add owm auction: " + a.card.getName() + " " + a.price);
@@ -218,6 +224,7 @@ namespace Auction.mod
 
             if (msg is MarketplaceAvailableOffersListViewMessage)
             {
+                Prices.Instance.getBlackmarketPrices(msg as MarketplaceAvailableOffersListViewMessage);
                 if (this.dataisready) return;
 
                 MarketplaceAvailableOffersListViewMessage marketplaceAvailableOffersListViewMessage = (MarketplaceAvailableOffersListViewMessage)msg;

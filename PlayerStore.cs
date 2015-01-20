@@ -126,12 +126,20 @@ namespace Auction.mod
 
                     int index = helpf.cardidToArrayIndex(c.card.getType());
                     if(index>=1)c.setPrice(prcs.getPrice(index, sttngs.wtbAHpriceType));
-                    if (c.price == 0) c.setPrice(1);
+                    //if (c.price == 0) c.setPrice(1);
 
+
+                    if (index >= 0)
+                    {
+                        c.setPrice(Prices.Instance.getPrice(index, ScrollsPostPriceType.BLACKMARKET));
+                    }
+                            
+                    
                 }
                 createOfferListFiltered.RemoveAll(createCardsFilter.isFiltered);
                 createCardsFilter.filtersChanged = false;
-                createOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.CARD));
+                createOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.PRICE)); //.CARD
+                createOfferListFiltered.Reverse();//wasnt there
             }
             return new List<Auction>(createOfferListFiltered);
         }

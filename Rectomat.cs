@@ -70,16 +70,23 @@ namespace Auction.mod
 
        private Rectomat()
        {
+       }
+
+       private bool setstuffup = false; // because we cant load resources on startup.
+
+       private void setupstuff()
+       {
+           this.setstuffup = true;
+           Helpfunktions.Instance.setskins((GUISkin)ResourceManager.Load("_GUISkins/CardListPopup"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupGradient"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)ResourceManager.Load("_GUISkins/CardListPopupLeftButton"));
            this.srchsvr = Searchsettings.Instance;
-           GUISkin gUISkin = (GUISkin)Resources.Load("_GUISkins/Lobby");
+           GUISkin gUISkin = (GUISkin)ResourceManager.Load("_GUISkins/Lobby");
            gUIStyle = new GUIStyle(gUISkin.button);
            gUIStyle.normal.background = ResourceManager.LoadTexture("ChatUI/dropdown_arrow");
            GUIStyleState arg_13A_0 = gUIStyle.hover;
            Texture2D background = ResourceManager.LoadTexture("ChatUI/dropdown_arrow_mouseover");
            arg_13A_0.background = background;
            gUIStyle.active.background = background;
-
-           GUISkin buttonSkin = (GUISkin)Resources.Load("_GUISkins/Lobby");
+           GUISkin buttonSkin = (GUISkin)ResourceManager.Load("_GUISkins/Lobby");
            this.pulldownSkin = ScriptableObject.CreateInstance<GUISkin>();
            this.pulldownSkin.button = new GUIStyle(buttonSkin.button);
            this.pulldownSkin.label = new GUIStyle(buttonSkin.label);
@@ -96,6 +103,7 @@ namespace Auction.mod
 
        public void setupPositions(bool chatisshown, float rowscale, GUIStyle chatLogStyle, GUISkin cardListPopupSkin)
         {
+            if(!setstuffup)this.setupstuff();
            // set rects for auction windows + searchwindow
            
            // set rects for menus
