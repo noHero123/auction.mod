@@ -865,12 +865,14 @@ namespace Auction.mod
                             if (helpf.wtsmenue)
                             {
 								p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
+                                suggeprice = ((sttngs.wtsAHpriceType == ScrollsPostPriceType.BLACKMARKET)? "BM: " : "SG: ") + p1;
                             }
                             else
                             {
 								p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
+                                suggeprice = ((sttngs.wtbAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "BM: " : "SG: ") + p1;
                             }
-                            suggeprice = "SG: " + p1;
+                            
                             if (sttngs.showsugrange)
                             {
                                 if (helpf.wtsmenue)
@@ -880,9 +882,11 @@ namespace Auction.mod
                                 else
                                 {
 									p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
+                                    
                                 }
+                                if (p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                             }
-                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+                            
                         }
                         GUI.skin = helpf.cardListPopupSkin;
                         Rect position14 = new Rect(nextx + 2f, position9.y, recto.labelsWidth / 2f, recto.fieldHeight);
@@ -1067,6 +1071,28 @@ namespace Auction.mod
                 GUI.Box(recto.position2, string.Empty);
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, this.opacity);
 
+                
+                int num = 0;
+                Card card = null;
+
+                // set drawn cards
+                if (helpf.createAuctionMenu)
+                {
+                    if (this.helpf.addmode)
+                    {
+                        this.ahlist = this.ps.getAddOffers();
+                    }
+                    else
+                    {
+                        this.ahlist = this.ps.getOwnOffers();
+                    }
+                }
+                else
+                {
+                        if (wtsmenue) this.ahlist = ah.getSellOffers();
+                        else this.ahlist = ah.getBuyOffers();
+                }
+
 
 
                 // draw sort buttons:###############################################
@@ -1186,33 +1212,13 @@ namespace Auction.mod
                     }
                     else
                     {
-                        GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "own auctions");
+                        GUI.Label(new Rect(recto.position.x + recto.position.width * 0.03f, recto.screenRect.yMin - 4, (recto.position.xMax - recto.position.width * 0.03f) - (recto.position.x + recto.position.width * 0.03f), 20), "own auctions " + this.gglthngs.pstoreOwnAucs.Count + "/10");
                     }
                     GUI.skin.label.alignment = TextAnchor.MiddleLeft;
                 }
 
 
-                int num = 0;
-                Card card = null;
-
-                // set drawn cards
-                if (helpf.createAuctionMenu)
-                {
-                    if (this.helpf.addmode)
-                    {
-                        this.ahlist = this.ps.getAddOffers();
-                    }
-                    else
-                    {
-                        this.ahlist = this.ps.getOwnOffers();
-                    }
-                }
-                else
-                {
-                        if (wtsmenue) this.ahlist = ah.getSellOffers();
-                        else this.ahlist = ah.getBuyOffers();
-                }
-
+                
 
 
                 DateTime currenttime = DateTime.Now;
@@ -1237,7 +1243,7 @@ namespace Auction.mod
                 {
                     this.scrollPos2 = GUI.BeginScrollView(recto.position3, this.scrollPos2, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 }
-                if (srchsvr.reverse || (this.helpf.createAuctionMenu)) { this.ahlist.Reverse(); }
+                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { this.ahlist.Reverse(); }
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
                 float testy = this.scrollPos.y;
@@ -1377,12 +1383,14 @@ namespace Auction.mod
                                 if (wtsmenue)
                                 {
                                     p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
+                                    suggeprice = ((sttngs.wtsAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "BM: " : "SG: ") + p1;
                                 }
                                 else
                                 {
                                     p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
+                                    suggeprice = ((sttngs.wtbAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "BM: " : "SG: ") + p1;
                                 }
-                                suggeprice = "SG: " + p1;
+
                                 if (sttngs.showsugrange)
                                 {
                                     if (wtsmenue)
@@ -1392,9 +1400,11 @@ namespace Auction.mod
                                     else
                                     {
                                         p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
+
                                     }
+                                    if (p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                                 }
-                                if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+
                             }
                         }
                         GUI.skin = helpf.cardListPopupSkin;
@@ -1585,11 +1595,15 @@ namespace Auction.mod
                         }
 
                         // draw button for getting cards here!
-                        if (GUI.Button(recto.getOwnStuffButton, "GetStuff") )
+                        GUI.color = Color.white;
+                        if (this.gglthngs.workthreadclaimall) GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        if (GUI.Button(recto.getOwnStuffButton, "Claim All") )
                         {
                             this.sttngs.tradeCardID = 0;
+                            if (this.gglthngs.workthreadclaimall == false) new Thread(new ThreadStart(this.gglthngs.ClaimAllThread)).Start();
 
                         }
+                        GUI.color = Color.white;
                     }
                 }
 
@@ -1704,7 +1718,7 @@ namespace Auction.mod
 
             }
 
-            if (GUI.Button(recto.tbadd, "+"))
+            if (GUI.Button(recto.tbadd, "Sell"))
             {
                 this.gglthngs.sellingCard = this.OfferCard;
                 App.Communicator.sendRequest(new CheckCardDependenciesMessage(this.OfferCard.getId()));
@@ -1977,12 +1991,14 @@ namespace Auction.mod
                             if (wtsmenue)
                             {
                                 p1 = prcs.getPrice(index, sttngs.wtsAHpriceType);
+                                suggeprice = ((sttngs.wtsAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "BM: " : "SG: ") + p1;
                             }
                             else
                             {
                                 p1 = prcs.getPrice(index, sttngs.wtbAHpriceType);
+                                suggeprice = ((sttngs.wtbAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "BM: " : "SG: ") + p1;
                             }
-                            suggeprice = "SG: " + p1;
+
                             if (sttngs.showsugrange)
                             {
                                 if (wtsmenue)
@@ -1992,9 +2008,11 @@ namespace Auction.mod
                                 else
                                 {
                                     p2 = prcs.getPrice(index, sttngs.wtbAHpriceType2);
+
                                 }
+                                if (p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
                             }
-                            if (sttngs.showsugrange && p1 != p2) suggeprice = "SG: " + Math.Min(p1, p2) + "-" + Math.Max(p1, p2);
+
                         }
                         nextx = position12.xMax + recto.costIconWidth;
                         GUI.skin = helpf.cardListPopupBigLabelSkin;
@@ -2448,7 +2466,7 @@ namespace Auction.mod
             GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             if (helpf.playerStoreMenu) GUI.color = Color.white;
 
-            if (GUI.Button(recto.auctionhousebuttonrect, "PStr") && !helpf.showtradedialog)
+            if (GUI.Button(recto.auctionhousebuttonrect, "BM Buy") && !helpf.showtradedialog)
             {
                 helpf.createAuctionMenu = false;
                 helpf.playerStoreMenu = true;
@@ -2465,7 +2483,7 @@ namespace Auction.mod
 
             GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             if (helpf.createAuctionMenu) GUI.color = Color.white;
-            if (GUI.Button(recto.createbuttonrect, "Crt") && !helpf.showtradedialog)
+            if (GUI.Button(recto.createbuttonrect, "BM Sell") && !helpf.showtradedialog)
             {
                 helpf.createAuctionMenu = true;
                 helpf.playerStoreMenu = false;

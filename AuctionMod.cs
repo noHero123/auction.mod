@@ -62,7 +62,6 @@ namespace Auction.mod
         GeneratorUI genui;
         SettingsUI setui;
         Generator generator;
-        VersionCheck vc;
         PopupManager pppmngr;
 
         public static string GetName()
@@ -72,7 +71,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 133;
+            return 137;
         }
 
 
@@ -170,7 +169,6 @@ namespace Auction.mod
         public AuctionMod()
         {
             pppmngr = PopupManager.Instance;
-            vc = new VersionCheck();
             DateTime itze= DateTime.Now;
             helpf = Helpfunktions.Instance;
             helpf.setOwnAucPath(this.OwnFolder() + System.IO.Path.DirectorySeparatorChar + "auc" + System.IO.Path.DirectorySeparatorChar);

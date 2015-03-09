@@ -11,6 +11,12 @@ namespace Auction.mod
     public class GetGoogleThings : ICommListener, IOkCallback, ICancelCallback, IOkCancelCallback, IOkStringCallback, IOkStringCancelCallback
     {
         public bool loadeddata=false;
+
+        public volatile bool workthreadclaimall = false;
+        private int claimeditems = 0;
+        private int claimeditemstaxes = 0;
+        private int claimeditemsmoney = 0;
+
         public volatile bool workthreadready = true;
         public volatile bool workthreadreadyOwnOffers = true;
         public volatile bool workthreadreadyCreateOffers = true;
@@ -41,8 +47,14 @@ namespace Auction.mod
             public string seller;
         }
 
+        bool needSoldAucs = true;
+
         public List<sharedItem> pStoreItems = new List<sharedItem>();
+
         public List<Auction> pstoreAucs = new List<Auction>();
+        public List<Auction> pstoreOwnAucs = new List<Auction>();
+
+        public List<Auction> pstoreSOLDAucs = new List<Auction>();
 
 
         private static GetGoogleThings instance;
@@ -79,6 +91,17 @@ namespace Auction.mod
 
         public void handleMessage(Message msg)
         {
+
+            if (msg is MessageMessage)
+            {
+                MessageMessage omsg = (MessageMessage)msg;
+                if (omsg.type == MessageMessage.Type.SOLD_MARKET_SCROLLS)
+                {
+                    needSoldAucs = true;
+                    App.Communicator.send(new MarketplaceSoldListViewMessage());
+                }
+            }
+
             if (msg is OkMessage)
             {
                 OkMessage omsg = (OkMessage)msg;
@@ -89,14 +112,14 @@ namespace Auction.mod
                     {
                         this.dataOffer = 0;
                         App.Communicator.send(new MarketplaceOffersViewMessage());
-                        App.Communicator.send(new MarketplaceSoldListViewMessage());
+                        //App.Communicator.send(new MarketplaceSoldListViewMessage());
                         App.Communicator.sendRequest(new LibraryViewMessage());
                     }
                     if (omsg.op == "MarketplaceCancelOffer")
                     {
                         this.dataOffer = 0;
                         App.Communicator.send(new MarketplaceOffersViewMessage());
-                        App.Communicator.send(new MarketplaceSoldListViewMessage());
+                        //App.Communicator.send(new MarketplaceSoldListViewMessage());
                         App.Communicator.sendRequest(new LibraryViewMessage());
                     }
 
@@ -104,9 +127,18 @@ namespace Auction.mod
                     {
                         
                         if (transactionBeingClaimed == null) return;
+                        if (this.workthreadclaimall)
+                        {
+                            this.claimeditemstaxes += this.transactionBeingClaimed.fee;
+                            this.claimeditemsmoney += this.transactionBeingClaimed.sellPrice;
+                            System.Threading.Thread.Sleep(150);
+                            this.claimlast();
+                            return;
+                        }
                         App.AudioScript.PlaySFX("Sounds/hyperduck/UI/ui_coin_tally_end");
                         CardType cardType = CardTypeManager.getInstance().get(this.transactionBeingClaimed.cardType);
                         this.dataOffer = 0;
+                        this.needSoldAucs = true;
                         App.Communicator.send(new MarketplaceOffersViewMessage());
                         App.Communicator.send(new MarketplaceSoldListViewMessage());
                         App.Communicator.sendRequest(new LibraryViewMessage());
@@ -124,6 +156,7 @@ namespace Auction.mod
 								this.transactionBeingClaimed.fee,
 								").</color>"
 							}), "Ok");
+                        this.transactionBeingClaimed = null;
                     }
                 }
                 if (Helpfunktions.Instance.playerStoreMenu)
@@ -175,7 +208,7 @@ namespace Auction.mod
 
                 MarketplaceOffersViewMessage marketplaceOffersViewMessage = (MarketplaceOffersViewMessage)msg;
                 MarketplaceOffer[] offers = marketplaceOffersViewMessage.offers;
-                this.pstoreAucs.Clear();
+                this.pstoreOwnAucs.Clear();
                 DateTime tme = DateTime.Now;
                 tme = tme.AddMilliseconds(1000);
                 for (int i = 0; i < offers.Length; i++)
@@ -184,11 +217,19 @@ namespace Auction.mod
                     Auction a = new Auction(App.MyProfile.ProfileInfo.name, tme, Auction.OfferType.SELL, marketplaceOffer.card, "" + marketplaceOffer.id, marketplaceOffer.price);
                     tme = tme.AddMilliseconds(1);
                     //Console.WriteLine("add owm auction: " + a.card.getName() + " " + a.price);
-                    this.pstoreAucs.Add(a);
+                    this.pstoreOwnAucs.Add(a);
                 }
 
                 this.dataOffer++;
-                if (this.dataOffer >= 2) this.dataisreadyOwnOffers = true;
+                
+                if (this.dataOffer >= 2 || !this.needSoldAucs)
+                {
+                    this.dataisreadyOwnOffers = true;
+                }
+                if (this.dataOffer >= 2)
+                {
+                    this.needSoldAucs = false;
+                }
             }
 
             if (msg is MarketplaceSoldListViewMessage)
@@ -197,7 +238,7 @@ namespace Auction.mod
 
                 MarketplaceSoldListViewMessage marketplaceOffersViewMessage = (MarketplaceSoldListViewMessage)msg;
                 TransactionInfo[] offers = marketplaceOffersViewMessage.sold;
-                //this.pstoreAucs.Clear();
+                this.pstoreSOLDAucs.Clear();
                 this.soldScrollTransactions.Clear();
                 DateTime tme = DateTime.Now;
                 
@@ -216,10 +257,11 @@ namespace Auction.mod
                     Auction a = new Auction(App.MyProfile.ProfileInfo.name, tme, Auction.OfferType.SELL, c, aucmessage, marketplaceOffer.sellPrice, marketplaceOffer.cardId);
                     tme = tme.AddMilliseconds(1);
                     //Console.WriteLine("add owm auction: " + a.card.getName() + " " + a.price);
-                    this.pstoreAucs.Add(a);
+                    this.pstoreSOLDAucs.Add(a);
                 }
                 this.dataOffer++;
                 if (this.dataOffer >= 2) this.dataisreadyOwnOffers = true;
+                this.needSoldAucs = false;
             }
 
             if (msg is MarketplaceAvailableOffersListViewMessage)
@@ -240,7 +282,7 @@ namespace Auction.mod
                     card.level = mta.level;
                     Auction a = new Auction("BlackMarket", tme, Auction.OfferType.SELL, card, "", mta.price);
                     tme = tme.AddMilliseconds(1);
-                    Console.WriteLine("add auction: " + a.card.getName() + " " + a.price);
+                    //Console.WriteLine("add auction: " + a.card.getName() + " " + a.price);
                     this.pstoreAucs.Add(a);
                 }
 
@@ -259,6 +301,12 @@ namespace Auction.mod
             if (popupType == "deckinvalidationwarning")
             {
                 this.GetCreateOfferInfo();
+            }
+
+            if (popupType == "claimgold")
+            {
+                //Console.WriteLine("#transaction was claimed");
+                
             }
         }
         public void PopupOk(string popupType, string value)
@@ -299,8 +347,11 @@ namespace Auction.mod
         {
             this.dataisreadyOwnOffers = false;
             this.dataOffer = 0;
+            this.dataisready = false;
             App.Communicator.send(new MarketplaceOffersViewMessage());
-            App.Communicator.send(new MarketplaceSoldListViewMessage());
+            if(needSoldAucs)App.Communicator.send(new MarketplaceSoldListViewMessage());
+            //for prices:
+            App.Communicator.send(new MarketplaceAvailableOffersListViewMessage());
         }
 
 
@@ -329,7 +380,9 @@ namespace Auction.mod
         {
             Console.WriteLine("add data to own ps");
             this.pstore.removeAllOwnMessages();
-            List<Auction> auctionsToAdd = new List<Auction>(this.pstoreAucs);
+            List<Auction> auctionsToAdd = new List<Auction>(this.pstoreOwnAucs);
+            List<Auction> auctionsToAdd2 = new List<Auction>(this.pstoreSOLDAucs);
+            auctionsToAdd.AddRange(auctionsToAdd2);
             this.pstore.addOwnAuctions(auctionsToAdd);
             this.dataOffer = 0;
             this.dataisreadyOwnOffers = false;
@@ -374,6 +427,8 @@ namespace Auction.mod
 
         public void ClaimSalesMoney(int cardid)
         {
+            if (this.workthreadclaimall == true) return;
+
             if (this.soldScrollTransactions.ContainsKey(cardid))
             {
                 TransactionInfo transactionInfo = this.soldScrollTransactions[cardid];
@@ -381,6 +436,66 @@ namespace Auction.mod
                 App.Communicator.send(new MarketplaceClaimMessage(transactionInfo.transactionId));
                 this.soldScrollTransactions.Remove(cardid);
             }
+        }
+
+        private void claimlast()
+        {
+            int cardid = -1;
+            TransactionInfo transactionInfo = null;
+            foreach (KeyValuePair<int, TransactionInfo> kvp in this.soldScrollTransactions)
+            {
+                cardid = kvp.Key;
+                transactionInfo = kvp.Value;
+            }
+            if (cardid != -1)
+            {
+                this.claimeditems++;
+                this.soldScrollTransactions.Remove(cardid);
+                this.transactionBeingClaimed = transactionInfo;
+                App.Communicator.send(new MarketplaceClaimMessage(transactionInfo.transactionId));
+            }
+            else
+            {
+                //finished claiming
+                if (this.claimeditems >= 1)
+                {
+                    this.dataOffer = 0;
+                    this.needSoldAucs = true;
+                    App.Communicator.send(new MarketplaceOffersViewMessage());
+                    App.Communicator.send(new MarketplaceSoldListViewMessage());
+                    App.Communicator.sendRequest(new LibraryViewMessage());
+                    App.Popups.ShowOk(this, "claimgold", "Gold added", string.Concat(new object[]
+							{   
+                                "<color=#bbaa88>",
+								"Your Scrolls where sold for ",
+								this.claimeditemsmoney,
+								" gold!\nEarned <color=#ffd055>",
+								this.claimeditemsmoney-this.claimeditemstaxes,
+								" gold</color> (the fence collects ",
+								this.claimeditemstaxes,
+								").</color>"
+							}), "Ok");
+                }
+
+                this.claimeditems = 0;
+                this.claimeditemstaxes = 0;
+                this.claimeditemsmoney = 0;
+                this.transactionBeingClaimed = null;
+                this.workthreadclaimall = false;
+            }
+
+        }
+
+        public void ClaimAllThread()
+        {
+            if (this.workthreadclaimall == true) return;
+            this.workthreadclaimall = true;
+            this.claimeditems = 0;
+            this.claimeditemstaxes = 0;
+            this.claimeditemsmoney = 0;
+            claimlast();
+
+            //this.workthreadclaimall = false;
         }
 
 

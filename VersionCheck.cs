@@ -22,6 +22,8 @@ namespace Auction.mod
 
         public VersionCheck()
         {
+            return;
+            //isnt needed anymore.. i realised that summoner has an autoupdate function :D
             this.pppmngr = PopupManager.Instance;
             new Thread(new ThreadStart(this.workthread)).Start();
             try

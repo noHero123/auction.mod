@@ -11,13 +11,14 @@ namespace Auction.mod
     {
 
 		private static ScrollsPostPriceType nextScrollsPostPriceType(ScrollsPostPriceType type) {
-			return (ScrollsPostPriceType)(((int)type + 1) % 3);
+			return (ScrollsPostPriceType)(((int)type + 1) % 4);
 		}
 		private static string scrollsPostPriceTypeToString(ScrollsPostPriceType type) {
 			switch(type){
 			case ScrollsPostPriceType.LOWER: return "lower";
 			case ScrollsPostPriceType.SUGGESTED: return "sugg.";
 			case ScrollsPostPriceType.UPPER: return "upper";
+            case ScrollsPostPriceType.BLACKMARKET: return "BM";
 			default: throw new ArgumentException();
 			}
 		}
@@ -256,7 +257,7 @@ namespace Auction.mod
                     sttngs.wtsAHpriceType2 = nextScrollsPostPriceType(sttngs.wtsAHpriceType2);
                 }
                 GUI.Label(recto.setwtsahlabel3, "and");
-                GUI.Label(recto.setwtsahlabel4, "ScrollsGuide prices");
+                GUI.Label(recto.setwtsahlabel4, ((sttngs.wtsAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "" : "ScrollsGuide ") + "prices");
                 GUI.Label(recto.setwtbahlabel, "show in WTB-AH the ");
                 if (GUI.Button(recto.setwtbahbutton, ""))
                 {
@@ -267,7 +268,7 @@ namespace Auction.mod
                     sttngs.wtbAHpriceType2 = nextScrollsPostPriceType(sttngs.wtbAHpriceType2);
                 }
                 GUI.Label(recto.setwtbahlabel3, "and");
-                GUI.Label(recto.setwtbahlabel4, "ScrollsGuide prices");
+                GUI.Label(recto.setwtbahlabel4, ((sttngs.wtbAHpriceType == ScrollsPostPriceType.BLACKMARKET) ? "" : "ScrollsGuide ") + "prices");
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 				GUI.Label(recto.setwtsahbutton, scrollsPostPriceTypeToString(sttngs.wtsAHpriceType));
 				GUI.Label(recto.setwtbahbutton, scrollsPostPriceTypeToString(sttngs.wtbAHpriceType));
