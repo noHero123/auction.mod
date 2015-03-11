@@ -97,12 +97,14 @@ namespace Auction.mod
             orgicardsPlayer.AddRange(((LibraryViewMessage)msg).cards);
             List<string> checklist = new List<string>();
             helpf.cardIDToNumberOwned.Clear();
+            helpf.cardIDToNumberOwnedTiered.Clear();
             Console.WriteLine("add cards to cardIDToNumberOwned");
             foreach (Auction ai in this.fullBuyOwnList) //fullbuyownlist == all cards in game
             {
                 if (!helpf.cardIDToNumberOwned.ContainsKey(ai.card.getType()))
                 {
                     helpf.cardIDToNumberOwned.Add(ai.card.getType(), 0);
+                    helpf.cardIDToNumberOwnedTiered.Add(ai.card.getType(), 0);
                 }
             }
 
@@ -117,6 +119,11 @@ namespace Auction.mod
 
 
                 helpf.cardIDToNumberOwned[c.getType()] = helpf.cardIDToNumberOwned[c.getType()] + 1;
+
+                int tieramount = (int)Math.Pow(3, c.level);
+                //Console.WriteLine("#"+ c.getType() + " "+ c.level + " " + tieramount);
+
+                helpf.cardIDToNumberOwnedTiered[c.getType()] = helpf.cardIDToNumberOwnedTiered[c.getType()] + tieramount;
             }
 
             this.fullSellOwnList.Sort(delegate(Auction p1, Auction p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });

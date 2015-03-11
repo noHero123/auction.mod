@@ -41,26 +41,66 @@ namespace Auction.mod
             return a1.card.getName ().CompareTo (a2.card.getName ());
         }
         public static int CompareSellerName(Auction a1, Auction a2) {
-            return a1.seller.CompareTo (a2.seller);
+            int firstcompare = a1.seller.CompareTo (a2.seller);
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
         }
         public static int CompareTime(Auction a1, Auction a2) {
-            return -a1.time.CompareTo (a2.time); //We want the most recent on the top.
+            int firstcompare = -a1.time.CompareTo (a2.time); //We want the most recent on the top.
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
         }
         public static int ComparePrice(Auction a1, Auction a2) {
-            return a1.price.CompareTo (a2.price);
+            int firstcompare = a1.price.CompareTo(a2.price);
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
         }
+
+        public static int CompareCardNameREV(Auction a1, Auction a2)
+        {
+            return -a1.card.getName().CompareTo(a2.card.getName());
+        }
+        public static int CompareSellerNameREV(Auction a1, Auction a2)
+        {
+            int firstcompare = -a1.seller.CompareTo(a2.seller);
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
+        }
+        public static int CompareTimeREV(Auction a1, Auction a2)
+        {
+            int firstcompare = a1.time.CompareTo(a2.time); //We want the most recent on the flor.
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
+        }
+        public static int ComparePriceREV(Auction a1, Auction a2)
+        {
+            int firstcompare = -a1.price.CompareTo(a2.price);
+            return (firstcompare != 0) ? firstcompare : CompareCardName(a1, a2);
+        }
+
         public static Comparison<Auction> getComparison(AuctionHouse.SortMode mode) {
             switch(mode) {
             case AuctionHouse.SortMode.CARD:
                 return CompareCardName;
+
             case AuctionHouse.SortMode.PRICE:
                 return ComparePrice;
+
             case AuctionHouse.SortMode.SELLER:
                 return CompareSellerName;
+
             case AuctionHouse.SortMode.TIME:
                 return CompareTime;
+
+            case AuctionHouse.SortMode.CARD_REVERSE:
+                return CompareCardNameREV;
+
+            case AuctionHouse.SortMode.PRICE_REVERSE:
+                return ComparePriceREV;
+
+            case AuctionHouse.SortMode.SELLER_REVERSE:
+                return CompareSellerNameREV;
+
+            case AuctionHouse.SortMode.TIME_REVERSE:
+                return CompareTimeREV;
+
             default:
-                throw new ArgumentException ();
+                return CompareCardName;
             }
         }
         public void setPrice(int p)

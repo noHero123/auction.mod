@@ -54,7 +54,7 @@ namespace Auction.mod
 
         #endregion
         #region AmountFilter
-        int amountFilter = 0; //0=no filter, 1= ">0" Filter ; 2=">3" Filter; 3="<3" Filter ; 4 = "<1"
+        int amountFilter = 0; //0=no filter, 1= ">0" Filter ; 2=">3" Filter; 3="<3" Filter ; 4 = "<1" Filter; 26 =">27" Filter; 27 ="<27" Filter; 
 
         public void setAmountFilter(int value)
         {
@@ -70,6 +70,14 @@ namespace Auction.mod
             if (amountFilter == 2 && anz <= 3) return true;
             if (amountFilter == 3 && anz >= 3) return true;
             if (amountFilter == 4 && anz >= 1) return true;
+            if (amountFilter == 26)
+            {
+                if(helpf.cardIDToNumberOwnedTiered[a.card.getType()] <= 27) return true;
+            }
+            if (amountFilter == 27)
+            {
+                if (helpf.cardIDToNumberOwnedTiered[a.card.getType()] >= 27) return true;
+            }
             return false;
         }
         #endregion

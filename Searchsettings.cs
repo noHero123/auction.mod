@@ -20,6 +20,7 @@ namespace Auction.mod
             public bool boolean8;
             public bool boolean9;
             public bool boolean10;
+            public bool boolean11;
             public string strings0;
             public string strings1;
             public string strings2;
@@ -46,6 +47,7 @@ namespace Auction.mod
         public bool rarebool=true;
         public bool threebool=false;
         public bool onebool=false;
+        public bool twentysevenbool = false;
         public bool ignore0=false;
         public bool takepriceformgenarator=false;
         public string timesearchstring = "";
@@ -91,6 +93,7 @@ namespace Auction.mod
             this.rarebool = true;
             this.threebool = false;
             this.onebool = false;
+            this.twentysevenbool = false;
             this.ignore0 = false;
             this.wtssearchstring = "";
             this.sellersearchstring = "";
@@ -114,6 +117,7 @@ namespace Auction.mod
             this.rarebool = true;
             this.threebool = false;
             this.onebool = false;
+            this.twentysevenbool = false;
             this.ignore0 = false;
             this.wtssearchstring = "";
             this.sellersearchstring = "";
@@ -137,6 +141,7 @@ namespace Auction.mod
             this.rarebool = true;
             this.threebool = false;
             this.onebool = false;
+            this.twentysevenbool = false;
             this.genpricesearchstring = "";
             this.genpricesearchstring2 = "";
             if (wts)
@@ -165,6 +170,7 @@ namespace Auction.mod
             this.rarebool = true;
             this.threebool = false;
             this.onebool = false;
+            this.twentysevenbool = false;
             this.pspricesearchstring = "";
             this.pspricesearchstring2 = "";
         }
@@ -197,8 +203,9 @@ namespace Auction.mod
             copy.boolean6 = rarebool;
             copy.boolean7 = threebool;
             copy.boolean8 = onebool;
-            copy.boolean9 = ignore0;
-            copy.boolean10 = takepriceformgenarator;
+            copy.boolean9 = twentysevenbool;
+            copy.boolean10 = ignore0;
+            copy.boolean11 = takepriceformgenarator;
             copy.strings0 = wtssearchstring;
             copy.strings1 = sellersearchstring;
             copy.strings2 = pricesearchstring;//shortwts/wtbstring
@@ -226,8 +233,9 @@ namespace Auction.mod
             rarebool = copy.boolean6;
             threebool = copy.boolean7;
             onebool = copy.boolean8;
-            ignore0 = copy.boolean9;
-            takepriceformgenarator = copy.boolean10;
+            twentysevenbool = copy.boolean9;
+            ignore0 = copy.boolean10;
+            takepriceformgenarator = copy.boolean11;
             wtssearchstring = copy.strings0;
             sellersearchstring = copy.strings1;
             pricesearchstring = copy.strings2;

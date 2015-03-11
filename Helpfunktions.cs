@@ -89,6 +89,7 @@ namespace Auction.mod
         public Dictionary<int, string> cardidsToCardnames = new Dictionary<int, string>();
         public Dictionary<string, int> cardnamesToID = new Dictionary<string, int>();
         public Dictionary<int, int> cardIDToNumberOwned = new Dictionary<int, int>();
+        public Dictionary<int, int> cardIDToNumberOwnedTiered = new Dictionary<int, int>();
         public Dictionary<int, long> cardIDToCardNumber = new Dictionary<int, long>();
 
         public Dictionary<string, ChatUser> globalusers = new Dictionary<string, ChatUser>();

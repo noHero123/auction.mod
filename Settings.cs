@@ -51,8 +51,8 @@ namespace Auction.mod
         public int wtbroundmode = 0;
         public bool roundwtb = false;
         public ScrollsPostDayType scrollspostday = 0;
-		public ScrollsPostPriceType wtsGeneratorPriceType = ScrollsPostPriceType.UPPER, wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
-		public ScrollsPostPriceType wtsAHpriceType = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType = ScrollsPostPriceType.SUGGESTED, wtsAHpriceType2 = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
+		public ScrollsPostPriceType wtsGeneratorPriceType = ScrollsPostPriceType.BLACKMARKET, wtbGeneratorPriceType = ScrollsPostPriceType.BLACKMARKET;
+        public ScrollsPostPriceType wtsAHpriceType = ScrollsPostPriceType.BLACKMARKET, wtbAHpriceType = ScrollsPostPriceType.BLACKMARKET, wtsAHpriceType2 = ScrollsPostPriceType.SUGGESTED, wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
 
         public string spampreventtime = "";
         public int spamprevint=0;
@@ -161,9 +161,10 @@ namespace Auction.mod
             roundwtb = false;
             wtbroundup = false;
             wtbroundmode = 0;
-			wtsGeneratorPriceType = ScrollsPostPriceType.SUGGESTED;
-			wtbGeneratorPriceType = ScrollsPostPriceType.LOWER;
-			wtsAHpriceType = wtsAHpriceType = wtsAHpriceType2 = wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
+			wtsGeneratorPriceType = ScrollsPostPriceType.BLACKMARKET;
+            wtbGeneratorPriceType = ScrollsPostPriceType.BLACKMARKET;
+            wtsAHpriceType = wtsAHpriceType = ScrollsPostPriceType.BLACKMARKET;
+            wtsAHpriceType2 = wtbAHpriceType2 = ScrollsPostPriceType.SUGGESTED;
             scrollspostday = ScrollsPostDayType.one;
         }
 

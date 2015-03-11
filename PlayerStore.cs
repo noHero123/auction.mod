@@ -138,8 +138,7 @@ namespace Auction.mod
                 }
                 createOfferListFiltered.RemoveAll(createCardsFilter.isFiltered);
                 createCardsFilter.filtersChanged = false;
-                createOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.PRICE)); //.CARD
-                createOfferListFiltered.Reverse();//wasnt there
+                createOfferListFiltered.Sort(Auction.getComparison(AuctionHouse.SortMode.PRICE_REVERSE)); //.CARD
             }
             return new List<Auction>(createOfferListFiltered);
         }

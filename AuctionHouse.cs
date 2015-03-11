@@ -6,7 +6,7 @@ namespace Auction.mod
     public class AuctionHouse
     {
         public enum SortMode {
-            TIME, CARD, PRICE, SELLER
+            TIME, CARD, PRICE, SELLER, TIME_REVERSE, PRICE_REVERSE, SELLER_REVERSE, CARD_REVERSE
         }
 
     private static AuctionHouse instance;

@@ -269,10 +269,18 @@ namespace Auction.mod
                 GUI.contentColor = Color.yellow;
                 bool rareclick = GUI.Button(recto.sbrarerect, "R");
                 GUI.color = Color.white;
-                if (!srchsvr.threebool) { GUI.color = dblack; }
+                if (!srchsvr.twentysevenbool) { GUI.color = dblack; }
                 //if (!p1mt3bool) { GUI.color = dblack; }
+                bool mt27click;
+                if (helpf.wtsmenue)
+                {
+                    mt27click = GUI.Button(recto.sbtwentysevenrect, "<27"); // >3 bei wtsmenue=false
+                }
+                else { mt27click = GUI.Button(recto.sbtwentysevenrect, ">27"); }
                 bool mt3click;
                 bool mt0click = false;
+                GUI.color = Color.white;
+                if (!srchsvr.threebool) { GUI.color = dblack; }
                 if (helpf.wtsmenue)
                 {
                     mt3click = GUI.Button(recto.sbthreerect, "<3"); // >3 bei wtsmenue=false
@@ -389,6 +397,7 @@ namespace Auction.mod
                 if (commonclick) { srchsvr.commonbool = !srchsvr.commonbool; };
                 if (uncommonclick) { srchsvr.uncommonbool = !srchsvr.uncommonbool; }
                 if (rareclick) { srchsvr.rarebool = !srchsvr.rarebool; };
+                if (mt27click) { srchsvr.twentysevenbool = !srchsvr.twentysevenbool; }
                 if (mt3click) { srchsvr.threebool = !srchsvr.threebool; }
                 if (mt0click) { srchsvr.onebool = !srchsvr.onebool; }
                 if (owp) { srchsvr.ignore0 = !srchsvr.ignore0; }
@@ -453,12 +462,13 @@ namespace Auction.mod
                         ah.buyOfferFilter.setDontShowNoPrice(srchsvr.ignore0);
                     }
                 }
-                if (mt3click||mt0click)
+                if (mt3click || mt0click || mt27click)
                 {
                     int filter = 0;
                     
                     if (helpf.wtsmenue)
                     {
+                        if (srchsvr.twentysevenbool) filter = 27;//(onebool < threebool)
                         if (srchsvr.threebool) filter = 3;
                         if (helpf.playerStoreMenu && srchsvr.onebool) filter = 4;
                         ah.sellOfferFilter.setAmountFilter(filter);
@@ -468,6 +478,7 @@ namespace Auction.mod
                     {
                         if (srchsvr.onebool) filter = 1;
                         if (srchsvr.threebool) filter = 2;//(onebool < threebool)
+                        if (srchsvr.twentysevenbool) filter = 26;//(onebool < threebool)
                         ah.buyOfferFilter.setAmountFilter(filter);
                     }
                 }
@@ -577,14 +588,18 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
                     if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 1;
+
+                    bool res = false;
+                    if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { res = true; }
+                    
                     if (helpf.wtsmenue)
                     {
-                        ah.setSellSortMode(AuctionHouse.SortMode.CARD);
-                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.CARD);
+                        ah.setSellSortMode((!res)? AuctionHouse.SortMode.CARD : AuctionHouse.SortMode.CARD_REVERSE);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode((!res)? AuctionHouse.SortMode.CARD : AuctionHouse.SortMode.CARD_REVERSE);
                     }
                     else
                     {
-                        ah.setBuySortMode(AuctionHouse.SortMode.CARD);
+                        ah.setBuySortMode((!res)? AuctionHouse.SortMode.CARD : AuctionHouse.SortMode.CARD_REVERSE);
                     }
 
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
@@ -601,8 +616,12 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
-                        ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
-                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.SELLER);
+
+                        bool res = false;
+                        if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { res = true; }
+                    
+                        ah.setSellSortMode((!res)? AuctionHouse.SortMode.SELLER : AuctionHouse.SortMode.SELLER_REVERSE);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode((!res)? AuctionHouse.SortMode.SELLER : AuctionHouse.SortMode.SELLER_REVERSE);
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
@@ -614,7 +633,10 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                         if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 3;
-                        ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
+                        bool res = false;
+                        if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { res = true; }
+
+                        ah.setBuySortMode((!res) ? AuctionHouse.SortMode.SELLER : AuctionHouse.SortMode.SELLER_REVERSE);
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                     }
                 }
@@ -625,14 +647,18 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                     if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 2;
+
+                    bool res = false;
+                    if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { res = true; }
+                    
                     if (helpf.wtsmenue)
                     {
-                        ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
-                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                        ah.setSellSortMode((!res) ? AuctionHouse.SortMode.PRICE : AuctionHouse.SortMode.PRICE_REVERSE);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode((!res) ? AuctionHouse.SortMode.PRICE : AuctionHouse.SortMode.PRICE_REVERSE);
                     }
                     else
                     {
-                        ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
+                        ah.setBuySortMode((!res) ? AuctionHouse.SortMode.PRICE : AuctionHouse.SortMode.PRICE_REVERSE);
                     }
 
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
@@ -644,14 +670,18 @@ namespace Auction.mod
                     if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                     if (srchsvr.sortmode == 0) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                     srchsvr.sortmode = 0;
+
+                    bool res = false;
+                    if (srchsvr.reverse) { res = true; }
+                    
                     if (helpf.wtsmenue)
                     {
-                        ah.setSellSortMode(AuctionHouse.SortMode.TIME);
-                        if (helpf.playerStoreMenu) ps.setSellSortMode(AuctionHouse.SortMode.TIME);
+                        ah.setSellSortMode((!res) ? AuctionHouse.SortMode.TIME : AuctionHouse.SortMode.TIME_REVERSE);
+                        if (helpf.playerStoreMenu) ps.setSellSortMode((!res) ? AuctionHouse.SortMode.TIME : AuctionHouse.SortMode.TIME_REVERSE);
                     }
                     else
                     {
-                        ah.setBuySortMode(AuctionHouse.SortMode.TIME);
+                        ah.setBuySortMode((!res) ? AuctionHouse.SortMode.TIME : AuctionHouse.SortMode.TIME_REVERSE);
                     }
                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                 }
@@ -698,7 +728,8 @@ namespace Auction.mod
                 }
 
                 //this.scrollPos = GUI.BeginScrollView(recto.position3, this.scrollPos, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
-                if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { this.ahlist.Reverse(); }
+                
+                //if ((!(this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0) && srchsvr.reverse) || (this.helpf.playerStoreMenu && this.srchsvr.sortmode == 0 && !srchsvr.reverse)) { this.ahlist.Reverse(); }
 
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
@@ -1105,15 +1136,19 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }// this will toggle the reverse mode
                         if (srchsvr.sortmode == 1) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 1;
+
+                        bool rev = false;
+                        if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { rev = true; }
+
                         if (helpf.bothmenue)
                         {
                             if (wtsmenue)
                             {
-                                ah.setSellSortMode(AuctionHouse.SortMode.CARD);
+                                ah.setSellSortMode((rev)? AuctionHouse.SortMode.CARD : AuctionHouse.SortMode.CARD_REVERSE);
                             }
                             else
                             {
-                                ah.setBuySortMode(AuctionHouse.SortMode.CARD);
+                                ah.setBuySortMode((rev)? AuctionHouse.SortMode.CARD : AuctionHouse.SortMode.CARD_REVERSE);
                             }
                             if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
                         }
@@ -1133,9 +1168,13 @@ namespace Auction.mod
                                 if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                                 if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                                 srchsvr.sortmode = 3;
+
+                                bool rev = false;
+                                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { rev = true; }
+
                                 if (helpf.bothmenue)
                                 {
-                                    ah.setSellSortMode(AuctionHouse.SortMode.SELLER);
+                                    ah.setSellSortMode((rev)? AuctionHouse.SortMode.SELLER : AuctionHouse.SortMode.SELLER_REVERSE);
                                     //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
                                     srchsvr.savesettings(0, true);
                                 }
@@ -1149,9 +1188,13 @@ namespace Auction.mod
                                 if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                                 if (srchsvr.sortmode == 3) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                                 srchsvr.sortmode = 3;
+
+                                bool rev = false;
+                                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { rev = true; }
+
                                 if (helpf.bothmenue)
                                 {
-                                    ah.setBuySortMode(AuctionHouse.SortMode.SELLER);
+                                    ah.setBuySortMode((rev)? AuctionHouse.SortMode.SELLER : AuctionHouse.SortMode.SELLER_REVERSE);
 
                                     srchsvr.savesettings(0, false);
                                 }
@@ -1167,15 +1210,18 @@ namespace Auction.mod
                         if (srchsvr.sortmode == 2) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 2;
 
+                        bool rev = false;
+                        if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { rev = true; }
+
                         if (helpf.bothmenue)
                         {
                             if (wtsmenue)
                             {
-                                ah.setSellSortMode(AuctionHouse.SortMode.PRICE);
+                                ah.setSellSortMode((rev)? AuctionHouse.SortMode.PRICE : AuctionHouse.SortMode.PRICE_REVERSE);
                             }
                             else
                             {
-                                ah.setBuySortMode(AuctionHouse.SortMode.PRICE);
+                                ah.setBuySortMode((rev)? AuctionHouse.SortMode.PRICE : AuctionHouse.SortMode.PRICE_REVERSE);
                             }
                             if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
                         }
@@ -1188,13 +1234,17 @@ namespace Auction.mod
                         if (srchsvr.reverse == true) { srchsvr.sortmode = -1; }
                         if (srchsvr.sortmode == 0) { srchsvr.reverse = true; } else { srchsvr.reverse = false; };
                         srchsvr.sortmode = 0;
+
+                        bool rev = false;
+                        if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { rev = true; }
+
                         if (wtsmenue)
                         {
-                            ah.setSellSortMode(AuctionHouse.SortMode.TIME);
+                            ah.setSellSortMode((rev)? AuctionHouse.SortMode.TIME : AuctionHouse.SortMode.TIME_REVERSE);
                         }
                         else
                         {
-                            ah.setBuySortMode(AuctionHouse.SortMode.TIME);
+                            ah.setBuySortMode((rev) ? AuctionHouse.SortMode.TIME : AuctionHouse.SortMode.TIME_REVERSE);
                         }
                         if (wtsmenue) { srchsvr.savesettings(0, true); } else { srchsvr.savesettings(0, false); }
                         //lstfltrs.sortlist(alists.ahlist); lstfltrs.sortlist(alists.ahlistfull);
@@ -1243,7 +1293,7 @@ namespace Auction.mod
                 {
                     this.scrollPos2 = GUI.BeginScrollView(recto.position3, this.scrollPos2, new Rect(0f, 0f, recto.innerRect.width - 20f, recto.fieldHeight * anzcards));
                 }
-                if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { this.ahlist.Reverse(); }
+                //if (srchsvr.reverse || (this.helpf.createAuctionMenu && this.helpf.addmode)) { this.ahlist.Reverse(); }
                 GUI.skin = helpf.cardListPopupBigLabelSkin;
 
                 float testy = this.scrollPos.y;
@@ -1663,7 +1713,7 @@ namespace Auction.mod
 
                 int anzcard = helpf.cardIDToNumberOwned[cid];
                 int index = helpf.cardidToArrayIndex(cid);
-                string message = "You want to create an auction for a " + cname + " (SG:" + prcs.getPrice(index, sttngs.wtbAHpriceType) + ")" + "\r\nYou own this card " + anzcard + " times.\r\n";
+                string message = "You want to create an auction for a " + cname + " (SG:" + prcs.getPrice(index, sttngs.wtbAHpriceType) + ")" + "\r\nYou own this card " + anzcard + " times.\r\n \r\n" + "(to change the Scroll you want to sell, click the picture below) ";
                 string yourmessage1 = "WTS my " + cname + " for " + this.OfferPrice + "g.";
                 GUI.Label(recto.crtmessage, message );//+ yourmessage1);
 
@@ -2085,11 +2135,14 @@ namespace Auction.mod
                 GUI.contentColor = Color.yellow;
                 bool rareclick = GUI.Button(recto.sbrarerect, "R");
                 GUI.color = Color.white;
-                if (!srchsvr.threebool) { GUI.color = dblack; }
+                if (!srchsvr.twentysevenbool) { GUI.color = dblack; }
                 //if (!p1mt3bool) { GUI.color = dblack; }
+                bool mt27click;
+                mt27click = GUI.Button(recto.sbtwentysevenrect, ">27");
+                GUI.color = Color.white;
                 bool mt3click;
                 bool mt0click = false;
-
+                if (!srchsvr.threebool) { GUI.color = dblack; }
                 mt3click = GUI.Button(recto.sbthreerect, ">3"); // >3 bei wtsmenue=false
 
                 GUI.color = Color.white;
@@ -2132,6 +2185,7 @@ namespace Auction.mod
                 if (commonclick) { srchsvr.commonbool = !srchsvr.commonbool; };
                 if (uncommonclick) { srchsvr.uncommonbool = !srchsvr.uncommonbool; }
                 if (rareclick) { srchsvr.rarebool = !srchsvr.rarebool; };
+                if (mt27click) { srchsvr.twentysevenbool = !srchsvr.twentysevenbool; }
                 if (mt3click) { srchsvr.threebool = !srchsvr.threebool; }
                 if (mt0click) { srchsvr.onebool = !srchsvr.onebool; }
                 if (closeclick)
@@ -2148,10 +2202,11 @@ namespace Auction.mod
                     ps.createCardsFilter.setCardFilter(srchsvr.wtssearchstring);
 
                 }
-                if (mt3click || mt0click)
+                if (mt3click || mt0click || mt27click)
                 {
                     int filter = 0;
                     if (srchsvr.threebool) filter = 2;
+                    if (srchsvr.twentysevenbool) filter = 26;
                     ps.createCardsFilter.setAmountFilter(filter);
 
                 }

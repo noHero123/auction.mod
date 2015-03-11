@@ -251,18 +251,20 @@ namespace Auction.mod
                     }
 
                 }
-                if (mt3click || mt0click)
+                if (mt3click || mt0click )
                 {
                     int filter = 0;
 
                     if (helpf.wtsmenue)
                     {
                         if (srchsvr.threebool) filter = 2;
+                        if (srchsvr.twentysevenbool) filter = 26;
                         generator.sellOwnCardsFilter.setAmountFilter(filter);
                     }
                     else
                     {
                         if (srchsvr.threebool) filter = 3;
+                        if (srchsvr.twentysevenbool) filter = 27;
                         generator.buyOwnCardsFilter.setAmountFilter(filter);
                     }
                 }

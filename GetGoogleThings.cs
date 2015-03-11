@@ -281,7 +281,7 @@ namespace Auction.mod
                     Card card = new Card(1, type, true);
                     card.level = mta.level;
                     Auction a = new Auction("BlackMarket", tme, Auction.OfferType.SELL, card, "", mta.price);
-                    tme = tme.AddMilliseconds(1);
+                    tme = tme.AddMilliseconds(-1);
                     //Console.WriteLine("add auction: " + a.card.getName() + " " + a.price);
                     this.pstoreAucs.Add(a);
                 }

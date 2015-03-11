@@ -22,7 +22,7 @@ namespace Auction.mod
        public Rect wtbbuttonrect, bothbuttonrect, ownbuttonrect, auctionhousebuttonrect, createbuttonrect, updatebuttonrect, fillbuttonrect;
        public float goldlength;
         //filterrects
-       public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect;
+       public Rect filtermenurect, sbarlabelrect, sbrect, sbrectbutton, sbgrect, sborect, sberect, sbdrect, sbcommonrect, sbuncommonrect, sbrarerect, sbthreerect, sbonerect, sbtwentysevenrect;
        public Rect sbsellerlabelrect, sbsellerrect, sbpricelabelrect, sbpricerect, sbclearrect, sbgeneratebutton, sbloadbutton, sbsavebutton, sbpricerect2, sbcreateauctionbutton;
        public Rect sbonlywithpricebox, sbonlywithpricelabelbox,  sbtpfgen, sbtpfgenlabel, tboffer;
        public Rect tbpriceinput, tbororand, tbcard,tradingbox, tbok, tbcancel, tbwhisper, tbmessage, tbmessagescroll, tbadd;
@@ -171,6 +171,8 @@ namespace Auction.mod
             this.sbrarerect = new Rect(sbuncommonrect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
             this.sbthreerect = new Rect(sbdrect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
             this.sbonerect = new Rect(sbthreerect.xMax + 4, sbcommonrect.y, sbiconwidth, sbiconhight);
+
+            this.sbtwentysevenrect = new Rect(sbthreerect.xMax + 4, sbgrect.y, sbiconwidth, sbiconhight);
 
             this.sbsellerlabelrect = new Rect(sbarlabelrect.x, sbcommonrect.yMax + 4, sbrarerect.xMax - sbarlabelrect.x, texthight);
             this.sbsellerrect = new Rect(sbdrect.x, sbsellerlabelrect.y, filtermenurect.xMax - sbdrect.x - num2, texthight);
