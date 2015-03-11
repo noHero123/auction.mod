@@ -25,6 +25,12 @@ namespace Auction.mod
         private int dataOffer = 0;
 
         public Card sellingCard = null;
+        public int sellingType = 1;
+        public int sellingTypeLevel = 0;
+
+        public int cancelType = 1;
+        public int cancelTypeLevel = 0;
+
 
         public long createCardID = -1;
 
@@ -34,7 +40,9 @@ namespace Auction.mod
         public int clickedItemForSales = 0;
         public int clickedItemPrice = 0;
         public long clickedItemBuyID = -1;
+        public int clickedItemtypeid = -1;
         public string clickedItemName = "";
+        public int clickedItemPriceFromOfferMessage = 0;
 
         Dictionary<int, TransactionInfo> soldScrollTransactions = new Dictionary<int, TransactionInfo>();
         TransactionInfo transactionBeingClaimed = null;
@@ -110,13 +118,24 @@ namespace Auction.mod
                     
                     if (omsg.op == "MarketplaceCreateOffer")
                     {
+                        Helpfunktions.Instance.cardIDToNumberOwned[this.sellingType]--;
+                        Helpfunktions.Instance.cardIDToNumberOwnedTiered[this.sellingType] -= (int)Math.Pow(3, sellingTypeLevel);
+                        PlayerStore.Instance.createCardsFilter.filtersChanged = true;
+                        PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
+
                         this.dataOffer = 0;
+                        this.sellingCard = null;
                         App.Communicator.send(new MarketplaceOffersViewMessage());
                         //App.Communicator.send(new MarketplaceSoldListViewMessage());
                         App.Communicator.sendRequest(new LibraryViewMessage());
                     }
                     if (omsg.op == "MarketplaceCancelOffer")
                     {
+                        Helpfunktions.Instance.cardIDToNumberOwned[this.cancelType]++;
+                        Helpfunktions.Instance.cardIDToNumberOwnedTiered[this.cancelType] += (int)Math.Pow(3, cancelTypeLevel);
+                        PlayerStore.Instance.createCardsFilter.filtersChanged = true;
+                        PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
+
                         this.dataOffer = 0;
                         App.Communicator.send(new MarketplaceOffersViewMessage());
                         //App.Communicator.send(new MarketplaceSoldListViewMessage());
@@ -159,6 +178,7 @@ namespace Auction.mod
                         this.transactionBeingClaimed = null;
                     }
                 }
+
                 if (Helpfunktions.Instance.playerStoreMenu)
                 {
                     if (omsg.op == "MarketplaceMakeDeal")
@@ -166,11 +186,27 @@ namespace Auction.mod
                         App.Communicator.sendRequest(new GetStoreItemsMessage());
                         App.Communicator.sendRequest(new LibraryViewMessage());
                         App.Popups.ShowOk(this, "dealmade", "Purchase complete!", clickedItemName + " has been added to your collection.", "Ok");
+                        Helpfunktions.Instance.cardIDToNumberOwned[this.clickedItemtypeid]++;
+                        Helpfunktions.Instance.cardIDToNumberOwnedTiered[this.clickedItemtypeid]+=(int)Math.Pow(3, clickedItemLevel);
+                        PlayerStore.Instance.createCardsFilter.filtersChanged = true;
+                        PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
+                        clickedItemBuyID = -1;
                     }
                 }
 
             }
 
+            if (msg is FailMessage)
+            {
+                FailMessage failMessage = (FailMessage)msg;
+                if (failMessage.isType(typeof(MarketplaceMakeDealMessage)))
+                {
+                    App.Popups.ShowOk(this, "dealNOTmade", "Purchase failed", failMessage.info, "Ok");
+                    PlayerStore.Instance.createCardsFilter.filtersChanged = true;
+                    PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
+                    clickedItemBuyID = -1;
+                }
+            }
 
             if (msg is CheckCardDependenciesMessage)
             {
@@ -199,6 +235,7 @@ namespace Auction.mod
                 clickedItemPrice = marketplaceOffersViewMessage.offer.price;
                 clickedItemBuyID = marketplaceOffersViewMessage.offer.id;
                 clickedItemName = marketplaceOffersViewMessage.offer.card.getName();
+                clickedItemtypeid = marketplaceOffersViewMessage.offer.card.getType();
 
             }
 
@@ -317,10 +354,14 @@ namespace Auction.mod
                 bool flag = int.TryParse(value, out price);
                 if (flag)
                 {
+                    this.sellingType = this.sellingCard.getType();
+                    this.sellingTypeLevel = this.sellingCard.level;
                     App.Communicator.send(new MarketplaceCreateOfferMessage(this.sellingCard.getId(), price));
+                    this.sellingCard = null;
                 }
                 else
                 {
+                    this.sellingCard = null;
                     App.Popups.ShowOk(this, "infopopup", "Error", "Something went wrong! Did you enter a numeric price?", "Ok");
                 }
             }
@@ -328,7 +369,7 @@ namespace Auction.mod
 
         public void PopupCancel(string popupType)
         {
-            if (popupType == "deckinvalidationwarning")
+            if (popupType == "deckinvalidationwarning" || popupType == "sellcard")
             {
                 this.sellingCard = null;
             }

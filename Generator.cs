@@ -135,7 +135,8 @@ namespace Auction.mod
             //}
 
             this.sellOwnCardsFilter.filtersChanged = true;
-        
+            PlayerStore.Instance.createCardsFilter.filtersChanged = true;
+            PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
 
         }
 

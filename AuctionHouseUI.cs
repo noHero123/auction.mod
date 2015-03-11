@@ -383,10 +383,12 @@ namespace Auction.mod
 
                 if (this.helpf.playerStoreMenu)
                 {
+                    if (!this.gglthngs.workthreadready) GUI.contentColor = this.dblack;
                     if (GUI.Button(recto.updateGoogleThings, "Update"))
                     {
                         if (this.gglthngs.workthreadready) new Thread(new ThreadStart(this.gglthngs.workthread)).Start();
                     }
+                    GUI.contentColor = Color.white;
                 }
                 
 
@@ -890,6 +892,7 @@ namespace Auction.mod
                         //int index = Array.FindIndex(helpf.cardids, element => element == current.card.getType());
                         int index = helpf.cardidToArrayIndex(current.card.getType());
                         string suggeprice = "";
+                        
                         if (index >= 0)
                         {
                             int p1 = 0, p2 = 0;
@@ -952,7 +955,7 @@ namespace Auction.mod
                         {
                             if (!helpf.showtradedialog)
                             {
-                                if (current.seller == App.MyProfile.ProfileInfo.name || current.price > App.MyProfile.ProfileData.gold)
+                                if (current.seller == App.MyProfile.ProfileInfo.name || current.price > App.MyProfile.ProfileData.gold || gglthngs.clickedItemBuyID != -1)
                                 {
                                     GUI.color = dblack;
                                 }
@@ -962,15 +965,21 @@ namespace Auction.mod
                                     // start trading with seller
                                     if (current.seller != App.MyProfile.ProfileInfo.name && current.price <= App.MyProfile.ProfileData.gold)
                                     {
-                                        helpf.showtradedialog = true;
+                                        if (!this.helpf.playerStoreMenu)
+                                        {
+                                            helpf.showtradedialog = true;
+                                        }
                                         tradeitem = current;
 
-                                        if (this.helpf.playerStoreMenu)
+                                        if (this.helpf.playerStoreMenu && gglthngs.clickedItemBuyID == -1)
                                         {
+                                            helpf.showtradedialog = true;
                                             gglthngs.clickedItemLevel = -1;
                                             gglthngs.clickedItemForSales = -1;
                                             gglthngs.clickedItemPrice = -1;
-                                            gglthngs.clickedItemBuyID = -1;
+                                            gglthngs.clickedItemBuyID = -2;
+                                            gglthngs.clickedItemtypeid = -1;
+                                            gglthngs.clickedItemPriceFromOfferMessage = current.price;
                                             App.Communicator.sendRequest(new MarketplaceOffersSearchViewMessage(current.card.getType()));
                                         }
                                     }
@@ -1529,6 +1538,8 @@ namespace Auction.mod
                                 {
                                     if (GUI.Button(new Rect(position7.xMax + 2, (float)num * recto.fieldHeight, recto.costIconWidth, recto.fieldHeight), ""))
                                     {
+                                        gglthngs.cancelType = current.card.getType();
+                                        gglthngs.cancelTypeLevel = current.card.level;
                                         App.Communicator.sendRequest(new MarketplaceCancelOfferMessage(Convert.ToInt64(current.message)));
                                     }
                                     GUI.skin = helpf.cardListPopupBigLabelSkin;
@@ -1638,12 +1649,13 @@ namespace Auction.mod
                     }
                     else
                     {
+                        if (!this.gglthngs.workthreadreadyOwnOffers) GUI.contentColor = this.dblack;
                         if (GUI.Button(recto.updateGoogleThings, "Update"))
                         {
                             //update own offers
                             if (this.gglthngs.workthreadreadyOwnOffers) new Thread(new ThreadStart(this.gglthngs.workthreadOwnOffers)).Start();
                         }
-
+                        GUI.contentColor = Color.white;
                         // draw button for getting cards here!
                         GUI.color = Color.white;
                         if (this.gglthngs.workthreadclaimall) GUI.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -1873,7 +1885,9 @@ namespace Auction.mod
             if (this.helpf.playerStoreMenu)
             {
                 if (gglthngs.clickedItemLevel >= 0) cname = ccname + " (tier "+ (gglthngs.clickedItemLevel+1)+")";
-                message = "You want to buy\r\n" + cname + " for " + gglthngs.clickedItemPrice + "g" + "\r\nYou own this card " + anzcard + " times";
+                string warningcolor = (gglthngs.clickedItemPrice == gglthngs.clickedItemPriceFromOfferMessage) ? "" : "<color=#ff0000ff>";
+                string warningcolor2 = (gglthngs.clickedItemPrice == gglthngs.clickedItemPriceFromOfferMessage) ? "" : "</color>";
+                message = "You want to buy\r\n" + cname + " for "+ warningcolor + gglthngs.clickedItemPrice  + warningcolor2 + "g" + "\r\nYou own this card " + anzcard + " times";
                 if (gglthngs.clickedItemForSales >= 0) message += "\r\nItems for Sale: " + gglthngs.clickedItemForSales; 
             }
             GUI.Label(recto.tbmessage, message);
@@ -1905,7 +1919,7 @@ namespace Auction.mod
                 }
                 else
                 {
-                    if (this.gglthngs.clickedItemBuyID != -1 && GUI.Button(recto.tbok, "OK"))
+                    if (this.gglthngs.clickedItemBuyID >= 0 && GUI.Button(recto.tbok, "OK"))
                     {
                         //#############################################################################################################
                         //#############################################################################################################
@@ -1927,7 +1941,11 @@ namespace Auction.mod
                 helpf.showtradedialog = false;
                 App.ArenaChat.ChatRooms.OpenWhisperRoom(name);
             };
-            if (GUI.Button(recto.tbcancel, "Cancel")) { helpf.showtradedialog = false; };
+            if (GUI.Button(recto.tbcancel, "Cancel")) 
+            {
+                gglthngs.clickedItemBuyID = -1;
+                helpf.showtradedialog = false; 
+            };
             //if ( !this.helpf.playerStoreMenu && GUI.Button(recto.tboffer, "Offer") ) { helpf.makeOfferMenu = true; this.OrOrAnd = 0; this.OfferPrice = "0"; this.OfferCard = null; };
         }
 
