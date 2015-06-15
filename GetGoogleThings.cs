@@ -8,7 +8,7 @@ using JsonFx.Json;
 
 namespace Auction.mod
 {
-    public class GetGoogleThings : ICommListener, IOkCallback, ICancelCallback, IOkCancelCallback, IOkStringCallback, IOkStringCancelCallback
+    public class GetGoogleThings : IOkCallback, ICancelCallback, IOkCancelCallback, IOkStringCallback, IOkStringCancelCallback
     {
         public bool loadeddata=false;
 
@@ -82,14 +82,6 @@ namespace Auction.mod
         private GetGoogleThings()
         {
             this.pstore = PlayerStore.Instance;
-            try
-            {
-                App.Communicator.addListener(this);
-            }
-            catch
-            {
-                Console.WriteLine("cant add listener");
-            }
         }
 
         public void onConnect(OnConnectData ocd)
@@ -105,7 +97,7 @@ namespace Auction.mod
                 MessageMessage omsg = (MessageMessage)msg;
                 if (omsg.type == MessageMessage.Type.SOLD_MARKET_SCROLLS)
                 {
-                    needSoldAucs = true;
+                    this.needSoldAucs = true;
                     App.Communicator.send(new MarketplaceSoldListViewMessage());
                 }
             }
@@ -115,8 +107,8 @@ namespace Auction.mod
                 OkMessage omsg = (OkMessage)msg;
                 if (Helpfunktions.Instance.createAuctionMenu)
                 {
-                    
-                    if (omsg.op == "MarketplaceCreateOffer")
+
+                    if (omsg.op == "MarketplaceCreateOffer" && this.sellingCard != null)
                     {
                         Helpfunktions.Instance.cardIDToNumberOwned[this.sellingType]--;
                         Helpfunktions.Instance.cardIDToNumberOwnedTiered[this.sellingType] -= (int)Math.Pow(3, sellingTypeLevel);
@@ -206,9 +198,32 @@ namespace Auction.mod
                     PlayerStore.Instance.sellOfferFilter.filtersChanged = true;
                     clickedItemBuyID = -1;
                 }
+
+                if (failMessage.isType(typeof(MarketplaceCreateOfferMessage)) && this.sellingCard != null)
+                {
+                    App.Popups.ShowOk(this, "cantcreate", "Create failed", failMessage.info, "Ok");
+                    this.sellingCard = null;
+                }
+
+                if (failMessage.isType(typeof(MarketplaceClaimMessage)))
+                {
+                    if (transactionBeingClaimed == null) return;
+                    if (this.workthreadclaimall)
+                    {
+                        System.Threading.Thread.Sleep(150);
+                        this.claimlast();
+                        return;
+                    }
+                    this.dataOffer = 0;
+                    this.needSoldAucs = true;
+                    App.Communicator.send(new MarketplaceOffersViewMessage());
+                    App.Communicator.send(new MarketplaceSoldListViewMessage());
+                    App.Communicator.sendRequest(new LibraryViewMessage());
+                    transactionBeingClaimed = null;
+                }
             }
 
-            if (msg is CheckCardDependenciesMessage)
+            if (msg is CheckCardDependenciesMessage && sellingCard !=null )
             {
                 CheckCardDependenciesMessage checkCardDependenciesMessage = (CheckCardDependenciesMessage)msg;
                 if (checkCardDependenciesMessage.dependencies == null || checkCardDependenciesMessage.dependencies.Length == 0)
@@ -221,7 +236,7 @@ namespace Auction.mod
                 }
             }
 
-            if (msg is MarketplaceCreateOfferInfoMessage)
+            if (msg is MarketplaceCreateOfferInfoMessage && sellingCard != null)
             {
                 MarketplaceCreateOfferInfoMessage marketplaceCreateOfferInfoMessage = (MarketplaceCreateOfferInfoMessage)msg;
                 App.Popups.ShowSellCard(this, "sellcard", this.sellingCard, marketplaceCreateOfferInfoMessage.lowestPrice, marketplaceCreateOfferInfoMessage.suggestedPrice, marketplaceCreateOfferInfoMessage.copiesForSale, marketplaceCreateOfferInfoMessage.tax);
@@ -357,7 +372,7 @@ namespace Auction.mod
                     this.sellingType = this.sellingCard.getType();
                     this.sellingTypeLevel = this.sellingCard.level;
                     App.Communicator.send(new MarketplaceCreateOfferMessage(this.sellingCard.getId(), price));
-                    this.sellingCard = null;
+                    //this.sellingCard = null;
                 }
                 else
                 {

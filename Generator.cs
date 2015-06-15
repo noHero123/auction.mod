@@ -175,7 +175,11 @@ namespace Auction.mod
 
             this.fullBuyOwnList.Sort(delegate(Auction p1, Auction p2) { return (p1.card.getName()).CompareTo(p2.card.getName()); });
             this.buyOwnCardsFilter.filtersChanged = true;
-            prcs.totalpricecheck();//helpf.cardids
+            try
+            {
+                prcs.totalpricecheck();//helpf.cardids
+            }
+            catch { }
 
             // set cardIDToNumberOwned to zeros, or the mod will crash, if you got an offer, but dont visit the deckbuilder /store etc (where you get your own cards) before
             helpf.cardIDToNumberOwned.Clear();

@@ -70,7 +70,6 @@
     <Compile Include="AuctionFilter.cs" />
     <Compile Include="SpamFilterTestCase.cs" />
     <Compile Include="SpammFilter.cs" />
-    <Compile Include="VersionCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

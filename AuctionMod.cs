@@ -71,7 +71,7 @@ namespace Auction.mod
 
         public static int GetVersion()
         {
-            return 146;
+            return 148;
         }
 
 
@@ -80,9 +80,48 @@ namespace Auction.mod
         //lol
         }
 
+        private void addListenerOnWrongLogin()
+        {
+            System.DateTime started = System.DateTime.Now;
+            bool notfound = true;
+            while (notfound && (System.DateTime.Now - started).TotalMilliseconds < 1000)
+            {
+                Communicator com = App.Communicator;
+                if (com != null)
+                {
+                    List<ICommListener> lists = com.getListeners();
+
+                    if (lists != null && lists.Contains(this)) continue;
+                    System.Threading.Thread.Sleep(10);
+                    Communicator com2 = App.Communicator;
+                    if (com2 != null)
+                    {
+                        com2.addListener(this);
+                        notfound = false;
+                    }
+                }
+            }
+        }
+
+
         public void handleMessage(Message msg)
         {
 
+            if (msg is FailMessage)
+            {
+                FailMessage failMessage = (FailMessage)msg;
+                if (failMessage.isTypes(new Type[]
+			{
+				typeof(ConnectMessage),
+				typeof(FirstConnectMessage)
+			}))
+                {
+                    Thread t1 = new Thread(new ThreadStart(addListenerOnWrongLogin));
+                    t1.Start();
+                }
+            }
+
+            GetGoogleThings.Instance.handleMessage(msg);
             if (msg is CardTypesMessage)
             {
                 generator.setallavailablecards(msg);
